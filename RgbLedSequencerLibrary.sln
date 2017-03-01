@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RgbLedSequencerLibrary", "src\RgbLedSequencerLibrary\RgbLedSequencerLibrary.csproj", "{E1EE2BB5-34E1-45D8-AE84-A10F9251EF1B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Licensing", "Licensing", "{0F6F72A8-44AA-4B82-AFA6-201C460EC6BF}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code Analysis", "Code Analysis", "{D7BFF86B-BFDB-408D-8D43-ECA0D6D0C28B}"
+	ProjectSection(SolutionItems) = preProject
+		_CodeAnalysis.docx = _CodeAnalysis.docx
+		CustomDictionary.xml = CustomDictionary.xml
+		Menees.Analyzers.Settings.xml = Menees.Analyzers.Settings.xml
+		src\RgbLedSequencerLibrary\RgbLedSequencerLibrary.ruleset = src\RgbLedSequencerLibrary\RgbLedSequencerLibrary.ruleset
+		test\unit\RgbLedSequencerLibraryTests\RgbLedSequencerLibraryTests.ruleset = test\unit\RgbLedSequencerLibraryTests\RgbLedSequencerLibraryTests.ruleset
+		stylecop.json = stylecop.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Tests", "Unit Tests", "{371D84AB-7213-402F-9AD7-866A27381ED6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Versioning", "Versioning", "{146CFFF2-7AF3-48C7-B89D-1EA37CB441A5}"
+	ProjectSection(SolutionItems) = preProject
+		AssemblyInfoCommon.cs = AssemblyInfoCommon.cs
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RgbLedSequencerLibraryTests", "test\unit\RgbLedSequencerLibraryTests\RgbLedSequencerLibraryTests.csproj", "{3B9D7124-14F9-40AD-AE91-B6323448EE5E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E1EE2BB5-34E1-45D8-AE84-A10F9251EF1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1EE2BB5-34E1-45D8-AE84-A10F9251EF1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1EE2BB5-34E1-45D8-AE84-A10F9251EF1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1EE2BB5-34E1-45D8-AE84-A10F9251EF1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B9D7124-14F9-40AD-AE91-B6323448EE5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B9D7124-14F9-40AD-AE91-B6323448EE5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B9D7124-14F9-40AD-AE91-B6323448EE5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B9D7124-14F9-40AD-AE91-B6323448EE5E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3B9D7124-14F9-40AD-AE91-B6323448EE5E} = {371D84AB-7213-402F-9AD7-866A27381ED6}
+	EndGlobalSection
+EndGlobal
