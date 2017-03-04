@@ -16,7 +16,11 @@
 
 namespace RgbLedSequencerLibraryTests.Extension
 {
+    using System;
+    using System.Linq;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Ploeh.AutoFixture.Idioms;
     using Ploeh.AutoFixture.Kernel;
 
@@ -46,38 +50,54 @@ namespace RgbLedSequencerLibraryTests.Extension
         /// <inheritdoc/>
         void IGuardClauseCommand.Execute(object value)
         {
-            //var instanceMethod = this.Method as InstanceMethod;
-            //var staticMethod = this.Method as StaticMethod;
-            //Task returnedTask;
-            //if (instanceMethod != null)
-            //{
-            //    returnedTask = instanceMethod.Method.Invoke(
-            //        instanceMethod.Owner,
-            //        this.Expansion.Expand(value).ToArray()) as Task;
-            //}
-            //else if (staticMethod != null)
-            //{
-            //    returnedTask = staticMethod.Method.Invoke(
-            //        null,
-            //        this.Expansion.Expand(value).ToArray()) as Task;
-            //}
-            //else
-            //{
-            //    this.Execute(value);
-            //    returnedTask = Task.CompletedTask;
-            //}
+            var instanceMethod = this.Method as InstanceMethod;
+            var staticMethod = this.Method as StaticMethod;
+            Task returnedTask;
+            if (instanceMethod != null)
+            {
+                returnedTask = instanceMethod.Method.Invoke(
+                    instanceMethod.Owner,
+                    this.Expansion.Expand(value).ToArray()) as Task;
+            }
+            else if (staticMethod != null)
+            {
+                returnedTask = staticMethod.Method.Invoke(
+                    null,
+                    this.Expansion.Expand(value).ToArray()) as Task;
+            }
+            else
+            {
+                this.Execute(value);
+                returnedTask = Task.CompletedTask;
+            }
 
-            //if (returnedTask == null)
-            //{
-            //    throw new GuardClauseException("Async method did not return a Task.");
-            //}
+            if (returnedTask == null)
+            {
+                throw new GuardClauseException("Async method did not return a Task.");
+            }
 
-            ////var thread = new Thread(() => returnedTask.GetAwaiter().GetResult());
-            ////thread.Start();
-            ////thread.Join();
-            //Task.Factory.StartNew(async () => await returnedTask, TaskCreationOptions.LongRunning)
-            //    .GetAwaiter()
-            //    .GetResult();
+            Exception ex = null;
+            var thread = new Thread(() => RunTask(returnedTask, out ex));
+            thread.Start();
+            thread.Join();
+
+            if (ex != null)
+            {
+                throw ex;
+            }
+        }
+
+        private static void RunTask(Task task, out Exception caughtException)
+        {
+            caughtException = null;
+            try
+            {
+                task.GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                caughtException = ex;
+            }
         }
     }
 }
