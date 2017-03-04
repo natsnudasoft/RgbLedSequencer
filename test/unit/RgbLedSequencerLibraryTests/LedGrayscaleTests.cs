@@ -50,11 +50,12 @@ namespace RgbLedSequencerLibraryTests
         [InlineAutoMoqData(nameof(LedGrayscale.Blue))]
         public void ColorChannelChangesPropertyChangedIsRaised(
             string propertyName,
-            byte propertyValue,
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
             const byte MaxGrayscale = 255;
+            fixture.Customizations.Add(new RandomNumericSequenceGenerator(1, MaxGrayscale));
+            var propertyValue = fixture.Create<byte>();
             sequencerConfigMock.Setup(c => c.MaxGrayscale).Returns(MaxGrayscale);
             var sut = fixture.Build<LedGrayscale>().OmitAutoProperties().Create();
             var receivedEvents = new List<string>();
