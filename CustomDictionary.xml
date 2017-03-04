@@ -1,0 +1,19 @@
+<Dictionary>
+  <Words>
+    <Unrecognized>
+    </Unrecognized>
+    <Recognized>
+      <Word>Rgb</Word>
+      <Word>Led</Word>
+      <Word>Cts</Word>
+      <Word>Dsr</Word>
+      <Word>Dtr</Word>
+      <Word>Rts</Word>
+    </Recognized>
+    <Acronyms>
+      <CasingExceptions>
+      </CasingExceptions>
+    </Acronyms>
+    <Deprecated />
+  </Words>
+</Dictionary>

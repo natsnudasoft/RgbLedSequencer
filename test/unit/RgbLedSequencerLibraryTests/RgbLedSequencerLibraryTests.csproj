@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3B9D7124-14F9-40AD-AE91-B6323448EE5E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RgbLedSequencerLibraryTests</RootNamespace>
+    <AssemblyName>RgbLedSequencerLibraryTests</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>RgbLedSequencerLibraryTests.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>RgbLedSequencerLibraryTests.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>RgbLedSequencerLibraryTests.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Moq, Version=4.7.1.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moq.4.7.1\lib\net45\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.Albedo, Version=1.0.2.0, Culture=neutral, PublicKeyToken=179ef6dd03497bbd, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Albedo.1.0.2\lib\net35\Ploeh.Albedo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\AutoFixture.3.50.2\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture.AutoMoq, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\AutoFixture.AutoMoq.3.50.2\lib\net40\Ploeh.AutoFixture.AutoMoq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture.Idioms, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\AutoFixture.Idioms.3.50.2\lib\net40\Ploeh.AutoFixture.Idioms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture.Xunit2, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\AutoFixture.Xunit2.3.50.2\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.SemanticComparison, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\SemanticComparison.3.50.2\lib\net40\Ploeh.SemanticComparison.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.2.0.3545, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\xunit.assert.2.2.0\lib\netstandard1.1\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.2.0.3545, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\xunit.extensibility.core.2.2.0\lib\netstandard1.1\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.2.0.3545, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\xunit.extensibility.execution.2.2.0\lib\net452\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
+    <Compile Include="CommandInterface\CommandExecutionManagerTests.cs" />
+    <Compile Include="CommandInterface\CommandProgressTests.cs" />
+    <Compile Include="CommandInterface\RgbLedSequencerCommandTests.cs" />
+    <Compile Include="CommandInterface\RgbLedSequencerTests.cs" />
+    <Compile Include="CommandInterface\UnexpectedInstructionExceptionTests.cs" />
+    <Compile Include="Extension\AsyncMethodInvokeCommand.cs" />
+    <Compile Include="Extension\AutoMoqDataAttribute.cs" />
+    <Compile Include="BaudRateValidatorTests.cs" />
+    <Compile Include="CommandInterface\ClearCommandTests.cs" />
+    <Compile Include="CommandInterface\ContinueCommandTests.cs" />
+    <Compile Include="CommandInterface\PlaySequenceCommandTests.cs" />
+    <Compile Include="CommandInterface\SaveSequenceCommandTests.cs" />
+    <Compile Include="CommandInterface\SetDotCorrectionCommandTests.cs" />
+    <Compile Include="CommandInterface\SleepCommandTests.cs" />
+    <Compile Include="DotCorrectionDataTests.cs" />
+    <Compile Include="Extension\DoesNotThrowAssertion.cs" />
+    <Compile Include="Extension\ExceptionBehaviourExpectation.cs" />
+    <Compile Include="Extension\ParameterNullReferenceBehaviourExpectation.cs" />
+    <Compile Include="Extension\GuardClauseExtensions.cs" />
+    <Compile Include="GrayscaleDataTests.cs" />
+    <Compile Include="Extension\InlineAutoMoqDataAttribute.cs" />
+    <Compile Include="LedDotCorrectionTests.cs" />
+    <Compile Include="LedGrayscaleTests.cs" />
+    <Compile Include="Extension\ParameterAttribute.cs" />
+    <Compile Include="Extension\ParameterCustomization.cs" />
+    <Compile Include="Extension\ParameterSpecimenBuilder.cs" />
+    <Compile Include="ParameterValidationTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RgbLedSequencerSectionTests.cs" />
+    <Compile Include="SequenceDataTests.cs" />
+    <Compile Include="SequenceStepTests.cs" />
+    <Compile Include="SerialPortElementTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\..\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="RgbLedSequencerLibraryTests.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\..\packages\codecracker.CSharp.1.0.1\analyzers\dotnet\cs\CodeCracker.Common.dll" />
+    <Analyzer Include="..\..\..\packages\codecracker.CSharp.1.0.1\analyzers\dotnet\cs\CodeCracker.CSharp.dll" />
+    <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Menees.Analyzers.dll" />
+    <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Microsoft.Build.dll" />
+    <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Microsoft.Build.Engine.dll" />
+    <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Microsoft.Build.Framework.dll" />
+    <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Microsoft.Build.Tasks.Core.dll" />
+    <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Microsoft.Build.Utilities.Core.dll" />
+    <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
+    <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\..\..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+      <SubType>Designer</SubType>
+    </CodeAnalysisDictionary>
+    <AdditionalFiles Include="..\..\..\Menees.Analyzers.Settings.xml">
+      <Link>Menees.Analyzers.Settings.xml</Link>
+    </AdditionalFiles>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\RgbLedSequencerLibrary\RgbLedSequencerLibrary.csproj">
+      <Project>{e1ee2bb5-34e1-45d8-ae84-a10f9251ef1b}</Project>
+      <Name>RgbLedSequencerLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
