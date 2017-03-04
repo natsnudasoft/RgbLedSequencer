@@ -17,7 +17,7 @@ after_build:
   - 7z a RgbLedSequencerLibrary_Release_Any_CPU.zip %APPVEYOR_BUILD_FOLDER%\src\RgbLedSequencerLibrary\bin\Release\RgbLedSequencerLibrary.xml
   - 7z a RgbLedSequencerLibrary_Release_Any_CPU.zip %APPVEYOR_BUILD_FOLDER%\src\RgbLedSequencerLibrary\bin\Release\example-app.config
 after_test:
-  - cmd: packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user "-filter:+[*]* -[*Tests]*" -target:packages\xunit.runner.console.2.2.0\tools\xunit-console.exe -targetargs:"test\unit\RgbLedSequencerLibraryTests\bin\Release\RgbLedSequencerLibraryTests.dll -noshadow" -excludebyattribute:*.ExcludeFromCodeCoverage* -excludebyfile:*Designer.cs -output:coverage.xml
+  - cmd: packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user "-filter:+[*]* -[*Tests]*" -target:packages\xunit.runner.console.2.2.0\tools\xunit-console.exe -targetargs:"test\unit\RgbLedSequencerLibraryTests\bin\Release\RgbLedSequencerLibraryTests.dll -noshadow -appveyor" -excludebyattribute:*.ExcludeFromCodeCoverage* -excludebyfile:*Designer.cs -output:coverage.xml
   - cmd: packages\coveralls.io.1.3.4\tools\coveralls.net.exe --opencover coverage.xml
 cache:
   - packages -> **\packages.config
