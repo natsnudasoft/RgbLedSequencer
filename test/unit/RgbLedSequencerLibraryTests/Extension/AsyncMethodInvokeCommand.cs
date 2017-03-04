@@ -74,7 +74,10 @@ namespace RgbLedSequencerLibraryTests.Extension
                 throw new GuardClauseException("Async method did not return a Task.");
             }
 
-            Task.Run(() => returnedTask.GetAwaiter().GetResult()).GetAwaiter().GetResult();
+            //var thread = new Thread(() => returnedTask.GetAwaiter().GetResult());
+            //thread.Start();
+            //thread.Join();
+            Task.Run(async () => await returnedTask).GetAwaiter().GetResult();
         }
     }
 }
