@@ -21,11 +21,11 @@ The RGB LED Sequencer Library (RgbLedSLi) is a C#.NET Class Library which provid
 interface to communicate with the RGB LED Sequencer via COM Port (for the PICAXE, this is usually
 achieved using an [AXE027](http://www.picaxe.com/Hardware/Cables/PICAXE-USB-Download-Cable) cable).
 
-[GitHubTagImage]: https://img.shields.io/github/tag/natsnudasoft/RGBLEDSequencer.svg?maxAge=300&style=flat-square
-[GitHubTagUrl]: https://github.com/natsnudasoft/RGBLEDSequencer
-[AppVeyorImage]: https://img.shields.io/appveyor/ci/natsnudasoft/RGBLEDSequencer/master.svg?maxAge=300&style=flat-square
-[AppVeyorUrl]:  https://ci.appveyor.com/project/natsnudasoft/RGBLEDSequencer/branch/master
-[CoverallsImage]: https://img.shields.io/coveralls/natsnudasoft/RGBLEDSequencer/master.svg?maxAge=300&style=flat-square
-[CoverallsUrl]: https://coveralls.io/github/natsnudasoft/RGBLEDSequencer?branch=master
-[LicenceImage]: https://img.shields.io/github/license/natsnudasoft/RGBLEDSequencer.svg?maxAge=2592000&style=flat-square
+[GitHubTagImage]: https://img.shields.io/github/tag/natsnudasoft/RgbLedSequencer.svg?maxAge=300&style=flat-square
+[GitHubTagUrl]: https://github.com/natsnudasoft/RgbLedSequencer
+[AppVeyorImage]: https://img.shields.io/appveyor/ci/natsnudasoft/RgbLedSequencer/master.svg?maxAge=300&style=flat-square
+[AppVeyorUrl]:  https://ci.appveyor.com/project/natsnudasoft/RgbLedSequencer/branch/master
+[CoverallsImage]: https://img.shields.io/coveralls/natsnudasoft/RgbLedSequencer/master.svg?maxAge=300&style=flat-square
+[CoverallsUrl]: https://coveralls.io/github/natsnudasoft/RgbLedSequencer?branch=master
+[LicenceImage]: https://img.shields.io/github/license/natsnudasoft/RgbLedSequencer.svg?maxAge=2592000&style=flat-square
 [LicenceUrl]: http://www.apache.org/licenses/LICENSE-2.0
