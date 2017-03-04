@@ -21,8 +21,6 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
     using System.Threading.Tasks;
     using Extension;
     using Moq;
-    using Ploeh.AutoFixture;
-    using Ploeh.AutoFixture.Idioms;
     using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary.CommandInterface;
     using Xunit;
@@ -31,17 +29,17 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
     {
         private static readonly Type SutType = typeof(CommandExecutionManager);
 
-        [Theory]
-        [AutoMoqData]
-        public void ExecuteHasCorrectGuardClauses(Fixture fixture)
-        {
-            var assertion = new GuardClauseAssertion(
-                fixture,
-                new ParameterNullReferenceBehaviourExpectation(fixture));
+        //[Theory]
+        //[AutoMoqData]
+        //public void ExecuteHasCorrectGuardClauses(Fixture fixture)
+        //{
+        //    var assertion = new GuardClauseAssertion(
+        //        fixture,
+        //        new ParameterNullReferenceBehaviourExpectation(fixture));
 
-            assertion.Verify(
-                SutType.GetMethod(nameof(CommandExecutionManager.ExecuteCommandAsync)));
-        }
+        //    assertion.Verify(
+        //        SutType.GetMethod(nameof(CommandExecutionManager.ExecuteCommandAsync)));
+        //}
 
         [Theory]
         [AutoMoqData]

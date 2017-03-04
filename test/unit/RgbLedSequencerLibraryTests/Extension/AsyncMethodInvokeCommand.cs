@@ -77,7 +77,9 @@ namespace RgbLedSequencerLibraryTests.Extension
             //var thread = new Thread(() => returnedTask.GetAwaiter().GetResult());
             //thread.Start();
             //thread.Join();
-            Task.Run(async () => await returnedTask).GetAwaiter().GetResult();
+            Task.Factory.StartNew(async () => await returnedTask, TaskCreationOptions.LongRunning)
+                .GetAwaiter()
+                .GetResult();
         }
     }
 }
