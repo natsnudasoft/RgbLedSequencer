@@ -16,8 +16,11 @@
 
 namespace RgbLedSequencerLibraryTests.Extension
 {
+    using System;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.ExceptionServices;
+    using System.Threading;
     using System.Threading.Tasks;
     using Ploeh.AutoFixture.Idioms;
     using Ploeh.AutoFixture.Kernel;
@@ -74,7 +77,32 @@ namespace RgbLedSequencerLibraryTests.Extension
                 throw new GuardClauseException("Async method did not return a Task.");
             }
 
-            returnedTask.GetAwaiter().GetResult();
+            ExceptionDispatchInfo exInfo = null;
+            var thread = new Thread(() => WaitTaskCaptureException(returnedTask, out exInfo));
+            thread.Start();
+            thread.Join();
+
+            if (exInfo != null)
+            {
+                exInfo.Throw();
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Exception should be propagated by caller.")]
+        private static void WaitTaskCaptureException(Task task, out ExceptionDispatchInfo exInfo)
+        {
+            exInfo = null;
+            try
+            {
+                task.GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                exInfo = ExceptionDispatchInfo.Capture(ex);
+            }
         }
     }
 }
