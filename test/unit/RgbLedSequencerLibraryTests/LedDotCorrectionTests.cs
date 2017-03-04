@@ -65,11 +65,12 @@ namespace RgbLedSequencerLibraryTests
         [InlineAutoMoqData(nameof(LedDotCorrection.Blue))]
         public void ColorChannelChangesPropertyChangedIsRaised(
             string propertyName,
-            byte propertyValue,
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfig,
             Fixture fixture)
         {
             const byte MaxDotCorrection = 255;
+            fixture.Customizations.Add(new RandomNumericSequenceGenerator(1, MaxDotCorrection - 1));
+            var propertyValue = fixture.Create<byte>();
             sequencerConfig.Setup(c => c.MaxDotCorrection).Returns(MaxDotCorrection);
             var sut = fixture.Build<LedDotCorrection>().OmitAutoProperties().Create();
             var receivedEvents = new List<string>();

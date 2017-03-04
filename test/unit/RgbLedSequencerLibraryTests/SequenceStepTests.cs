@@ -59,9 +59,10 @@ namespace RgbLedSequencerLibraryTests
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
-            const int PropertyValue = 50;
             const string PropertyName = nameof(SequenceStep.StepDelay);
             const byte MaxStepDelay = 100;
+            fixture.Customizations.Add(new RandomNumericSequenceGenerator(1, MaxStepDelay));
+            var propertyValue = fixture.Create<byte>();
             sequencerConfigMock.Setup(c => c.MaxStepDelay).Returns(MaxStepDelay);
             var sut = fixture.Build<SequenceStep>().OmitAutoProperties().Create();
             var receivedEvents = new List<string>();
@@ -70,7 +71,7 @@ namespace RgbLedSequencerLibraryTests
                 receivedEvents.Add(e.PropertyName);
             };
 
-            sut.StepDelay = PropertyValue;
+            sut.StepDelay = propertyValue;
 
             Assert.Equal(1, receivedEvents.Count);
             Assert.Equal(PropertyName, receivedEvents[0]);
