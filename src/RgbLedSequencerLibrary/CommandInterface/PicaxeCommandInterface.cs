@@ -55,6 +55,8 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// underlying stream of the port is closed.</exception>
         /// <exception cref="IOException">The underlying port is in an invalid state, or an attempt
         /// to set the state of the underlying port failed.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
         public async Task HandshakeAsync()
         {
             this.SerialPortAdapter.BreakState = true;
@@ -70,6 +72,8 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// <inheritdoc/>
         /// <exception cref="TimeoutException">A read or write operation timed out.</exception>
         /// <exception cref="InvalidOperationException">The underlying port is not open.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
         public async Task SendByteWhenReadyAsync(byte value)
         {
             await this.CheckReceivedInstructionAsync(ReceiveInstruction.Ready)
@@ -80,6 +84,8 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// <inheritdoc/>
         /// <exception cref="TimeoutException">A read or write operation timed out.</exception>
         /// <exception cref="InvalidOperationException">The underlying port is not open.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
         public async Task SendWordWhenReadyAsync(int value)
         {
             const int ByteSize = 8;

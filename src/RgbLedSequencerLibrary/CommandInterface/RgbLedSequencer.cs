@@ -95,6 +95,8 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// underlying stream of the port is closed.</exception>
         /// <exception cref="IOException">The underlying port is in an invalid state, or an attempt
         /// to set the state of the underlying port failed.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
         public async Task ContinueAsync()
         {
 #pragma warning disable MEN010 // Avoid magic numbers
@@ -112,6 +114,8 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// underlying stream of the port is closed.</exception>
         /// <exception cref="IOException">The underlying port is in an invalid state, or an attempt
         /// to set the state of the underlying port failed.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
         public async Task SleepAsync()
         {
 #pragma warning disable MEN010 // Avoid magic numbers
@@ -131,6 +135,8 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// underlying stream of the port is closed.</exception>
         /// <exception cref="IOException">The underlying port is in an invalid state, or an attempt
         /// to set the state of the underlying port failed.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
         public async Task SetDotCorrectionAsync(DotCorrectionData dotCorrection)
         {
             ParameterValidation.IsNotNull(dotCorrection, nameof(dotCorrection));
@@ -146,7 +152,7 @@ namespace RgbLedSequencerLibrary.CommandInterface
             {
                 this.ReportProgress(new CommandProgress(
                     CalculateDotCorrectionProgress(this.SequencerConfig.RgbLedCount, ledIndex),
-                    GetDotCorrectionProgressMessage(ledIndex)));
+                    GetSetDotCorrectionProgressMessage(ledIndex)));
                 await this.SendLedDotCorrectionAsync(dotCorrection[ledIndex])
                     .ConfigureAwait(false);
             }
@@ -163,6 +169,8 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// underlying stream of the port is closed.</exception>
         /// <exception cref="IOException">The underlying port is in an invalid state, or an attempt
         /// to set the state of the underlying port failed.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
         public async Task PlaySequenceAsync(byte sequenceIndex)
         {
             ParameterValidation.IsBetweenInclusive(
@@ -193,6 +201,8 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// underlying stream of the port is closed.</exception>
         /// <exception cref="IOException">The underlying port is in an invalid state, or an attempt
         /// to set the state of the underlying port failed.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
         public async Task SaveSequenceAsync(byte sequenceIndex, SequenceData sequence)
         {
             ParameterValidation.IsBetweenInclusive(
@@ -226,6 +236,8 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// underlying stream of the port is closed.</exception>
         /// <exception cref="IOException">The underlying port is in an invalid state, or an attempt
         /// to set the state of the underlying port failed.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
         public async Task ClearSequencesAsync()
         {
 #pragma warning disable MEN010 // Avoid magic numbers
@@ -241,11 +253,11 @@ namespace RgbLedSequencerLibrary.CommandInterface
             int rgbLedCount,
             int ledIndex)
         {
-#pragma warning disable MEN010 // Avoid magic numbers
+            const double ProgressStart = 2d;
+            const double ProgressEnd = 100d;
             var dotCorrectionProgress = (rgbLedCount - 1 - ledIndex) /
                 (double)rgbLedCount;
-            return ((100d - 2d) * dotCorrectionProgress) + 2d;
-#pragma warning restore MEN010 // Avoid magic numbers
+            return ((ProgressEnd - ProgressStart) * dotCorrectionProgress) + ProgressStart;
         }
 
         private static double CalculateSequenceProgress(
@@ -254,26 +266,26 @@ namespace RgbLedSequencerLibrary.CommandInterface
             int stepIndex,
             int ledIndex)
         {
-#pragma warning disable MEN010 // Avoid magic numbers
+            const double ProgressStart = 2d;
+            const double ProgressEnd = 100d;
             var sequenceProgress = ((stepIndex * rgbLedCount) + (rgbLedCount - 1 - ledIndex)) /
                 (double)(rgbLedCount * stepCount);
-            return ((100d - 2d) * sequenceProgress) + 2d;
-#pragma warning restore MEN010 // Avoid magic numbers
+            return ((ProgressEnd - ProgressStart) * sequenceProgress) + ProgressStart;
         }
 
-        private static string GetDotCorrectionProgressMessage(int ledIndex)
+        private static string GetSetDotCorrectionProgressMessage(int ledIndex)
         {
             return string.Format(
                 CultureInfo.CurrentCulture,
-                Resources.DotCorrectionDataProgress,
+                Resources.SendDotCorrectionDataProgress,
                 ledIndex + 1);
         }
 
-        private static string GetSequenceProgressMessage(int stepIndex, int ledIndex)
+        private static string GetSendSequenceProgressMessage(int stepIndex, int ledIndex)
         {
             return string.Format(
                 CultureInfo.CurrentCulture,
-                Resources.SequenceDataProgress,
+                Resources.SendSequenceDataProgress,
                 stepIndex + 1,
                 ledIndex + 1);
         }
@@ -287,7 +299,7 @@ namespace RgbLedSequencerLibrary.CommandInterface
             {
                 this.ReportProgress(new CommandProgress(
                     CalculateSequenceProgress(rgbLedCount, stepCount, stepIndex, ledIndex),
-                    GetSequenceProgressMessage(stepIndex, ledIndex)));
+                    GetSendSequenceProgressMessage(stepIndex, ledIndex)));
                 await this.SendLedGrayscaleAsync(sequenceStep.GrayscaleData[ledIndex])
                     .ConfigureAwait(false);
             }

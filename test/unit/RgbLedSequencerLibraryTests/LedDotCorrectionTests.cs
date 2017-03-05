@@ -17,7 +17,6 @@
 namespace RgbLedSequencerLibraryTests
 {
     using System;
-    using System.Collections.Generic;
     using Extension;
     using Moq;
     using Ploeh.AutoFixture;
@@ -60,29 +59,32 @@ namespace RgbLedSequencerLibraryTests
         }
 
         [Theory]
-        [InlineAutoMoqData(nameof(LedDotCorrection.Red))]
-        [InlineAutoMoqData(nameof(LedDotCorrection.Green))]
-        [InlineAutoMoqData(nameof(LedDotCorrection.Blue))]
-        public void ColorChannelChangesPropertyChangedIsRaised(
-            string propertyName,
-            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfig,
-            Fixture fixture)
+        [AutoMoqData]
+        public void WritablePropertiesAreCorrectlyImplemented(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            WritablePropertyAssertion assertion)
         {
-            const byte MaxDotCorrection = 255;
-            fixture.Customizations.Add(new RandomNumericSequenceGenerator(1, MaxDotCorrection - 1));
-            var propertyValue = fixture.Create<byte>();
-            sequencerConfig.Setup(c => c.MaxDotCorrection).Returns(MaxDotCorrection);
-            var sut = fixture.Build<LedDotCorrection>().OmitAutoProperties().Create();
-            var receivedEvents = new List<string>();
-            sut.PropertyChanged += (s, e) =>
-            {
-                receivedEvents.Add(e.PropertyName);
-            };
+            const byte MaxDotCorrection = byte.MaxValue;
+            sequencerConfigMock.Setup(c => c.MaxDotCorrection).Returns(MaxDotCorrection);
+            assertion.Verify(
+                SutType.GetProperty(nameof(LedDotCorrection.Red)),
+                SutType.GetProperty(nameof(LedDotCorrection.Green)),
+                SutType.GetProperty(nameof(LedDotCorrection.Blue)));
+        }
 
-            SutType.GetProperty(propertyName).SetValue(sut, propertyValue);
+        [Theory]
+        [AutoMoqData]
+        public void ColorChannelChangesPropertyChangedIsRaised(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            PropertyChangedRaisedAssertion assertion)
+        {
+            const byte MaxDotCorrection = byte.MaxValue;
+            sequencerConfigMock.Setup(c => c.MaxDotCorrection).Returns(MaxDotCorrection);
 
-            Assert.Equal(1, receivedEvents.Count);
-            Assert.Equal(propertyName, receivedEvents[0]);
+            assertion.Verify(
+                SutType.GetProperty(nameof(LedDotCorrection.Red)),
+                SutType.GetProperty(nameof(LedDotCorrection.Green)),
+                SutType.GetProperty(nameof(LedDotCorrection.Blue)));
         }
 
         [Theory]
@@ -96,8 +98,9 @@ namespace RgbLedSequencerLibraryTests
         {
             const byte MaxDotCorrection = 50;
             sequencerConfigMock.Setup(c => c.MaxDotCorrection).Returns(MaxDotCorrection);
-            var sut = fixture.Create<LedDotCorrection>();
+            var sut = fixture.Build<LedDotCorrection>().OmitAutoProperties().Create();
 
+            SutType.GetProperty(propertyName).SetValue(sut, (byte)0);
             SutType.GetProperty(propertyName).SetValue(sut, byte.MaxValue);
             var actualValue = SutType.GetProperty(propertyName).GetValue(sut);
 

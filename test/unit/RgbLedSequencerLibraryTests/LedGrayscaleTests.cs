@@ -17,7 +17,6 @@
 namespace RgbLedSequencerLibraryTests
 {
     using System;
-    using System.Collections.Generic;
     using Extension;
     using Moq;
     using Ploeh.AutoFixture;
@@ -45,29 +44,32 @@ namespace RgbLedSequencerLibraryTests
         }
 
         [Theory]
-        [InlineAutoMoqData(nameof(LedGrayscale.Red))]
-        [InlineAutoMoqData(nameof(LedGrayscale.Green))]
-        [InlineAutoMoqData(nameof(LedGrayscale.Blue))]
-        public void ColorChannelChangesPropertyChangedIsRaised(
-            string propertyName,
-            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
-            Fixture fixture)
+        [AutoMoqData]
+        public void WritablePropertiesAreCorrectlyImplemented(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfig,
+            WritablePropertyAssertion assertion)
         {
-            const byte MaxGrayscale = 255;
-            fixture.Customizations.Add(new RandomNumericSequenceGenerator(1, MaxGrayscale));
-            var propertyValue = fixture.Create<byte>();
+            const byte MaxGrayscale = byte.MaxValue;
+            sequencerConfig.Setup(c => c.MaxGrayscale).Returns(MaxGrayscale);
+            assertion.Verify(
+                SutType.GetProperty(nameof(LedGrayscale.Red)),
+                SutType.GetProperty(nameof(LedGrayscale.Green)),
+                SutType.GetProperty(nameof(LedGrayscale.Blue)));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void ColorChannelChangesPropertyChangedIsRaised(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            PropertyChangedRaisedAssertion assertion)
+        {
+            const byte MaxGrayscale = byte.MaxValue;
             sequencerConfigMock.Setup(c => c.MaxGrayscale).Returns(MaxGrayscale);
-            var sut = fixture.Build<LedGrayscale>().OmitAutoProperties().Create();
-            var receivedEvents = new List<string>();
-            sut.PropertyChanged += (s, e) =>
-            {
-                receivedEvents.Add(e.PropertyName);
-            };
 
-            SutType.GetProperty(propertyName).SetValue(sut, propertyValue);
-
-            Assert.Equal(1, receivedEvents.Count);
-            Assert.Equal(propertyName, receivedEvents[0]);
+            assertion.Verify(
+                SutType.GetProperty(nameof(LedGrayscale.Red)),
+                SutType.GetProperty(nameof(LedGrayscale.Green)),
+                SutType.GetProperty(nameof(LedGrayscale.Blue)));
         }
 
         [Theory]
@@ -81,7 +83,7 @@ namespace RgbLedSequencerLibraryTests
         {
             const byte MaxGrayscale = 50;
             sequencerConfigMock.Setup(c => c.MaxGrayscale).Returns(MaxGrayscale);
-            var sut = fixture.Create<LedGrayscale>();
+            var sut = fixture.Build<LedGrayscale>().OmitAutoProperties().Create();
 
             SutType.GetProperty(propertyName).SetValue(sut, byte.MaxValue);
             var actualValue = SutType.GetProperty(propertyName).GetValue(sut);

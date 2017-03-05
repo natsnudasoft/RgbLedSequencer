@@ -22,6 +22,7 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
     using Moq;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
+    using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary;
     using RgbLedSequencerLibrary.CommandInterface;
     using Xunit;
@@ -150,7 +151,7 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
         [Theory]
         [AutoMoqData]
         public async Task UnexpectedInstructionReceivedThrowsAsync(
-            Mock<ISerialPortAdapter> serialPortAdapterMock,
+            [Frozen]Mock<ISerialPortAdapter> serialPortAdapterMock,
             Fixture fixture)
         {
             serialPortAdapterMock

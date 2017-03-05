@@ -18,6 +18,7 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
 {
     using System;
     using System.Threading.Tasks;
+    using Helper;
     using Moq;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
@@ -85,8 +86,15 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
 
         [Theory]
         [AutoMoqData]
-        public void SetDotCorrectionHasCorrectGuardClauses(Fixture fixture)
+        public void SetDotCorrectionHasCorrectGuardClauses(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
         {
+            var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
             var assertion = new GuardClauseAssertion(
                 fixture,
                 new ParameterNullReferenceBehaviourExpectation(fixture));
@@ -101,8 +109,11 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
             [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
             Fixture fixture)
         {
-            const int RgbLedCount = 5;
-            sequencerConfigMock.Setup(s => s.RgbLedCount).Returns(RgbLedCount);
+            var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
             var dotCorrection = fixture.Create<DotCorrectionData>();
             var sut = fixture.Create<RgbLedSequencer>();
 
@@ -114,7 +125,7 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
                 Times.Once());
             picaxeCommandInterfaceMock.Verify(
                 s => s.SendByteWhenReadyAsync(It.IsAny<byte>()),
-                Times.Exactly(RgbLedCount * 3));
+                Times.Exactly(customization.RgbLedCount * 3));
         }
 
         [Theory]
@@ -165,16 +176,17 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
-            const int RgbLedCount = 5;
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxStepCount = 8,
+                StepCount = 5
+            };
+            fixture.Customize(customization);
             const byte SequenceIndex = 5;
             const int SequenceCount = 10;
-            const int MaxStepCount = 8;
-            const int StepCount = 5;
-            sequencerConfigMock.Setup(s => s.RgbLedCount).Returns(RgbLedCount);
             sequencerConfigMock.Setup(s => s.SequenceCount).Returns(SequenceCount);
-            sequencerConfigMock.Setup(s => s.MaxStepCount).Returns(MaxStepCount);
             ApplySequenceIndexSpecimen(fixture, SequenceIndex);
-            ApplyStepCountSpecimen(fixture, StepCount);
 #pragma warning disable SA1118 // Parameter must not span multiple lines
             var behaviourExpectation = new CompositeBehaviorExpectation(
                 new ParameterNullReferenceBehaviourExpectation(fixture),
@@ -184,6 +196,7 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
                     (byte)(SequenceCount + 1)));
 #pragma warning restore SA1118 // Parameter must not span multiple lines
             var assertion = new GuardClauseAssertion(fixture, behaviourExpectation);
+
             assertion.Verify(SutType.GetMethod(nameof(RgbLedSequencer.SaveSequenceAsync)));
         }
 
@@ -194,15 +207,16 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
             [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
             Fixture fixture)
         {
-            const int RgbLedCount = 5;
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxStepCount = 8,
+                StepCount = 5
+            };
+            fixture.Customize(customization);
             const byte SequenceIndex = 5;
             const int SequenceCount = 10;
-            const int MaxStepCount = 8;
-            const int StepCount = 5;
-            sequencerConfigMock.Setup(s => s.RgbLedCount).Returns(RgbLedCount);
             sequencerConfigMock.Setup(s => s.SequenceCount).Returns(SequenceCount);
-            sequencerConfigMock.Setup(s => s.MaxStepCount).Returns(MaxStepCount);
-            ApplyStepCountSpecimen(fixture, StepCount);
             var sequence = fixture.Create<SequenceData>();
             var sut = fixture.Create<RgbLedSequencer>();
 
@@ -214,10 +228,10 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
                 Times.Once());
             picaxeCommandInterfaceMock.Verify(
                 s => s.SendByteWhenReadyAsync(It.IsAny<byte>()),
-                Times.Exactly((RgbLedCount * 3 * StepCount) + 1));
+                Times.Exactly((customization.RgbLedCount * 3 * customization.StepCount.Value) + 1));
             picaxeCommandInterfaceMock.Verify(
                 s => s.SendWordWhenReadyAsync(It.IsAny<int>()),
-                Times.Exactly(StepCount + 1));
+                Times.Exactly(customization.StepCount.Value + 1));
         }
 
         [Theory]
@@ -251,14 +265,6 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
                 SutType,
                 nameof(sequenceIndex),
                 sequenceIndex));
-        }
-
-        private static void ApplyStepCountSpecimen(IFixture fixture, int stepCount)
-        {
-            fixture.Customizations.Add(new ParameterSpecimenBuilder(
-                typeof(SequenceData),
-                nameof(stepCount),
-                stepCount));
         }
     }
 }

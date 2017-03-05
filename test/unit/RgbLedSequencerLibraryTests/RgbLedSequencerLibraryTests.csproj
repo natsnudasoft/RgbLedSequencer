@@ -117,8 +117,16 @@
     <Compile Include="Extension\ExceptionBehaviourExpectation.cs" />
     <Compile Include="Extension\ParameterNullReferenceBehaviourExpectation.cs" />
     <Compile Include="Extension\GuardClauseExtensions.cs" />
+    <Compile Include="Extension\ParameterTypeFavoringConstructorQuery.cs" />
+    <Compile Include="Extension\PropertyChangedRaisedAssertion.cs" />
+    <Compile Include="Extension\PropertyChangedRaisedException.cs" />
     <Compile Include="GrayscaleDataTests.cs" />
     <Compile Include="Extension\InlineAutoMoqDataAttribute.cs" />
+    <Compile Include="Helper\DotCorrectionDataCustomization.cs" />
+    <Compile Include="Helper\GrayscaleDataCustomization.cs" />
+    <Compile Include="Helper\SequenceDataCustomization.cs" />
+    <Compile Include="Helper\SequencerConfigurationCustomization.cs" />
+    <Compile Include="Helper\SequenceStepCustomization.cs" />
     <Compile Include="LedDotCorrectionTests.cs" />
     <Compile Include="LedGrayscaleTests.cs" />
     <Compile Include="Extension\ParameterAttribute.cs" />
