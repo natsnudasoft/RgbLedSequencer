@@ -19,44 +19,54 @@ namespace RgbLedSequencerLibrary.CommandInterface
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Provides an interface describing operations for communicating with an RGB LED Sequencer.
+    /// Provides a high level interface describing operations available on an RGB LED Sequencer.
     /// </summary>
     public interface IRgbLedSequencer
     {
         /// <summary>
-        /// Gets the serial port adapter used to communicate with the RGB LED Sequencer.
-        /// </summary>
-        ISerialPortAdapter SerialPortAdapter { get; }
-
-        /// <summary>
-        /// Attempts to perform communication with the RGB LED Sequencer, waiting for a handshake
-        /// signal.
+        /// Instructs the RGB LED Sequencer to continue from a break (used to wake the device
+        /// without performing a command).
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        Task HandshakeAsync();
+        Task ContinueAsync();
 
         /// <summary>
-        /// Sends a byte to the RGB LED Sequencer when a ready signal has been received.
+        /// Instructs the RGB LED Sequencer to go into sleep mode.
         /// </summary>
-        /// <param name="value">The value to send to the RGB LED Sequencer.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        Task SendByteWhenReadyAsync(byte value);
+        Task SleepAsync();
 
         /// <summary>
-        /// Sends a word (16 bit unsigned value) to the RGB LED Sequencer when a ready signal has
-        /// been received.
+        /// Sends the specified <see cref="DotCorrectionData"/> to the RGB LED Sequencer.
         /// </summary>
-        /// <param name="value">The value to send to the RGB LED Sequencer, only the lower 16 bits
-        /// are used.</param>
+        /// <param name="dotCorrection">The <see cref="DotCorrectionData"/> data to send to the RGB
+        /// LED Sequencer.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        Task SendWordWhenReadyAsync(int value);
+        Task SetDotCorrectionAsync(DotCorrectionData dotCorrection);
 
         /// <summary>
-        /// Sends the specified instruction to the RGB LED Sequencer as a byte value.
+        /// Instructs the RGB LED Sequencer to begin playing the sequence at the specified index.
         /// </summary>
-        /// <param name="instruction">The <see cref="SendInstruction"/> to send to the RGB LED
+        /// <param name="sequenceIndex">The index of the sequence to begin playing on the RGB LED
         /// Sequencer.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        Task SendInstructionAsync(SendInstruction instruction);
+        Task PlaySequenceAsync(byte sequenceIndex);
+
+        /// <summary>
+        /// Saves the specified <see cref="SequenceData"/> to the RGB LED Sequencer at the specified
+        /// index.
+        /// </summary>
+        /// <param name="sequenceIndex">The index to save the specified sequence to in the RGB LED
+        /// Sequencer.</param>
+        /// <param name="sequence">The <see cref="SequenceData"/> data to send to the RGB LED
+        /// Sequencer.</param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        Task SaveSequenceAsync(byte sequenceIndex, SequenceData sequence);
+
+        /// <summary>
+        /// Instructs the RGB LED Sequencer to clear all sequence data.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        Task ClearSequencesAsync();
     }
 }

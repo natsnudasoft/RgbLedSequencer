@@ -18,12 +18,13 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
 {
     using System;
     using System.Threading.Tasks;
-    using Extension;
     using Moq;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
+    using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary;
     using RgbLedSequencerLibrary.CommandInterface;
+    using RgbLedSequencerLibraryTests.Extension;
     using Xunit;
 
     public sealed class RgbLedSequencerTests
@@ -42,7 +43,9 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
         public void ConstructorSetsCorrectInitializedMembers(
             ConstructorInitializedMemberAssertion assertion)
         {
-            assertion.Verify(SutType.GetProperty(nameof(RgbLedSequencer.SerialPortAdapter)));
+            assertion.Verify(
+                SutType.GetProperty(nameof(RgbLedSequencer.SequencerConfig)),
+                SutType.GetProperty(nameof(RgbLedSequencer.PicaxeCommandInterface)));
         }
 
         [Theory]
@@ -54,113 +57,208 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
 
         [Theory]
         [AutoMoqData]
-        public async Task HandshakeSendsAndReceivesHandshakeSequenceAsync(Fixture fixture)
+        public async Task ContinueSendsCommandSequenceAsync(
+            [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
+            RgbLedSequencer sut)
         {
-            var serialPortAdapterMock = new Mock<ISerialPortAdapter>(MockBehavior.Strict);
-            fixture.Inject(serialPortAdapterMock);
-            var sequence = new MockSequence();
-            serialPortAdapterMock.InSequence(sequence).SetupSet(s => s.BreakState = true);
-            serialPortAdapterMock.InSequence(sequence).Setup(s => s.DiscardInBuffer());
-            serialPortAdapterMock.InSequence(sequence).SetupSet(s => s.BreakState = false);
-            serialPortAdapterMock.InSequence(sequence)
-                .Setup(s => s.ReadByteAsync())
-                .ReturnsAsync((byte)ReceiveInstruction.Handshake);
-            serialPortAdapterMock.InSequence(sequence)
-                .Setup(s => s.WriteByteAsync((byte)SendInstruction.Handshake))
-                .Returns(Task.CompletedTask);
-            var sut = fixture.Create<RgbLedSequencer>();
+            await sut.ContinueAsync().ConfigureAwait(false);
 
-            await sut.HandshakeAsync().ConfigureAwait(false);
-
-            serialPortAdapterMock
-                .Verify(s => s.WriteByteAsync((byte)SendInstruction.Handshake), Times.Once());
+            picaxeCommandInterfaceMock.Verify(s => s.HandshakeAsync(), Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendInstructionAsync(SendInstruction.Continue),
+                Times.Once());
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task SendByteWhenReadyChecksForReadyThenSendsByteAsync(
-            byte value,
-            Fixture fixture)
+        public async Task SleepSendsCommandSequenceAsync(
+            [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
+            RgbLedSequencer sut)
         {
-            var serialPortAdapterMock = new Mock<ISerialPortAdapter>(MockBehavior.Strict);
-            fixture.Inject(serialPortAdapterMock);
-            var sequence = new MockSequence();
-            serialPortAdapterMock.InSequence(sequence)
-                .Setup(s => s.ReadByteAsync())
-                .ReturnsAsync((byte)ReceiveInstruction.Ready);
-            serialPortAdapterMock.InSequence(sequence)
-                .Setup(s => s.WriteByteAsync(value))
-                .Returns(Task.CompletedTask);
-            var sut = fixture.Create<RgbLedSequencer>();
+            await sut.SleepAsync().ConfigureAwait(false);
 
-            await sut.SendByteWhenReadyAsync(value).ConfigureAwait(false);
-
-            serialPortAdapterMock.Verify(s => s.WriteByteAsync(value), Times.Once());
+            picaxeCommandInterfaceMock.Verify(s => s.HandshakeAsync(), Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendInstructionAsync(SendInstruction.Sleep),
+                Times.Once());
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task SendWordWhenReadyChecksForReadyThenSendsWordAsync(
-            ushort value,
-            Fixture fixture)
+        public void SetDotCorrectionHasCorrectGuardClauses(Fixture fixture)
         {
-            var serialPortAdapterMock = new Mock<ISerialPortAdapter>(MockBehavior.Strict);
-            fixture.Inject(serialPortAdapterMock);
-            var sequence = new MockSequence();
-            serialPortAdapterMock.InSequence(sequence)
-                .Setup(s => s.ReadByteAsync())
-                .ReturnsAsync((byte)ReceiveInstruction.Ready);
-            serialPortAdapterMock.InSequence(sequence)
-                .Setup(s => s.WriteByteAsync(unchecked((byte)value)))
-                .Returns(Task.CompletedTask);
-            serialPortAdapterMock.InSequence(sequence)
-                .Setup(s => s.ReadByteAsync())
-                .ReturnsAsync((byte)ReceiveInstruction.Ready);
-            serialPortAdapterMock.InSequence(sequence)
-                .Setup(s => s.WriteByteAsync(unchecked((byte)(value >> 8))))
-                .Returns(Task.CompletedTask);
-            var sut = fixture.Create<RgbLedSequencer>();
+            var assertion = new GuardClauseAssertion(
+                fixture,
+                new ParameterNullReferenceBehaviourExpectation(fixture));
 
-            await sut.SendWordWhenReadyAsync(value).ConfigureAwait(false);
-
-            serialPortAdapterMock
-                .Verify(s => s.WriteByteAsync(unchecked((byte)(value >> 8))), Times.Once());
+            assertion.Verify(SutType.GetMethod(nameof(RgbLedSequencer.SetDotCorrectionAsync)));
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task SendInstructionWritesInstructionByteAsync(
-            SendInstruction sendInstruction,
+        public async Task SetDotCorrectionSendsCommandSequenceAsync(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
             Fixture fixture)
         {
-            var serialPortAdapterMock = new Mock<ISerialPortAdapter>(MockBehavior.Strict);
-            fixture.Inject(serialPortAdapterMock);
-            var sequence = new MockSequence();
-            serialPortAdapterMock.InSequence(sequence)
-                .Setup(s => s.WriteByteAsync((byte)sendInstruction))
-                .Returns(Task.CompletedTask);
+            const int RgbLedCount = 5;
+            sequencerConfigMock.Setup(s => s.RgbLedCount).Returns(RgbLedCount);
+            var dotCorrection = fixture.Create<DotCorrectionData>();
             var sut = fixture.Create<RgbLedSequencer>();
 
-            await sut.SendInstructionAsync(sendInstruction).ConfigureAwait(false);
+            await sut.SetDotCorrectionAsync(dotCorrection).ConfigureAwait(false);
 
-            serialPortAdapterMock
-                .Verify(s => s.WriteByteAsync((byte)sendInstruction), Times.Once());
+            picaxeCommandInterfaceMock.Verify(s => s.HandshakeAsync(), Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendInstructionAsync(SendInstruction.SetDotCorrection),
+                Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendByteWhenReadyAsync(It.IsAny<byte>()),
+                Times.Exactly(RgbLedCount * 3));
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task UnexpectedInstructionReceivedThrowsAsync(
-            Mock<ISerialPortAdapter> serialPortAdapterMock,
+        public void PlaySequenceHasCorrectGuardClauses(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
-            serialPortAdapterMock
-                .Setup(s => s.ReadByteAsync())
-                .ReturnsAsync((byte)ReceiveInstruction.Undefined);
+            const int SequenceCount = 10;
+            sequencerConfigMock.Setup(c => c.SequenceCount).Returns(SequenceCount);
+#pragma warning disable SA1118 // Parameter must not span multiple lines
+            var behaviourExpectation = new CompositeBehaviorExpectation(
+                new ExceptionBehaviourExpectation<ArgumentOutOfRangeException>(
+                    fixture,
+                    "sequenceIndex",
+                    (byte)(SequenceCount + 1)));
+#pragma warning restore SA1118 // Parameter must not span multiple lines
+            var assertion = new GuardClauseAssertion(fixture, behaviourExpectation);
+            assertion.Verify(SutType.GetMethod(nameof(RgbLedSequencer.PlaySequenceAsync)));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task PlaySequenceSendsCommandSequenceAsync(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
+            Fixture fixture)
+        {
+            const byte SequenceIndex = 5;
+            const int SequenceCount = 10;
+            sequencerConfigMock.Setup(s => s.SequenceCount).Returns(SequenceCount);
             var sut = fixture.Create<RgbLedSequencer>();
 
-            var ex = await Record.ExceptionAsync(() => sut.HandshakeAsync()).ConfigureAwait(false);
+            await sut.PlaySequenceAsync(SequenceIndex).ConfigureAwait(false);
 
-            Assert.IsType<UnexpectedInstructionException>(ex);
+            picaxeCommandInterfaceMock.Verify(s => s.HandshakeAsync(), Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendInstructionAsync(SendInstruction.PlaySequence),
+                Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendByteWhenReadyAsync(SequenceIndex),
+                Times.Once());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void SaveSequenceHasCorrectGuardClauses(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
+        {
+            const int RgbLedCount = 5;
+            const byte SequenceIndex = 5;
+            const int SequenceCount = 10;
+            const int MaxStepCount = 8;
+            const int StepCount = 5;
+            sequencerConfigMock.Setup(s => s.RgbLedCount).Returns(RgbLedCount);
+            sequencerConfigMock.Setup(s => s.SequenceCount).Returns(SequenceCount);
+            sequencerConfigMock.Setup(s => s.MaxStepCount).Returns(MaxStepCount);
+            ApplySequenceIndexSpecimen(fixture, SequenceIndex);
+            ApplyStepCountSpecimen(fixture, StepCount);
+#pragma warning disable SA1118 // Parameter must not span multiple lines
+            var behaviourExpectation = new CompositeBehaviorExpectation(
+                new ParameterNullReferenceBehaviourExpectation(fixture),
+                new ExceptionBehaviourExpectation<ArgumentOutOfRangeException>(
+                    fixture,
+                    "sequenceIndex",
+                    (byte)(SequenceCount + 1)));
+#pragma warning restore SA1118 // Parameter must not span multiple lines
+            var assertion = new GuardClauseAssertion(fixture, behaviourExpectation);
+            assertion.Verify(SutType.GetMethod(nameof(RgbLedSequencer.SaveSequenceAsync)));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task SaveSequenceSendsCommandSequenceAsync(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
+            Fixture fixture)
+        {
+            const int RgbLedCount = 5;
+            const byte SequenceIndex = 5;
+            const int SequenceCount = 10;
+            const int MaxStepCount = 8;
+            const int StepCount = 5;
+            sequencerConfigMock.Setup(s => s.RgbLedCount).Returns(RgbLedCount);
+            sequencerConfigMock.Setup(s => s.SequenceCount).Returns(SequenceCount);
+            sequencerConfigMock.Setup(s => s.MaxStepCount).Returns(MaxStepCount);
+            ApplyStepCountSpecimen(fixture, StepCount);
+            var sequence = fixture.Create<SequenceData>();
+            var sut = fixture.Create<RgbLedSequencer>();
+
+            await sut.SaveSequenceAsync(SequenceIndex, sequence).ConfigureAwait(false);
+
+            picaxeCommandInterfaceMock.Verify(s => s.HandshakeAsync(), Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendInstructionAsync(SendInstruction.SaveSequence),
+                Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendByteWhenReadyAsync(It.IsAny<byte>()),
+                Times.Exactly((RgbLedCount * 3 * StepCount) + 1));
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendWordWhenReadyAsync(It.IsAny<int>()),
+                Times.Exactly(StepCount + 1));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task ClearSequencesSendsCommandSequenceAsync(
+            [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
+            RgbLedSequencer sut)
+        {
+            await sut.ClearSequencesAsync().ConfigureAwait(false);
+
+            picaxeCommandInterfaceMock.Verify(s => s.HandshakeAsync(), Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendInstructionAsync(SendInstruction.ClearSequences),
+                Times.Once());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task CommandReportsProgressAsync(
+            [Frozen]Mock<IProgress<CommandProgress>> progress,
+            [Greedy]RgbLedSequencer sut)
+        {
+            await sut.ContinueAsync().ConfigureAwait(false);
+
+            progress.Verify(p => p.Report(It.IsAny<CommandProgress>()), Times.AtLeastOnce());
+        }
+
+        private static void ApplySequenceIndexSpecimen(IFixture fixture, byte sequenceIndex)
+        {
+            fixture.Customizations.Add(new ParameterSpecimenBuilder(
+                SutType,
+                nameof(sequenceIndex),
+                sequenceIndex));
+        }
+
+        private static void ApplyStepCountSpecimen(IFixture fixture, int stepCount)
+        {
+            fixture.Customizations.Add(new ParameterSpecimenBuilder(
+                typeof(SequenceData),
+                nameof(stepCount),
+                stepCount));
         }
     }
 }

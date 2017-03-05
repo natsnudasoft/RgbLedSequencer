@@ -105,20 +105,13 @@
     <Compile Include="..\..\..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="CommandInterface\CommandExecutionManagerTests.cs" />
     <Compile Include="CommandInterface\CommandProgressTests.cs" />
-    <Compile Include="CommandInterface\RgbLedSequencerCommandTests.cs" />
+    <Compile Include="CommandInterface\PicaxeCommandInterfaceTests.cs" />
     <Compile Include="CommandInterface\RgbLedSequencerTests.cs" />
     <Compile Include="CommandInterface\UnexpectedInstructionExceptionTests.cs" />
     <Compile Include="Extension\AsyncMethodInvokeCommand.cs" />
     <Compile Include="Extension\AutoMoqDataAttribute.cs" />
     <Compile Include="BaudRateValidatorTests.cs" />
-    <Compile Include="CommandInterface\ClearCommandTests.cs" />
-    <Compile Include="CommandInterface\ContinueCommandTests.cs" />
-    <Compile Include="CommandInterface\PlaySequenceCommandTests.cs" />
-    <Compile Include="CommandInterface\SaveSequenceCommandTests.cs" />
-    <Compile Include="CommandInterface\SetDotCorrectionCommandTests.cs" />
-    <Compile Include="CommandInterface\SleepCommandTests.cs" />
     <Compile Include="DotCorrectionDataTests.cs" />
     <Compile Include="Extension\DoesNotThrowAssertion.cs" />
     <Compile Include="Extension\ExceptionBehaviourExpectation.cs" />
