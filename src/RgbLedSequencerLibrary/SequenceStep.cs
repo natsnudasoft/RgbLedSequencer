@@ -41,7 +41,7 @@ namespace RgbLedSequencerLibrary
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
         /// <param name="grayscaleDataFactory">The factory to use to create instances of
-        /// <see cref="GrayscaleData"/>.</param>
+        /// <see cref="RgbLedSequencerLibrary.GrayscaleData"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
         /// <paramref name="grayscaleDataFactory"/> is <see langword="null"/>.</exception>
         public SequenceStep(

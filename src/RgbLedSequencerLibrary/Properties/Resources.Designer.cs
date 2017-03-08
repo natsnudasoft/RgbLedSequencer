@@ -79,15 +79,6 @@ namespace RgbLedSequencerLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sending dot correction data for LED {0}..
-        /// </summary>
-        internal static string DotCorrectionDataProgress {
-            get {
-                return ResourceManager.GetString("DotCorrectionDataProgress", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Performing handshake with device..
         /// </summary>
         internal static string HandshakeProgress {
@@ -124,11 +115,20 @@ namespace RgbLedSequencerLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sending dot correction data for LED {0}..
+        /// </summary>
+        internal static string SendDotCorrectionDataProgress {
+            get {
+                return ResourceManager.GetString("SendDotCorrectionDataProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sending sequence data for step {0}, LED {1}..
         /// </summary>
-        internal static string SequenceDataProgress {
+        internal static string SendSequenceDataProgress {
             get {
-                return ResourceManager.GetString("SequenceDataProgress", resourceCulture);
+                return ResourceManager.GetString("SendSequenceDataProgress", resourceCulture);
             }
         }
         

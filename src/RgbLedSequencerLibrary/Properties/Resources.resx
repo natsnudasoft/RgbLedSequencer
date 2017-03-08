@@ -123,9 +123,6 @@
   <data name="ContinueComplete" xml:space="preserve">
     <value>Continue command sent.</value>
   </data>
-  <data name="DotCorrectionDataProgress" xml:space="preserve">
-    <value>Sending dot correction data for LED {0}.</value>
-  </data>
   <data name="HandshakeProgress" xml:space="preserve">
     <value>Performing handshake with device.</value>
   </data>
@@ -138,7 +135,10 @@
   <data name="SaveSequenceComplete" xml:space="preserve">
     <value>Sequence data sent.</value>
   </data>
-  <data name="SequenceDataProgress" xml:space="preserve">
+  <data name="SendDotCorrectionDataProgress" xml:space="preserve">
+    <value>Sending dot correction data for LED {0}.</value>
+  </data>
+  <data name="SendSequenceDataProgress" xml:space="preserve">
     <value>Sending sequence data for step {0}, LED {1}.</value>
   </data>
   <data name="SetDotCorrectionComplete" xml:space="preserve">

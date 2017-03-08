@@ -17,7 +17,9 @@
 namespace RgbLedSequencerLibraryTests
 {
     using System;
+    using System.Linq;
     using Extension;
+    using Helper;
     using Moq;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
@@ -31,15 +33,42 @@ namespace RgbLedSequencerLibraryTests
 
         [Theory]
         [AutoMoqData]
-        public void ConstructorHasCorrectGuardClauses(GuardClauseAssertion assertion)
+        public void ConstructorHasCorrectGuardClauses(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
         {
+            var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
+#pragma warning disable SA1118 // Parameter must not span multiple lines
+            var behaviourExpectation = new CompositeBehaviorExpectation(
+                new ParameterNullReferenceBehaviourExpectation(fixture),
+                new ExceptionBehaviourExpectation<ArgumentException>(
+                    fixture,
+                    "ledDotCorrections",
+                    fixture.CreateMany<LedDotCorrection>(customization.RgbLedCount + 1).ToArray(),
+                    fixture.CreateMany<LedDotCorrection>(customization.RgbLedCount - 1).ToArray()));
+#pragma warning restore SA1118 // Parameter must not span multiple lines
+            var assertion = new GuardClauseAssertion(fixture, behaviourExpectation);
+
             assertion.Verify(SutType.GetConstructors());
         }
 
         [Theory]
         [AutoMoqData]
-        public void ConstructorDoesNotThrow(DoesNotThrowAssertion assertion)
+        public void ConstructorDoesNotThrow(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            DoesNotThrowAssertion assertion,
+            Fixture fixture)
         {
+            var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
+
             assertion.Verify(SutType.GetConstructors());
         }
 
@@ -49,11 +78,14 @@ namespace RgbLedSequencerLibraryTests
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
-            const int RgbLedCount = 5;
-            sequencerConfigMock.Setup(c => c.RgbLedCount).Returns(RgbLedCount);
+            var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
             var sut = fixture.Create<DotCorrectionData>();
 
-            for (int i = 0; i < RgbLedCount; ++i)
+            for (int i = 0; i < customization.RgbLedCount; ++i)
             {
                 Assert.IsType<LedDotCorrection>(sut[i]);
                 Assert.NotNull(sut[i]);
@@ -62,9 +94,17 @@ namespace RgbLedSequencerLibraryTests
 
         [Theory]
         [AutoMoqData]
-        public void IndexerInvalidValueThrows(DotCorrectionData sut)
+        public void IndexerInvalidValueThrows(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
         {
-            var ex = Record.Exception(() => sut[0]);
+            var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
+            var sut = fixture.Create<DotCorrectionData>();
+            var ex = Record.Exception(() => sut[customization.RgbLedCount]);
 
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
@@ -73,10 +113,14 @@ namespace RgbLedSequencerLibraryTests
         [AutoMoqData]
         public void DebuggerDisplayDoesNotThrow(
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
-            DoesNotThrowAssertion assertion)
+            DoesNotThrowAssertion assertion,
+            Fixture fixture)
         {
-            const int RgbLedCount = 5;
-            sequencerConfigMock.Setup(c => c.RgbLedCount).Returns(RgbLedCount);
+            var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
 
             assertion.Verify(SutType.GetProperty(nameof(DotCorrectionData.DebuggerDisplay)));
         }

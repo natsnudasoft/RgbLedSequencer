@@ -61,16 +61,12 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="BaudRateValidator.cs" />
-    <Compile Include="CommandInterface\ClearCommand.cs" />
-    <Compile Include="CommandInterface\CommandExecutionManager.cs" />
     <Compile Include="CommandInterface\CommandProgress.cs" />
-    <Compile Include="CommandInterface\ContinueCommand.cs" />
-    <Compile Include="CommandInterface\IAsyncCommand.cs" />
-    <Compile Include="CommandInterface\SleepCommand.cs" />
+    <Compile Include="CommandInterface\IRgbLedSequencer.cs" />
+    <Compile Include="CommandInterface\RgbLedSequencer.cs" />
     <Compile Include="SerialPortElement.cs" />
     <Compile Include="IRgbLedSequencerConfiguration.cs" />
     <Compile Include="ParameterValidation.cs" />
-    <Compile Include="CommandInterface\PlaySequenceCommand.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -78,21 +74,18 @@
     </Compile>
     <Compile Include="LedGrayscale.cs" />
     <Compile Include="DotCorrectionData.cs" />
-    <Compile Include="CommandInterface\IRgbLedSequencer.cs" />
+    <Compile Include="CommandInterface\IPicaxeCommandInterface.cs" />
     <Compile Include="ISerialPortAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LedDotCorrection.cs" />
-    <Compile Include="CommandInterface\RgbLedSequencer.cs" />
+    <Compile Include="CommandInterface\PicaxeCommandInterface.cs" />
     <Compile Include="GrayscaleData.cs" />
-    <Compile Include="CommandInterface\RgbLedSequencerCommand.cs" />
     <Compile Include="RgbLedSequencerSection.cs" />
-    <Compile Include="CommandInterface\SaveSequenceCommand.cs" />
     <Compile Include="SequenceData.cs" />
     <Compile Include="CommandInterface\SendInstruction.cs" />
     <Compile Include="CommandInterface\ReceiveInstruction.cs" />
     <Compile Include="SerialPortAdapter.cs" />
     <Compile Include="SequenceStep.cs" />
-    <Compile Include="CommandInterface\SetDotCorrectionCommand.cs" />
     <Compile Include="CommandInterface\UnexpectedInstructionException.cs" />
     <Compile Include="ValidatedNotNullAttribute.cs" />
   </ItemGroup>

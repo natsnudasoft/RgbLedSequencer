@@ -17,8 +17,8 @@
 namespace RgbLedSequencerLibraryTests
 {
     using System;
-    using System.Collections.Generic;
     using Extension;
+    using Helper;
     using Moq;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
@@ -32,49 +32,92 @@ namespace RgbLedSequencerLibraryTests
 
         [Theory]
         [AutoMoqData]
-        public void ConstructorHasCorrectGuardClauses(GuardClauseAssertion assertion)
+        public void ConstructorHasCorrectGuardClauses(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
         {
+            var customization = new SequenceStepCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxStepDelay = 1000,
+                StepDelay = 500
+            };
+            fixture.Customize(customization);
+            var behaviourExpectation = new ParameterNullReferenceBehaviourExpectation(fixture);
+            var assertion = new GuardClauseAssertion(fixture, behaviourExpectation);
+
             assertion.Verify(SutType.GetConstructors());
         }
 
         [Theory]
         [AutoMoqData]
         public void ConstructorSetsCorrectInitializedMembers(
-            [Frozen]GrayscaleData grayscaleData,
-            SequenceStep sut)
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
         {
+            var customization = new GrayscaleDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
+            var grayscaleData = fixture.Create<GrayscaleData>();
+            Func<GrayscaleData> grayscaleDataFactory = () => grayscaleData;
+            var sut = new SequenceStep(sequencerConfigMock.Object, grayscaleDataFactory);
+
             Assert.Equal(grayscaleData, sut.GrayscaleData);
         }
 
         [Theory]
         [AutoMoqData]
-        public void ConstructorDoesNotThrow(DoesNotThrowAssertion assertion)
+        public void ConstructorDoesNotThrow(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            DoesNotThrowAssertion assertion,
+            Fixture fixture)
         {
+            var customization = new SequenceStepCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxStepDelay = 1000,
+                StepDelay = 500
+            };
+            fixture.Customize(customization);
+
             assertion.Verify(SutType.GetConstructors());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void WritablePropertiesAreCorrectlyImplemented(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            WritablePropertyAssertion assertion,
+            Fixture fixture)
+        {
+            var customization = new SequenceStepCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxStepDelay = int.MaxValue,
+                StepDelay = 500
+            };
+            fixture.Customize(customization);
+
+            assertion.Verify(
+                SutType.GetProperty(nameof(SequenceStep.StepDelay)));
         }
 
         [Theory]
         [AutoMoqData]
         public void StepDelayChangesPropertyChangedIsRaised(
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            PropertyChangedRaisedAssertion assertion,
             Fixture fixture)
         {
-            const string PropertyName = nameof(SequenceStep.StepDelay);
-            const byte MaxStepDelay = 100;
-            fixture.Customizations.Add(new RandomNumericSequenceGenerator(1, MaxStepDelay));
-            var propertyValue = fixture.Create<byte>();
-            sequencerConfigMock.Setup(c => c.MaxStepDelay).Returns(MaxStepDelay);
-            var sut = fixture.Build<SequenceStep>().OmitAutoProperties().Create();
-            var receivedEvents = new List<string>();
-            sut.PropertyChanged += (s, e) =>
+            var customization = new SequenceStepCustomization(sequencerConfigMock)
             {
-                receivedEvents.Add(e.PropertyName);
+                MaxStepDelay = int.MaxValue
             };
+            fixture.Customize(customization);
 
-            sut.StepDelay = propertyValue;
-
-            Assert.Equal(1, receivedEvents.Count);
-            Assert.Equal(PropertyName, receivedEvents[0]);
+            assertion.Verify(SutType.GetProperty(nameof(SequenceStep.StepDelay)));
         }
 
         [Theory]
@@ -85,25 +128,36 @@ namespace RgbLedSequencerLibraryTests
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
-            const string PropertyName = nameof(SequenceStep.StepDelay);
-            const byte MaxStepDelay = 50;
-            sequencerConfigMock.Setup(c => c.MaxStepDelay).Returns(MaxStepDelay);
+            var customization = new SequenceStepCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxStepDelay = 50,
+                StepDelay = 0
+            };
+            fixture.Customize(customization);
             var sut = fixture.Create<SequenceStep>();
+            const string PropertyName = nameof(SequenceStep.StepDelay);
 
             SutType.GetProperty(PropertyName).SetValue(sut, value);
             var actualValue = (int)SutType.GetProperty(PropertyName).GetValue(sut);
 
-            Assert.InRange(actualValue, 0, MaxStepDelay);
+            Assert.InRange(actualValue, 0, customization.MaxStepDelay);
         }
 
         [Theory]
         [AutoMoqData]
         public void DebuggerDisplayDoesNotThrow(
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
-            DoesNotThrowAssertion assertion)
+            DoesNotThrowAssertion assertion,
+            Fixture fixture)
         {
-            const int RgbLedCount = 5;
-            sequencerConfigMock.Setup(c => c.RgbLedCount).Returns(RgbLedCount);
+            var customization = new SequenceStepCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxStepDelay = 50,
+                StepDelay = 0
+            };
+            fixture.Customize(customization);
 
             assertion.Verify(SutType.GetProperty(nameof(SequenceStep.DebuggerDisplay)));
         }

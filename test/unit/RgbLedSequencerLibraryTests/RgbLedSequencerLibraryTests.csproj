@@ -105,27 +105,28 @@
     <Compile Include="..\..\..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="CommandInterface\CommandExecutionManagerTests.cs" />
     <Compile Include="CommandInterface\CommandProgressTests.cs" />
-    <Compile Include="CommandInterface\RgbLedSequencerCommandTests.cs" />
+    <Compile Include="CommandInterface\PicaxeCommandInterfaceTests.cs" />
     <Compile Include="CommandInterface\RgbLedSequencerTests.cs" />
     <Compile Include="CommandInterface\UnexpectedInstructionExceptionTests.cs" />
     <Compile Include="Extension\AsyncMethodInvokeCommand.cs" />
     <Compile Include="Extension\AutoMoqDataAttribute.cs" />
     <Compile Include="BaudRateValidatorTests.cs" />
-    <Compile Include="CommandInterface\ClearCommandTests.cs" />
-    <Compile Include="CommandInterface\ContinueCommandTests.cs" />
-    <Compile Include="CommandInterface\PlaySequenceCommandTests.cs" />
-    <Compile Include="CommandInterface\SaveSequenceCommandTests.cs" />
-    <Compile Include="CommandInterface\SetDotCorrectionCommandTests.cs" />
-    <Compile Include="CommandInterface\SleepCommandTests.cs" />
     <Compile Include="DotCorrectionDataTests.cs" />
     <Compile Include="Extension\DoesNotThrowAssertion.cs" />
     <Compile Include="Extension\ExceptionBehaviourExpectation.cs" />
     <Compile Include="Extension\ParameterNullReferenceBehaviourExpectation.cs" />
     <Compile Include="Extension\GuardClauseExtensions.cs" />
+    <Compile Include="Extension\ParameterTypeFavoringConstructorQuery.cs" />
+    <Compile Include="Extension\PropertyChangedRaisedAssertion.cs" />
+    <Compile Include="Extension\PropertyChangedRaisedException.cs" />
     <Compile Include="GrayscaleDataTests.cs" />
     <Compile Include="Extension\InlineAutoMoqDataAttribute.cs" />
+    <Compile Include="Helper\DotCorrectionDataCustomization.cs" />
+    <Compile Include="Helper\GrayscaleDataCustomization.cs" />
+    <Compile Include="Helper\SequenceDataCustomization.cs" />
+    <Compile Include="Helper\SequencerConfigurationCustomization.cs" />
+    <Compile Include="Helper\SequenceStepCustomization.cs" />
     <Compile Include="LedDotCorrectionTests.cs" />
     <Compile Include="LedGrayscaleTests.cs" />
     <Compile Include="Extension\ParameterAttribute.cs" />

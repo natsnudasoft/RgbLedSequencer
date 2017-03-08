@@ -17,7 +17,9 @@
 namespace RgbLedSequencerLibraryTests
 {
     using System;
+    using System.Linq;
     using Extension;
+    using Helper;
     using Moq;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
@@ -35,16 +37,30 @@ namespace RgbLedSequencerLibraryTests
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
-            const int MaxStepCount = 770;
-            sequencerConfigMock.Setup(c => c.MaxStepCount).Returns(MaxStepCount);
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxStepCount = 770,
+                StepCount = 10,
+                MaxStepDelay = 1000,
+                StepDelay = 500
+            };
+            fixture.Customize(customization);
 #pragma warning disable SA1118 // Parameter must not span multiple lines
             var behaviourExpectation = new CompositeBehaviorExpectation(
                 new ParameterNullReferenceBehaviourExpectation(fixture),
                 new ExceptionBehaviourExpectation<ArgumentOutOfRangeException>(
                     fixture,
                     "stepCount",
-                    771,
-                    -1));
+                    customization.MaxStepCount + 1,
+                    -1),
+                new ExceptionBehaviourExpectation<ArgumentException>(
+                    fixture,
+                    "sequenceSteps",
+                    new[]
+                    {
+                        fixture.CreateMany<SequenceStep>(customization.MaxStepCount + 1).ToArray()
+                    }));
 #pragma warning restore SA1118 // Parameter must not span multiple lines
             var assertion = new GuardClauseAssertion(fixture, behaviourExpectation);
 
@@ -55,10 +71,14 @@ namespace RgbLedSequencerLibraryTests
         [AutoMoqData]
         public void ConstructorSetsCorrectInitializedMembers(
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
-            ConstructorInitializedMemberAssertion assertion)
+            ConstructorInitializedMemberAssertion assertion,
+            Fixture fixture)
         {
-            const int MaxStepCount = int.MaxValue;
-            sequencerConfigMock.Setup(c => c.MaxStepCount).Returns(MaxStepCount);
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                MaxStepCount = int.MaxValue,
+            };
+            fixture.Customize(customization);
 
             assertion.Verify(SutType.GetProperty(nameof(SequenceData.StepCount)));
         }
@@ -67,10 +87,14 @@ namespace RgbLedSequencerLibraryTests
         [AutoMoqData]
         public void ConstructorDoesNotThrow(
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
-            DoesNotThrowAssertion assertion)
+            DoesNotThrowAssertion assertion,
+            Fixture fixture)
         {
-            const int MaxStepCount = int.MaxValue;
-            sequencerConfigMock.Setup(c => c.MaxStepCount).Returns(MaxStepCount);
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                MaxStepCount = int.MaxValue,
+            };
+            fixture.Customize(customization);
 
             assertion.Verify(SutType.GetConstructors());
         }
@@ -81,13 +105,15 @@ namespace RgbLedSequencerLibraryTests
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
-            const int MaxStepCount = 770;
-            const int StepCount = 5;
-            sequencerConfigMock.Setup(c => c.MaxStepCount).Returns(MaxStepCount);
-            ApplyStepCountSpecimen(fixture, StepCount);
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                MaxStepCount = 770,
+                StepCount = 5
+            };
+            fixture.Customize(customization);
             var sut = fixture.Create<SequenceData>();
 
-            var ex = Record.Exception(() => sut[StepCount]);
+            var ex = Record.Exception(() => sut[customization.StepCount.Value]);
 
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
@@ -98,13 +124,15 @@ namespace RgbLedSequencerLibraryTests
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
-            const int MaxStepCount = 770;
-            const int StepCount = 8;
-            sequencerConfigMock.Setup(c => c.MaxStepCount).Returns(MaxStepCount);
-            ApplyStepCountSpecimen(fixture, StepCount);
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                MaxStepCount = 770,
+                StepCount = 8
+            };
+            fixture.Customize(customization);
             var sut = fixture.Create<SequenceData>();
 
-            for (int i = 0; i < StepCount; ++i)
+            for (int i = 0; i < customization.StepCount; ++i)
             {
                 Assert.IsType<SequenceStep>(sut[i]);
                 Assert.NotNull(sut[i]);
@@ -118,22 +146,14 @@ namespace RgbLedSequencerLibraryTests
             DoesNotThrowAssertion assertion,
             Fixture fixture)
         {
-            const int MaxStepCount = 770;
-            const int StepCount = 5;
-            sequencerConfigMock.Setup(c => c.MaxStepCount).Returns(MaxStepCount);
-            ApplyStepCountSpecimen(fixture, StepCount);
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                MaxStepCount = 770,
+                StepCount = 9
+            };
+            fixture.Customize(customization);
 
             assertion.Verify(SutType.GetProperty(nameof(SequenceData.DebuggerDisplay)));
-        }
-
-        private static void ApplyStepCountSpecimen(
-            IFixture fixture,
-            int stepCount)
-        {
-            fixture.Customizations.Add(new ParameterSpecimenBuilder(
-                SutType,
-                nameof(stepCount),
-                stepCount));
         }
     }
 }
