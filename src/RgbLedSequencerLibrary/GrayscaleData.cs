@@ -35,6 +35,35 @@ namespace RgbLedSequencerLibrary
         /// </summary>
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
+        /// <param name="ledGrayscales">The <see cref="LedGrayscale"/> array that represents
+        /// the grayscale value of a number of RGB LEDs.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
+        /// <paramref name="ledGrayscales"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">The length of the <paramref name="ledGrayscales"/>
+        /// array does not match the number of RGB LEDs.</exception>
+        public GrayscaleData(
+            IRgbLedSequencerConfiguration sequencerConfig,
+            LedGrayscale[] ledGrayscales)
+        {
+            ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
+            ParameterValidation.IsNotNull(ledGrayscales, nameof(ledGrayscales));
+            if (ledGrayscales.Length != sequencerConfig.RgbLedCount)
+            {
+                throw new ArgumentException(
+                    "Array length must match the number of RGB LEDs.",
+                    nameof(ledGrayscales));
+            }
+
+            this.ledGrayscales = ledGrayscales;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GrayscaleData"/> class, using the
+        /// specified factory to create the number of <see cref="LedGrayscale"/> instances
+        /// defined in the specified <see cref="IRgbLedSequencerConfiguration"/>.
+        /// </summary>
+        /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
+        /// describes the configuration of the RGB LED Sequencer.</param>
         /// <param name="ledGrayscaleFactory">The factory to use to create instances of
         /// <see cref="LedGrayscale"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or

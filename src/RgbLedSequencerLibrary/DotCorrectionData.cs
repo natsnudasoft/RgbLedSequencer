@@ -35,6 +35,36 @@ namespace RgbLedSequencerLibrary
         /// </summary>
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
+        /// <param name="ledDotCorrections">The <see cref="LedDotCorrection"/> array that represents
+        /// the dot correction value of a number of RGB LEDs.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
+        /// <paramref name="ledDotCorrections"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">The length of the
+        /// <paramref name="ledDotCorrections"/> array does not match the number of RGB LEDs.
+        /// </exception>
+        public DotCorrectionData(
+            IRgbLedSequencerConfiguration sequencerConfig,
+            LedDotCorrection[] ledDotCorrections)
+        {
+            ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
+            ParameterValidation.IsNotNull(ledDotCorrections, nameof(ledDotCorrections));
+            if (ledDotCorrections.Length != sequencerConfig.RgbLedCount)
+            {
+                throw new ArgumentException(
+                    "Array length must match the number of RGB LEDs.",
+                    nameof(ledDotCorrections));
+            }
+
+            this.ledDotCorrections = ledDotCorrections;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DotCorrectionData"/> class, using the
+        /// specified factory to create the number of <see cref="LedDotCorrection"/> instances
+        /// defined in the specified <see cref="IRgbLedSequencerConfiguration"/>.
+        /// </summary>
+        /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
+        /// describes the configuration of the RGB LED Sequencer.</param>
         /// <param name="ledDotCorrectionFactory">The factory to use to create instances of
         /// <see cref="LedDotCorrection"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or

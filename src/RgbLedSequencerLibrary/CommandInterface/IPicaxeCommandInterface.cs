@@ -53,5 +53,21 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// Sequencer.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
         Task SendInstructionAsync(SendInstruction instruction);
+
+        /// <summary>
+        /// Reads a byte from the RGB LED Sequencer.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation. The
+        /// result of the <see cref="Task{TResult}"/> contains the byte that was read from the RGB
+        /// LED Sequencer.</returns>
+        Task<byte> ReadByteAsync();
+
+        /// <summary>
+        /// Reads a word (16 bit unsigned value) from the RGB LED Sequencer.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation. The
+        /// result of the <see cref="Task{TResult}"/> contains the word that was read from the RGB
+        /// LED Sequencer.</returns>
+        Task<int> ReadWordAsync();
     }
 }

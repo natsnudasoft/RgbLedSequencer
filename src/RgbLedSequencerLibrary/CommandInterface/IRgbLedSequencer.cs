@@ -37,6 +37,14 @@ namespace RgbLedSequencerLibrary.CommandInterface
         Task SleepAsync();
 
         /// <summary>
+        /// Reads the dot correction data currently stored in the RGB LED Sequencer.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation. The
+        /// result of the <see cref="Task{TResult}"/> contains the <see cref="DotCorrectionData"/>
+        /// that was read from the RGB LED Sequencer.</returns>
+        Task<DotCorrectionData> ReadDotCorrectionAsync();
+
+        /// <summary>
         /// Sends the specified <see cref="DotCorrectionData"/> to the RGB LED Sequencer.
         /// </summary>
         /// <param name="dotCorrection">The <see cref="DotCorrectionData"/> data to send to the RGB
@@ -51,6 +59,16 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// Sequencer.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
         Task PlaySequenceAsync(byte sequenceIndex);
+
+        /// <summary>
+        /// Reads the sequence at the specified index from the RGB LED Sequencer.
+        /// </summary>
+        /// <param name="sequenceIndex">The index of the sequence to begin playing on the RGB LED
+        /// Sequencer.</param>
+        /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation. The
+        /// result of the <see cref="Task{TResult}"/> contains the <see cref="SequenceData"/> that
+        /// was read from the RGB LED Sequencer.</returns>
+        Task<SequenceData> ReadSequenceAsync(byte sequenceIndex);
 
         /// <summary>
         /// Saves the specified <see cref="SequenceData"/> to the RGB LED Sequencer at the specified

@@ -107,6 +107,26 @@ namespace RgbLedSequencerLibrary.CommandInterface
             return this.SerialPortAdapter.WriteByteAsync((byte)instruction);
         }
 
+        /// <inheritdoc/>
+        /// <exception cref="TimeoutException">A read or write operation timed out.</exception>
+        /// <exception cref="InvalidOperationException">The underlying port is not open.</exception>
+        public Task<byte> ReadByteAsync()
+        {
+            return this.SerialPortAdapter.ReadByteAsync();
+        }
+
+        /// <inheritdoc/>
+        /// <exception cref="TimeoutException">A read or write operation timed out.</exception>
+        /// <exception cref="InvalidOperationException">The underlying port is not open.</exception>
+        public async Task<int> ReadWordAsync()
+        {
+            const int ByteSize = 8;
+            int word = await this.SerialPortAdapter.ReadByteAsync().ConfigureAwait(false);
+            word |= await this.SerialPortAdapter.ReadByteAsync().ConfigureAwait(false)
+                << ByteSize;
+            return word;
+        }
+
         private async Task CheckReceivedInstructionAsync(ReceiveInstruction expectedInstruction)
         {
             var receivedInstruction = (ReceiveInstruction)await this.SerialPortAdapter

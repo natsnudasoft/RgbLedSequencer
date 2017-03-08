@@ -128,6 +128,40 @@ namespace RgbLedSequencerLibrary.CommandInterface
         }
 
         /// <inheritdoc/>
+        /// <exception cref="TimeoutException">A read or write operation timed out.</exception>
+        /// <exception cref="InvalidOperationException">The underlying port is not open, or the
+        /// underlying stream of the port is closed.</exception>
+        /// <exception cref="IOException">The underlying port is in an invalid state, or an attempt
+        /// to set the state of the underlying port failed.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
+        public async Task<DotCorrectionData> ReadDotCorrectionAsync()
+        {
+#pragma warning disable MEN010 // Avoid magic numbers
+            this.ReportProgress(new CommandProgress(0d, Resources.HandshakeProgress));
+            await this.PicaxeCommandInterface.HandshakeAsync().ConfigureAwait(false);
+            await this.PicaxeCommandInterface
+                .SendInstructionAsync(SendInstruction.ReadDotCorrection)
+                .ConfigureAwait(false);
+
+            var rgbLedCount = this.SequencerConfig.RgbLedCount;
+            var ledDotCorrections = new LedDotCorrection[rgbLedCount];
+            for (int ledIndex = rgbLedCount - 1; ledIndex >= 0; --ledIndex)
+            {
+                this.ReportProgress(new CommandProgress(
+                    CalculateDotCorrectionProgress(this.SequencerConfig.RgbLedCount, ledIndex),
+                    GetReadDotCorrectionProgressMessage(ledIndex)));
+                ledDotCorrections[ledIndex] = await this.ReadLedDotCorrectionAsync()
+                    .ConfigureAwait(false);
+            }
+
+            this.ReportProgress(new CommandProgress(100d, Resources.ReadDotCorrectionComplete));
+#pragma warning restore MEN010 // Avoid magic numbers
+
+            return new DotCorrectionData(this.SequencerConfig, ledDotCorrections);
+        }
+
+        /// <inheritdoc/>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="dotCorrection"/> is not a
         /// valid value.</exception>
         /// <exception cref="TimeoutException">A read or write operation timed out.</exception>
@@ -189,6 +223,47 @@ namespace RgbLedSequencerLibrary.CommandInterface
                 .ConfigureAwait(false);
             this.ReportProgress(new CommandProgress(100d, Resources.PlaySequenceComplete));
 #pragma warning restore MEN010 // Avoid magic numbers
+        }
+
+        /// <inheritdoc/>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="sequenceIndex"/> is not a
+        /// valid value.</exception>
+        /// <exception cref="TimeoutException">A read or write operation timed out.</exception>
+        /// <exception cref="InvalidOperationException">The underlying port is not open, or the
+        /// underlying stream of the port is closed.</exception>
+        /// <exception cref="IOException">The underlying port is in an invalid state, or an attempt
+        /// to set the state of the underlying port failed.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
+        public async Task<SequenceData> ReadSequenceAsync(byte sequenceIndex)
+        {
+            ParameterValidation.IsBetweenInclusive(
+                sequenceIndex,
+                0,
+                Math.Max(0, this.SequencerConfig.SequenceCount - 1),
+                nameof(sequenceIndex));
+
+#pragma warning disable MEN010 // Avoid magic numbers
+            this.ReportProgress(new CommandProgress(0d, Resources.HandshakeProgress));
+            await this.PicaxeCommandInterface.HandshakeAsync().ConfigureAwait(false);
+            await this.PicaxeCommandInterface.SendInstructionAsync(SendInstruction.ReadSequence)
+                .ConfigureAwait(false);
+            await this.PicaxeCommandInterface.SendByteWhenReadyAsync(sequenceIndex)
+                .ConfigureAwait(false);
+
+            var stepCount = await this.PicaxeCommandInterface.ReadWordAsync().ConfigureAwait(false);
+            var sequenceSteps = new SequenceStep[stepCount];
+            for (int stepIndex = 0; stepIndex < stepCount; ++stepIndex)
+            {
+                sequenceSteps[stepIndex] = await this
+                    .ReadSequenceStepAsync(stepCount, stepIndex)
+                    .ConfigureAwait(false);
+            }
+
+            this.ReportProgress(new CommandProgress(100d, Resources.ReadSequenceComplete));
+#pragma warning restore MEN010 // Avoid magic numbers
+
+            return new SequenceData(this.SequencerConfig, sequenceSteps);
         }
 
         /// <inheritdoc/>
@@ -273,11 +348,28 @@ namespace RgbLedSequencerLibrary.CommandInterface
             return ((ProgressEnd - ProgressStart) * sequenceProgress) + ProgressStart;
         }
 
+        private static string GetReadDotCorrectionProgressMessage(int ledIndex)
+        {
+            return string.Format(
+                CultureInfo.CurrentCulture,
+                Resources.ReadDotCorrectionDataProgress,
+                ledIndex + 1);
+        }
+
         private static string GetSetDotCorrectionProgressMessage(int ledIndex)
         {
             return string.Format(
                 CultureInfo.CurrentCulture,
                 Resources.SendDotCorrectionDataProgress,
+                ledIndex + 1);
+        }
+
+        private static string GetReadSequenceProgressMessage(int stepIndex, int ledIndex)
+        {
+            return string.Format(
+                CultureInfo.CurrentCulture,
+                Resources.ReadSequenceDataProgress,
+                stepIndex + 1,
                 ledIndex + 1);
         }
 
@@ -288,6 +380,25 @@ namespace RgbLedSequencerLibrary.CommandInterface
                 Resources.SendSequenceDataProgress,
                 stepIndex + 1,
                 ledIndex + 1);
+        }
+
+        private async Task<SequenceStep> ReadSequenceStepAsync(int stepCount, int stepIndex)
+        {
+            var rgbLedCount = this.SequencerConfig.RgbLedCount;
+            var ledGrayscales = new LedGrayscale[rgbLedCount];
+            for (int ledIndex = rgbLedCount - 1; ledIndex >= 0; --ledIndex)
+            {
+                this.ReportProgress(new CommandProgress(
+                    CalculateSequenceProgress(rgbLedCount, stepCount, stepIndex, ledIndex),
+                    GetReadSequenceProgressMessage(stepIndex, ledIndex)));
+                ledGrayscales[ledIndex] = await this.ReadLedGrayscaleAsync().ConfigureAwait(false);
+            }
+
+            var grayscaleData = new GrayscaleData(this.SequencerConfig, ledGrayscales);
+            return new SequenceStep(this.SequencerConfig, grayscaleData)
+            {
+                StepDelay = await this.PicaxeCommandInterface.ReadWordAsync().ConfigureAwait(false)
+            };
         }
 
         private async Task SendSequenceStepAsync(SequenceData sequence, int stepIndex)
@@ -306,6 +417,32 @@ namespace RgbLedSequencerLibrary.CommandInterface
 
             await this.PicaxeCommandInterface.SendWordWhenReadyAsync(sequenceStep.StepDelay)
                 .ConfigureAwait(false);
+        }
+
+        private async Task<LedDotCorrection> ReadLedDotCorrectionAsync()
+        {
+            return new LedDotCorrection(this.SequencerConfig)
+            {
+                Blue = await this.PicaxeCommandInterface.ReadByteAsync()
+                    .ConfigureAwait(false),
+                Green = await this.PicaxeCommandInterface.ReadByteAsync()
+                    .ConfigureAwait(false),
+                Red = await this.PicaxeCommandInterface.ReadByteAsync()
+                    .ConfigureAwait(false)
+            };
+        }
+
+        private async Task<LedGrayscale> ReadLedGrayscaleAsync()
+        {
+            return new LedGrayscale(this.SequencerConfig)
+            {
+                Blue = await this.PicaxeCommandInterface.ReadByteAsync()
+                    .ConfigureAwait(false),
+                Green = await this.PicaxeCommandInterface.ReadByteAsync()
+                    .ConfigureAwait(false),
+                Red = await this.PicaxeCommandInterface.ReadByteAsync()
+                    .ConfigureAwait(false)
+            };
         }
 
         private async Task SendLedDotCorrectionAsync(LedDotCorrection ledDotCorrection)

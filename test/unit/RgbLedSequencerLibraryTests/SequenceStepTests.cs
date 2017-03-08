@@ -51,7 +51,24 @@ namespace RgbLedSequencerLibraryTests
 
         [Theory]
         [AutoMoqData]
-        public void ConstructorSetsCorrectInitializedMembers(
+        public void ConstructorWithGrayscaleDataSetsCorrectInitializedMembers(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
+        {
+            var customization = new GrayscaleDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
+            var grayscaleData = fixture.Create<GrayscaleData>();
+            var sut = new SequenceStep(sequencerConfigMock.Object, grayscaleData);
+
+            Assert.Equal(grayscaleData, sut.GrayscaleData);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void ConstructorWithFactorySetsCorrectInitializedMembers(
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {

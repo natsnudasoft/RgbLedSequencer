@@ -61,5 +61,15 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// Clear all sequences from the RGB LED Sequencer.
         /// </summary>
         ClearSequences = 6,
+
+        /// <summary>
+        /// Read the sequence currently stored at a specified index from the RGB LED Sequencer.
+        /// </summary>
+        ReadSequence = 7,
+
+        /// <summary>
+        /// Read the currently stored dot correction data from the RGB LED Sequencer.
+        /// </summary>
+        ReadDotCorrection = 8
     }
 }
