@@ -69,18 +69,48 @@ namespace RgbLedSequencerLibraryTests
 
         [Theory]
         [AutoMoqData]
-        public void ConstructorSetsCorrectInitializedMembers(
+        public void ConstructorWithSequenceStepsSetsCorrectInitializedMembers(
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
-            ConstructorInitializedMemberAssertion assertion,
             Fixture fixture)
         {
             var customization = new SequenceDataCustomization(sequencerConfigMock)
             {
-                MaxStepCount = int.MaxValue,
+                RgbLedCount = 5,
+                MaxStepDelay = 500,
+                StepDelay = 50,
+                MaxStepCount = 10,
+                StepCount = 8
             };
             fixture.Customize(customization);
+            var sequenceSteps =
+                fixture.CreateMany<SequenceStep>(customization.StepCount.Value).ToArray();
+            var sut = new SequenceData(sequencerConfigMock.Object, sequenceSteps);
 
-            assertion.Verify(SutType.GetProperty(nameof(SequenceData.StepCount)));
+            Assert.Equal(customization.StepCount.Value, sut.StepCount);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void ConstructorWithFactorySetsCorrectInitializedMembers(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
+        {
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxStepDelay = 500,
+                StepDelay = 50,
+                MaxStepCount = 10,
+                StepCount = 8
+            };
+            fixture.Customize(customization);
+            var sequenceStepFactory = fixture.Create<Func<SequenceStep>>();
+            var sut = new SequenceData(
+                sequencerConfigMock.Object,
+                sequenceStepFactory,
+                customization.StepCount.Value);
+
+            Assert.Equal(customization.StepCount.Value, sut.StepCount);
         }
 
         [Theory]

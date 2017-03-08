@@ -40,6 +40,28 @@ namespace RgbLedSequencerLibrary
         /// </summary>
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
+        /// <param name="grayscaleData">The <see cref="RgbLedSequencerLibrary.GrayscaleData"/> that
+        /// this step has.
+        /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
+        /// <paramref name="grayscaleData"/> is <see langword="null"/>.</exception>
+        public SequenceStep(
+            IRgbLedSequencerConfiguration sequencerConfig,
+            GrayscaleData grayscaleData)
+        {
+            ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
+            ParameterValidation.IsNotNull(grayscaleData, nameof(grayscaleData));
+
+            this.sequencerConfig = sequencerConfig;
+            this.GrayscaleData = grayscaleData;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SequenceStep"/> class, using the
+        /// specified factory to create a <see cref="GrayscaleData"/> instance.
+        /// </summary>
+        /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
+        /// describes the configuration of the RGB LED Sequencer.</param>
         /// <param name="grayscaleDataFactory">The factory to use to create instances of
         /// <see cref="RgbLedSequencerLibrary.GrayscaleData"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or

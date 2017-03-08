@@ -163,5 +163,40 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
 
             Assert.IsType<UnexpectedInstructionException>(ex);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task ReadByteReadsCorrectByteAsync(
+            byte expectedValue,
+            [Frozen]Mock<ISerialPortAdapter> serialPortAdapterMock,
+            Fixture fixture)
+        {
+            serialPortAdapterMock
+                .Setup(s => s.ReadByteAsync())
+                .ReturnsAsync(expectedValue);
+            var sut = fixture.Create<PicaxeCommandInterface>();
+
+            var actualValue = await sut.ReadByteAsync().ConfigureAwait(false);
+
+            Assert.Equal(expectedValue, actualValue);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task ReadWordReadsCorrectWordAsync(
+            ushort expectedValue,
+            [Frozen]Mock<ISerialPortAdapter> serialPortAdapterMock,
+            Fixture fixture)
+        {
+            serialPortAdapterMock
+                .SetupSequence(s => s.ReadByteAsync())
+                .ReturnsAsync((byte)expectedValue)
+                .ReturnsAsync((byte)(expectedValue >> 8));
+            var sut = fixture.Create<PicaxeCommandInterface>();
+
+            var actualValue = await sut.ReadWordAsync().ConfigureAwait(false);
+
+            Assert.Equal(expectedValue, actualValue);
+        }
     }
 }

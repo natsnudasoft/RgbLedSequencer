@@ -17,7 +17,7 @@
 '   =========================================================
 
 '   ---------------------------------------------------------
-'   RgbLedS v1.0.0 - 2017-02-25
+'   RgbLedS v1.1.0 - 2017-03-08
 '   ---------------------------------------------------------
 
 '   The RGB LED Sequencer is a 5 RGB LED device which allows up to 10 user
@@ -120,6 +120,8 @@ symbol CMDI_SAVESEQUENCE = %00000011 'Save a specified sequence to the 25LC1024 
 symbol CMDI_SLEEP = %00000100 'Sets the device to sleep mode (TLC5940 BLANK, 7 segment invalid to blank, 25LC1024 power down)
 symbol CMDI_HANDSHAKE = %0000101 'Finish handshaking and receive a command
 symbol CMDI_LCCLEAR = %00000110 'Clear the 25LC1024 EEPROM
+symbol CMDI_READSEQUENCE = %00000111 'Read the sequence at a specified sequence number (0-9) from the device
+symbol CMDI_READDOTCORRECTION = %00001000 'Read the dot correction data from the device
 
 'Serial Out instruction set (instructions that can be sent by this)
 symbol CMDO_READY = %00010000 'Signals that the device is ready for more data
@@ -136,6 +138,7 @@ symbol ChannelDataStart = 0 'The PICAXE EEPROM address that TLC5940 default chan
 symbol ChannelDataEnd = ChannelDataStart + 29 'The PICAXE EEPROM address that TLC5940 default channel data ends
 symbol DotCorrectionStart = ChannelDataEnd + 1 'The PICAXE EEPROM address that TLC5940 dot correction data starts
 symbol DotCorrectionEnd = DotCorrectionStart + 14 'The PICAXE EEPROM address that TLC5940 dot correction data ends
+symbol PreviousSequenceAddress = DotCorrectionEnd + 1 'The PICAXE EEPROM address the previous sequence to be played is stored
 symbol LcPageSize = 256 'The size of a page in the 25LC1024 EEPROM
 symbol TlcSettleTime = 250 * FrequencyMultiplier 'The time given for the TLC5940 to settle
 symbol ReadTimeoutTime = 3000 * FrequencyMultiplier 'The default timeout for serrxd commands
@@ -181,9 +184,13 @@ Setup:
     low SEGDRIVE_B_PIN
     low SEGDRIVE_C_PIN
     low SEGDRIVE_D_PIN
-    gosub LcStatusRegisterSetup
     'Give the TLC5940 time to settle
     pause TlcSettleTime
+    read PreviousSequenceAddress, sevenSegmentValue
+    if sevenSegmentValue >= SequenceCount then
+        sevenSegmentValue = 0
+    endif
+    gosub LcStatusRegisterSetup
     gosub TlcDotCorrection
     gosub PrepareCurrentSequence
     if numberOfSteps = 0 then
@@ -276,6 +283,10 @@ ReadCommand:
             gosub SaveSequence
         case CMDI_SETDOTCORRECTION
             gosub SetDotCorrection
+        case CMDI_READSEQUENCE
+            gosub ReadSequence
+        case CMDI_READDOTCORRECTION
+            gosub ReadDotCorrection
         case CMDI_LCCLEAR
             gosub LcClear
         case CMDI_SLEEP
@@ -294,6 +305,7 @@ NextSequence:
 'Prepare the device for the current sequence
 PrepareCurrentSequence:
     if sevenSegmentValue < SequenceCount then
+        write PreviousSequenceAddress, sevenSegmentValue
         gosub LcBeginRead
         lcAddress0 = sevenSegmentValue ** SequenceAndStepCountSize
         lcAddress1 = sevenSegmentValue * SequenceAndStepCountSize
@@ -363,6 +375,42 @@ SetDotCorrection:
         write b0, clockedByte
     next b0
     gosub TlcDotCorrection
+    return
+    
+'Reads the current sequence at a specified sequence number
+ReadSequence:
+    gosub LcBeginRead
+    sertxd(CMDO_READY)
+    'The sequence number we are reading from
+    serrxd[ReadTimeoutTime, ReadTimeout], clockedByte
+    lcAddress0 = clockedByte ** SequenceAndStepCountSize
+    lcAddress1 = clockedByte * SequenceAndStepCountSize
+    gosub LcAddressClock
+    'w2(b4+b5) = Read number of steps from 25LC1024 EEPROM (little endian order)
+    gosub LcReadByte
+    b4 = clockedByte
+    gosub LcReadByte
+    b5 = clockedByte
+    if w2 > SequenceStepCount then
+        w2 = 0
+    endif
+    'Transmit number of steps
+    sertxd(b4)
+    sertxd(b5)
+    for w1 = 1 to w2
+        for b1 = 1 to StepSize
+            gosub LcReadByte
+            sertxd(clockedByte)
+        next b1
+    next w1
+    gosub LcEndCommand
+    return
+    
+ReadDotCorrection:
+    for b0 = DotCorrectionStart to DotCorrectionEnd
+        read b0, clockedByte
+        sertxd(clockedByte)
+    next b0
     return
 
 'Prepare the 25LC1024 for a read sequence

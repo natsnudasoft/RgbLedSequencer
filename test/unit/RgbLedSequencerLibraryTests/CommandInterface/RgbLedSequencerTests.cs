@@ -86,6 +86,36 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
 
         [Theory]
         [AutoMoqData]
+        public async Task ReadDotCorrectionSendsCommandSequenceAndReturnsDotCorrectionAsync(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
+            Fixture fixture)
+        {
+            var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
+            var sut = fixture.Create<RgbLedSequencer>();
+
+            var dotCorrectionData = await sut.ReadDotCorrectionAsync().ConfigureAwait(false);
+
+            picaxeCommandInterfaceMock.Verify(s => s.HandshakeAsync(), Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendInstructionAsync(SendInstruction.ReadDotCorrection),
+                Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.ReadByteAsync(),
+                Times.Exactly(customization.RgbLedCount * 3));
+            for (int i = 0; i < customization.RgbLedCount; ++i)
+            {
+                Assert.IsType<LedDotCorrection>(dotCorrectionData[i]);
+                Assert.NotNull(dotCorrectionData[i]);
+            }
+        }
+
+        [Theory]
+        [AutoMoqData]
         public void SetDotCorrectionHasCorrectGuardClauses(
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
@@ -168,6 +198,50 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
             picaxeCommandInterfaceMock.Verify(
                 s => s.SendByteWhenReadyAsync(SequenceIndex),
                 Times.Once());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task ReadSequenceSendsCommandSequenceAndReturnsSequenceAsync(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
+            Fixture fixture)
+        {
+            const byte SequenceIndex = 5;
+            const int SequenceCount = 10;
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxStepCount = 8,
+                StepCount = 5
+            };
+            fixture.Customize(customization);
+            sequencerConfigMock.Setup(s => s.SequenceCount).Returns(SequenceCount);
+            picaxeCommandInterfaceMock
+                .Setup(p => p.ReadWordAsync())
+                .ReturnsAsync(customization.StepCount.Value);
+            var sut = fixture.Create<RgbLedSequencer>();
+
+            var sequenceData = await sut.ReadSequenceAsync(SequenceIndex).ConfigureAwait(false);
+
+            picaxeCommandInterfaceMock.Verify(s => s.HandshakeAsync(), Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendInstructionAsync(SendInstruction.ReadSequence),
+                Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendByteWhenReadyAsync(SequenceIndex),
+                Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.ReadWordAsync(),
+                Times.Exactly(customization.StepCount.Value + 1));
+            picaxeCommandInterfaceMock.Verify(
+                s => s.ReadByteAsync(),
+                Times.Exactly(customization.RgbLedCount * 3 * customization.StepCount.Value));
+            for (int i = 0; i < customization.StepCount; ++i)
+            {
+                Assert.IsType<SequenceStep>(sequenceData[i]);
+                Assert.NotNull(sequenceData[i]);
+            }
         }
 
         [Theory]

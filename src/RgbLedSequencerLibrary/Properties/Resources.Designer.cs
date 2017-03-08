@@ -106,6 +106,42 @@ namespace RgbLedSequencerLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dot correction read complete..
+        /// </summary>
+        internal static string ReadDotCorrectionComplete {
+            get {
+                return ResourceManager.GetString("ReadDotCorrectionComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading dot correction data for LED {0}..
+        /// </summary>
+        internal static string ReadDotCorrectionDataProgress {
+            get {
+                return ResourceManager.GetString("ReadDotCorrectionDataProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sequence read complete..
+        /// </summary>
+        internal static string ReadSequenceComplete {
+            get {
+                return ResourceManager.GetString("ReadSequenceComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading sequence data for step {0}, LED {1}..
+        /// </summary>
+        internal static string ReadSequenceDataProgress {
+            get {
+                return ResourceManager.GetString("ReadSequenceDataProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sequence data sent..
         /// </summary>
         internal static string SaveSequenceComplete {

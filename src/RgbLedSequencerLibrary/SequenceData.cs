@@ -34,6 +34,37 @@ namespace RgbLedSequencerLibrary
         /// </summary>
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
+        /// <param name="sequenceSteps">The <see cref="SequenceStep"/> array that represents
+        /// the steps in this sequence.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
+        /// <paramref name="sequenceSteps"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">The length of the <paramref name="sequenceSteps"/>
+        /// array was greater than the maximum allowed step count.</exception>
+        public SequenceData(
+            IRgbLedSequencerConfiguration sequencerConfig,
+            SequenceStep[] sequenceSteps)
+        {
+            ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
+            ParameterValidation.IsNotNull(sequenceSteps, nameof(sequenceSteps));
+            if (sequenceSteps.Length > sequencerConfig.MaxStepCount)
+            {
+                throw new ArgumentException(
+                    "Array length must be less than or equal to " + sequencerConfig.MaxStepCount
+                    + ".",
+                    nameof(sequenceSteps));
+            }
+
+            this.sequenceSteps = sequenceSteps;
+            this.StepCount = sequenceSteps.Length;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SequenceData"/> class, using the
+        /// specified factory to create the number of <see cref="SequenceStep"/> instances
+        /// specified by <paramref name="stepCount"/>.
+        /// </summary>
+        /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
+        /// describes the configuration of the RGB LED Sequencer.</param>
         /// <param name="sequenceStepFactory">The factory to use to create instances of
         /// <see cref="SequenceStep"/>.</param>
         /// <param name="stepCount">The number of steps in the sequence represented by this

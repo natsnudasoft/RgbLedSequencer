@@ -132,6 +132,18 @@
   <data name="PlaySequenceInProgress" xml:space="preserve">
     <value>Sending play sequence command.</value>
   </data>
+  <data name="ReadDotCorrectionComplete" xml:space="preserve">
+    <value>Dot correction read complete.</value>
+  </data>
+  <data name="ReadDotCorrectionDataProgress" xml:space="preserve">
+    <value>Reading dot correction data for LED {0}.</value>
+  </data>
+  <data name="ReadSequenceComplete" xml:space="preserve">
+    <value>Sequence read complete.</value>
+  </data>
+  <data name="ReadSequenceDataProgress" xml:space="preserve">
+    <value>Reading sequence data for step {0}, LED {1}.</value>
+  </data>
   <data name="SaveSequenceComplete" xml:space="preserve">
     <value>Sequence data sent.</value>
   </data>
