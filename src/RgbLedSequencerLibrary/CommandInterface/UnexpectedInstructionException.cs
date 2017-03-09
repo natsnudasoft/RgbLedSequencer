@@ -35,6 +35,7 @@ namespace RgbLedSequencerLibrary.CommandInterface
         /// Initializes a new instance of the <see cref="UnexpectedInstructionException"/> class.
         /// </summary>
         public UnexpectedInstructionException()
+            : base(DefaultMessage)
         {
         }
 
