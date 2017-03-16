@@ -14,11 +14,12 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibrary
+namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
     using System.Diagnostics;
     using System.Linq;
+    using NatsnudaLibrary;
 
     /// <summary>
     /// Represents dot correction (brightness difference compensation) values for a number of RGB

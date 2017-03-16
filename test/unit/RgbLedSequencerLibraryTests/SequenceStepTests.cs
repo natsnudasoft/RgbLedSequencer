@@ -14,12 +14,12 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibraryTests
+namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
-    using Extension;
     using Helper;
     using Moq;
+    using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
     using Ploeh.AutoFixture.Xunit2;
@@ -43,8 +43,8 @@ namespace RgbLedSequencerLibraryTests
                 StepDelay = 500
             };
             fixture.Customize(customization);
-            var behaviourExpectation = new ParameterNullReferenceBehaviourExpectation(fixture);
-            var assertion = new GuardClauseAssertion(fixture, behaviourExpectation);
+            var behaviorExpectation = new ParameterNullReferenceBehaviorExpectation(fixture);
+            var assertion = new GuardClauseAssertion(fixture, behaviorExpectation);
 
             assertion.Verify(SutType.GetConstructors());
         }

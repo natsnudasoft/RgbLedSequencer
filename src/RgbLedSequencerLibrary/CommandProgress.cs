@@ -14,9 +14,10 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibrary.CommandInterface
+namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
+    using NatsnudaLibrary;
 
     /// <summary>
     /// Represents the progress of a task of the RGB LED Sequencer.

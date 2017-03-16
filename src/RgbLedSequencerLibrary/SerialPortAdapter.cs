@@ -14,13 +14,14 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibrary
+namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
     using System.IO;
     using System.IO.Ports;
     using System.Threading;
     using System.Threading.Tasks;
+    using NatsnudaLibrary;
 
     /// <summary>
     /// Provides an adapter for the <see cref="SerialPort"/> that reads and writes bytes to the

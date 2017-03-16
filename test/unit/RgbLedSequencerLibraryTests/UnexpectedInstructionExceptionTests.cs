@@ -14,15 +14,15 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibraryTests.CommandInterface
+namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
-    using Extension;
+    using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture.Idioms;
     using Ploeh.SemanticComparison.Fluent;
-    using RgbLedSequencerLibrary.CommandInterface;
+    using RgbLedSequencerLibrary;
     using Xunit;
 
     public sealed class UnexpectedInstructionExceptionTests

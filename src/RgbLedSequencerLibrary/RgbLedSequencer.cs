@@ -14,12 +14,13 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibrary.CommandInterface
+namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
     using System.Globalization;
     using System.IO;
     using System.Threading.Tasks;
+    using NatsnudaLibrary;
     using Properties;
 
     /// <summary>

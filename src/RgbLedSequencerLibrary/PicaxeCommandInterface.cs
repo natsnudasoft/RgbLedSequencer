@@ -14,11 +14,12 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibrary.CommandInterface
+namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
     using System.IO;
     using System.Threading.Tasks;
+    using NatsnudaLibrary;
 
     /// <summary>
     /// Provides an implementation of a low level communications interface to a PICAXE controlling

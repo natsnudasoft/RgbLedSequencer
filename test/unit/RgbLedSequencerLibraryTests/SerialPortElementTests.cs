@@ -14,11 +14,11 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibraryTests
+namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
     using System.IO.Ports;
-    using Extension;
+    using NatsnudaLibrary.TestExtensions;
     using RgbLedSequencerLibrary;
     using Xunit;
 

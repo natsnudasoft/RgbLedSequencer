@@ -8,8 +8,8 @@
     <ProjectGuid>{3B9D7124-14F9-40AD-AE91-B6323448EE5E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RgbLedSequencerLibraryTests</RootNamespace>
-    <AssemblyName>RgbLedSequencerLibraryTests</AssemblyName>
+    <RootNamespace>Natsnudasoft.RgbLedSequencerLibraryTests</RootNamespace>
+    <AssemblyName>Natsnudasoft.RgbLedSequencerLibraryTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -49,6 +49,14 @@
     </Reference>
     <Reference Include="Moq, Version=4.7.1.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Moq.4.7.1\lib\net45\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Natsnudasoft.NatsnudaLibrary, Version=0.3.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NatsnudaLibrary.0.3.0\lib\net46\Natsnudasoft.NatsnudaLibrary.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Natsnudasoft.NatsnudaLibrary.TestExtensions, Version=0.3.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NatsnudaLibrary.TestExtensions.0.3.0\lib\net46\Natsnudasoft.NatsnudaLibrary.TestExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ploeh.Albedo, Version=1.0.2.0, Culture=neutral, PublicKeyToken=179ef6dd03497bbd, processorArchitecture=MSIL">
@@ -105,23 +113,13 @@
     <Compile Include="..\..\..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="CommandInterface\CommandProgressTests.cs" />
-    <Compile Include="CommandInterface\PicaxeCommandInterfaceTests.cs" />
-    <Compile Include="CommandInterface\RgbLedSequencerTests.cs" />
-    <Compile Include="CommandInterface\UnexpectedInstructionExceptionTests.cs" />
-    <Compile Include="Extension\AsyncMethodInvokeCommand.cs" />
-    <Compile Include="Extension\AutoMoqDataAttribute.cs" />
+    <Compile Include="CommandProgressTests.cs" />
+    <Compile Include="PicaxeCommandInterfaceTests.cs" />
+    <Compile Include="RgbLedSequencerTests.cs" />
+    <Compile Include="UnexpectedInstructionExceptionTests.cs" />
     <Compile Include="BaudRateValidatorTests.cs" />
     <Compile Include="DotCorrectionDataTests.cs" />
-    <Compile Include="Extension\DoesNotThrowAssertion.cs" />
-    <Compile Include="Extension\ExceptionBehaviourExpectation.cs" />
-    <Compile Include="Extension\ParameterNullReferenceBehaviourExpectation.cs" />
-    <Compile Include="Extension\GuardClauseExtensions.cs" />
-    <Compile Include="Extension\ParameterTypeFavoringConstructorQuery.cs" />
-    <Compile Include="Extension\PropertyChangedRaisedAssertion.cs" />
-    <Compile Include="Extension\PropertyChangedRaisedException.cs" />
     <Compile Include="GrayscaleDataTests.cs" />
-    <Compile Include="Extension\InlineAutoMoqDataAttribute.cs" />
     <Compile Include="Helper\DotCorrectionDataCustomization.cs" />
     <Compile Include="Helper\GrayscaleDataCustomization.cs" />
     <Compile Include="Helper\SequenceDataCustomization.cs" />
@@ -129,10 +127,6 @@
     <Compile Include="Helper\SequenceStepCustomization.cs" />
     <Compile Include="LedDotCorrectionTests.cs" />
     <Compile Include="LedGrayscaleTests.cs" />
-    <Compile Include="Extension\ParameterAttribute.cs" />
-    <Compile Include="Extension\ParameterCustomization.cs" />
-    <Compile Include="Extension\ParameterSpecimenBuilder.cs" />
-    <Compile Include="ParameterValidationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RgbLedSequencerSectionTests.cs" />
     <Compile Include="SequenceDataTests.cs" />

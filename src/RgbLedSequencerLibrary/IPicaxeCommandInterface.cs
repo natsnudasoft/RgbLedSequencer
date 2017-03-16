@@ -14,7 +14,7 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibrary.CommandInterface
+namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System.Threading.Tasks;
 

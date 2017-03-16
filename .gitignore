@@ -10,3 +10,4 @@ obj
 /tools/coverage
 /tools/results.xml
 /tools/coverage.xml
+/tools/artifact

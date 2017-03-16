@@ -14,12 +14,13 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibrary
+namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
+    using NatsnudaLibrary;
 
     /// <summary>
     /// Describes an individual step, and the delay time of the step, within an RGB LED Sequencer
