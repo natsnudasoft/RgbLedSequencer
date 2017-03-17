@@ -37,6 +37,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "RgbLedSequencerLibraryDocs", "docs\RgbLedSequencerLibrary\RgbLedSequencerLibraryDocs.shfbproj", "{8817198A-EA39-40CC-88EC-391C393C8F17}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{3308754B-41E4-4852-8C68-9D57E995079B}"
+	ProjectSection(SolutionItems) = preProject
+		src\RgbLedSequencerLibrary\RgbLedSequencerLibrary.nuspec = src\RgbLedSequencerLibrary\RgbLedSequencerLibrary.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
