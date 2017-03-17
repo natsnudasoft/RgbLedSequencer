@@ -14,7 +14,7 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibrary.CommandInterface
+namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     /// <summary>
     /// Defines the available instruction set that can be -received- by the

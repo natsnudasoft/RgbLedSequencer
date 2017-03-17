@@ -14,7 +14,7 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibraryTests
+namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
     using Ploeh.AutoFixture.Xunit2;

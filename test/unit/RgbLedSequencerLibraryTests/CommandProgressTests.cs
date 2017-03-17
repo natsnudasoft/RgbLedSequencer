@@ -14,13 +14,13 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibraryTests.CommandInterface
+namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
-    using Extension;
+    using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
-    using RgbLedSequencerLibrary.CommandInterface;
+    using RgbLedSequencerLibrary;
     using Xunit;
 
     public sealed class CommandProgressTests
@@ -34,19 +34,19 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
             const double ProgressPercentage = 50d;
             ApplyProgressPercentageSpecimen(fixture, ProgressPercentage);
 #pragma warning disable SA1118 // Parameter must not span multiple lines
-            var behaviourExpectation = new CompositeBehaviorExpectation(
-                new ParameterNullReferenceBehaviourExpectation(fixture),
-                new ExceptionBehaviourExpectation<ArgumentOutOfRangeException>(
+            var behaviorExpectation = new CompositeBehaviorExpectation(
+                new ParameterNullReferenceBehaviorExpectation(fixture),
+                new ExceptionBehaviorExpectation<ArgumentOutOfRangeException>(
                     fixture,
                     "progressPercentage",
                     200d,
                     -50d),
-                new ExceptionBehaviourExpectation<ArgumentException>(
+                new ExceptionBehaviorExpectation<ArgumentException>(
                     fixture,
                     "currentAction",
                     string.Empty));
 #pragma warning restore SA1118 // Parameter must not span multiple lines
-            var assertion = new GuardClauseAssertion(fixture, behaviourExpectation);
+            var assertion = new GuardClauseAssertion(fixture, behaviorExpectation);
 
             assertion.Verify(SutType.GetConstructors());
         }

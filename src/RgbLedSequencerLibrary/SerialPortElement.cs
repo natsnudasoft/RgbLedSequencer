@@ -14,7 +14,7 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibrary
+namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System.Configuration;
     using System.IO.Ports;

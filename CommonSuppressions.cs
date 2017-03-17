@@ -1,4 +1,4 @@
-﻿// <copyright file="AutoMoqDataAttribute.cs" company="natsnudasoft">
+// <copyright file="CommonSuppressions.cs" company="natsnudasoft">
 // Copyright (c) Adrian John Dunstan. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,19 +14,9 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibraryTests.Extension
-{
-    using System;
-    using Ploeh.AutoFixture;
-    using Ploeh.AutoFixture.AutoMoq;
-    using Ploeh.AutoFixture.Xunit2;
-
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public sealed class AutoMoqDataAttribute : AutoDataAttribute
-    {
-        public AutoMoqDataAttribute()
-            : base(new Fixture().Customize(new AutoMoqCustomization()))
-        {
-        }
-    }
-}
+#if !APPVEYOR
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Microsoft.Design",
+    "CA2210:AssembliesShouldHaveValidStrongNames",
+    Justification = "We only sign with a strong name on the build server.")]
+#endif

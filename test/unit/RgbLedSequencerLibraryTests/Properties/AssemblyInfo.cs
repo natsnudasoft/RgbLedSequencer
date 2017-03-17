@@ -20,10 +20,10 @@ using System.Runtime.InteropServices;
 
 [assembly: CLSCompliant(false)]
 
-[assembly: AssemblyTitle("RgbLedSequencerLibraryTests")]
+[assembly: AssemblyTitle("RgbLedSequencerLibrary.RgbLedSequencerLibraryTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("RgbLedSequencerLibraryTests")]
+[assembly: AssemblyProduct("RgbLedSequencerLibrary")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

@@ -25,9 +25,22 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Versioning", "Versioning", "{146CFFF2-7AF3-48C7-B89D-1EA37CB441A5}"
 	ProjectSection(SolutionItems) = preProject
 		AssemblyInfoCommon.cs = AssemblyInfoCommon.cs
+		CommonSuppressions.cs = CommonSuppressions.cs
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RgbLedSequencerLibraryTests", "test\unit\RgbLedSequencerLibraryTests\RgbLedSequencerLibraryTests.csproj", "{3B9D7124-14F9-40AD-AE91-B6323448EE5E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{7A28AE9A-13BA-4C0A-8F22-F3E1902152F9}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "RgbLedSequencerLibraryDocs", "docs\RgbLedSequencerLibrary\RgbLedSequencerLibraryDocs.shfbproj", "{8817198A-EA39-40CC-88EC-391C393C8F17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{3308754B-41E4-4852-8C68-9D57E995079B}"
+	ProjectSection(SolutionItems) = preProject
+		src\RgbLedSequencerLibrary\RgbLedSequencerLibrary.nuspec = src\RgbLedSequencerLibrary\RgbLedSequencerLibrary.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,11 +56,16 @@ Global
 		{3B9D7124-14F9-40AD-AE91-B6323448EE5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B9D7124-14F9-40AD-AE91-B6323448EE5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B9D7124-14F9-40AD-AE91-B6323448EE5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8817198A-EA39-40CC-88EC-391C393C8F17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8817198A-EA39-40CC-88EC-391C393C8F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8817198A-EA39-40CC-88EC-391C393C8F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8817198A-EA39-40CC-88EC-391C393C8F17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3B9D7124-14F9-40AD-AE91-B6323448EE5E} = {371D84AB-7213-402F-9AD7-866A27381ED6}
+		{8817198A-EA39-40CC-88EC-391C393C8F17} = {7A28AE9A-13BA-4C0A-8F22-F3E1902152F9}
 	EndGlobalSection
 EndGlobal

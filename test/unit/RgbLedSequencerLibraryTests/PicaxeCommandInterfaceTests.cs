@@ -14,17 +14,16 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibraryTests.CommandInterface
+namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
     using System.Threading.Tasks;
-    using Extension;
     using Moq;
+    using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
     using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary;
-    using RgbLedSequencerLibrary.CommandInterface;
     using Xunit;
 
     public sealed class PicaxeCommandInterfaceTests

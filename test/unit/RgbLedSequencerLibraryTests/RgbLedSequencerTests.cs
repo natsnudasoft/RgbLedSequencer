@@ -14,18 +14,17 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibraryTests.CommandInterface
+namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
     using System.Threading.Tasks;
     using Helper;
     using Moq;
+    using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
     using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary;
-    using RgbLedSequencerLibrary.CommandInterface;
-    using RgbLedSequencerLibraryTests.Extension;
     using Xunit;
 
     public sealed class RgbLedSequencerTests
@@ -127,7 +126,7 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
             fixture.Customize(customization);
             var assertion = new GuardClauseAssertion(
                 fixture,
-                new ParameterNullReferenceBehaviourExpectation(fixture));
+                new ParameterNullReferenceBehaviorExpectation(fixture));
 
             assertion.Verify(SutType.GetMethod(nameof(RgbLedSequencer.SetDotCorrectionAsync)));
         }
@@ -167,13 +166,13 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
             const int SequenceCount = 10;
             sequencerConfigMock.Setup(c => c.SequenceCount).Returns(SequenceCount);
 #pragma warning disable SA1118 // Parameter must not span multiple lines
-            var behaviourExpectation = new CompositeBehaviorExpectation(
-                new ExceptionBehaviourExpectation<ArgumentOutOfRangeException>(
+            var behaviorExpectation = new CompositeBehaviorExpectation(
+                new ExceptionBehaviorExpectation<ArgumentOutOfRangeException>(
                     fixture,
                     "sequenceIndex",
                     (byte)(SequenceCount + 1)));
 #pragma warning restore SA1118 // Parameter must not span multiple lines
-            var assertion = new GuardClauseAssertion(fixture, behaviourExpectation);
+            var assertion = new GuardClauseAssertion(fixture, behaviorExpectation);
             assertion.Verify(SutType.GetMethod(nameof(RgbLedSequencer.PlaySequenceAsync)));
         }
 
@@ -262,14 +261,14 @@ namespace RgbLedSequencerLibraryTests.CommandInterface
             sequencerConfigMock.Setup(s => s.SequenceCount).Returns(SequenceCount);
             ApplySequenceIndexSpecimen(fixture, SequenceIndex);
 #pragma warning disable SA1118 // Parameter must not span multiple lines
-            var behaviourExpectation = new CompositeBehaviorExpectation(
-                new ParameterNullReferenceBehaviourExpectation(fixture),
-                new ExceptionBehaviourExpectation<ArgumentOutOfRangeException>(
+            var behaviorExpectation = new CompositeBehaviorExpectation(
+                new ParameterNullReferenceBehaviorExpectation(fixture),
+                new ExceptionBehaviorExpectation<ArgumentOutOfRangeException>(
                     fixture,
                     "sequenceIndex",
                     (byte)(SequenceCount + 1)));
 #pragma warning restore SA1118 // Parameter must not span multiple lines
-            var assertion = new GuardClauseAssertion(fixture, behaviourExpectation);
+            var assertion = new GuardClauseAssertion(fixture, behaviorExpectation);
 
             assertion.Verify(SutType.GetMethod(nameof(RgbLedSequencer.SaveSequenceAsync)));
         }

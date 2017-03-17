@@ -14,13 +14,13 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibraryTests
+namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
     using System.Linq;
-    using Extension;
     using Helper;
     using Moq;
+    using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
     using Ploeh.AutoFixture.Xunit2;
@@ -47,14 +47,14 @@ namespace RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
 #pragma warning disable SA1118 // Parameter must not span multiple lines
-            var behaviourExpectation = new CompositeBehaviorExpectation(
-                new ParameterNullReferenceBehaviourExpectation(fixture),
-                new ExceptionBehaviourExpectation<ArgumentOutOfRangeException>(
+            var behaviorExpectation = new CompositeBehaviorExpectation(
+                new ParameterNullReferenceBehaviorExpectation(fixture),
+                new ExceptionBehaviorExpectation<ArgumentOutOfRangeException>(
                     fixture,
                     "stepCount",
                     customization.MaxStepCount + 1,
                     -1),
-                new ExceptionBehaviourExpectation<ArgumentException>(
+                new ExceptionBehaviorExpectation<ArgumentException>(
                     fixture,
                     "sequenceSteps",
                     new[]
@@ -62,7 +62,7 @@ namespace RgbLedSequencerLibraryTests
                         fixture.CreateMany<SequenceStep>(customization.MaxStepCount + 1).ToArray()
                     }));
 #pragma warning restore SA1118 // Parameter must not span multiple lines
-            var assertion = new GuardClauseAssertion(fixture, behaviourExpectation);
+            var assertion = new GuardClauseAssertion(fixture, behaviorExpectation);
 
             assertion.Verify(SutType.GetConstructors());
         }

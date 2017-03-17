@@ -14,7 +14,7 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibrary
+namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     /// <summary>
     /// Represents values that describe the configuration of an RGB LED Sequencer.

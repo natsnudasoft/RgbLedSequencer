@@ -14,11 +14,11 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibraryTests
+namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
-    using Extension;
     using Moq;
+    using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
     using Ploeh.AutoFixture.Xunit2;

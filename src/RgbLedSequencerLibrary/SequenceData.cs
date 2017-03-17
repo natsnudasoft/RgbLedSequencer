@@ -14,11 +14,12 @@
 // limitations under the License.
 // </copyright>
 
-namespace RgbLedSequencerLibrary
+namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
     using System.Diagnostics;
     using System.Globalization;
+    using NatsnudaLibrary;
 
     /// <summary>
     /// Represents an RGB LED light sequence in an RGB LED Sequencer.
