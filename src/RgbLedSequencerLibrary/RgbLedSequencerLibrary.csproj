@@ -35,11 +35,10 @@
     <DocumentationFile>bin\Release\Natsnudasoft.RgbLedSequencerLibrary.xml</DocumentationFile>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(APPVEYOR)' == 'True' And '$(APPVEYOR_PULL_REQUEST_NUMBER)' == '' ">
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>RgbLedSequencerLibrary.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\Natsnudasoft.snk</AssemblyOriginatorKeyFile>
+    <DefineConstants>$(DefineConstants);APPVEYOR</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>
@@ -63,6 +62,9 @@
   <ItemGroup>
     <Compile Include="..\..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonSuppressions.cs">
+      <Link>CommonSuppressions.cs</Link>
     </Compile>
     <Compile Include="BaudRateValidator.cs" />
     <Compile Include="CommandProgress.cs" />
@@ -99,7 +101,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="RgbLedSequencerLibrary.snk" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\packages\codecracker.CSharp.1.0.2\analyzers\dotnet\cs\CodeCracker.Common.dll" />

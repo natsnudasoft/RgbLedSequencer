@@ -1,4 +1,4 @@
-﻿// <copyright file="AssemblyInfo.cs" company="natsnudasoft">
+// <copyright file="CommonSuppressions.cs" company="natsnudasoft">
 // Copyright (c) Adrian John Dunstan. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +14,9 @@
 // limitations under the License.
 // </copyright>
 
-using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
-
-[assembly: CLSCompliant(false)]
-
-[assembly: AssemblyTitle("RgbLedSequencerLibrary.RgbLedSequencerLibraryTests")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("RgbLedSequencerLibrary")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-[assembly: ComVisible(false)]
-[assembly: Guid("3b9d7124-14f9-40ad-ae91-b6323448ee5e")]
+#if !APPVEYOR
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Microsoft.Design",
+    "CA2210:AssembliesShouldHaveValidStrongNames",
+    Justification = "We only sign with a strong name on the build server.")]
+#endif

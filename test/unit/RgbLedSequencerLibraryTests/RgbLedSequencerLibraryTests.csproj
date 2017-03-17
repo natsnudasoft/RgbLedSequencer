@@ -36,11 +36,10 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>RgbLedSequencerLibraryTests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(APPVEYOR)' == 'True' And '$(APPVEYOR_PULL_REQUEST_NUMBER)' == '' ">
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>RgbLedSequencerLibraryTests.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\Natsnudasoft.snk</AssemblyOriginatorKeyFile>
+    <DefineConstants>$(DefineConstants);APPVEYOR</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -113,6 +112,9 @@
     <Compile Include="..\..\..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\CommonSuppressions.cs">
+      <Link>CommonSuppressions.cs</Link>
+    </Compile>
     <Compile Include="CommandProgressTests.cs" />
     <Compile Include="PicaxeCommandInterfaceTests.cs" />
     <Compile Include="RgbLedSequencerTests.cs" />
@@ -149,7 +151,6 @@
       <IsTransformFile>True</IsTransformFile>
     </None>
     <None Include="packages.config" />
-    <None Include="RgbLedSequencerLibraryTests.snk" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\..\packages\codecracker.CSharp.1.0.2\analyzers\dotnet\cs\CodeCracker.Common.dll" />

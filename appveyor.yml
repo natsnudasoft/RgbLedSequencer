@@ -20,9 +20,6 @@
   build:
     project: RgbLedSequencerLibrary.sln
     verbosity: minimal
-    
-    
-    
   after_build:
     - call tools\prepare-artifacts.bat
   test:
