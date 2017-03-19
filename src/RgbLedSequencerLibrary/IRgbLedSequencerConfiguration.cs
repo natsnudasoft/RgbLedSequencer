@@ -53,9 +53,9 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         int SequenceCount { get; }
 
         /// <summary>
-        /// Gets the configuration of the COM port to connect to communicate with the RGB LED
+        /// Gets the configuration of the serial port used to communicate with the RGB LED
         /// Sequencer.
         /// </summary>
-        SerialPortElement SerialPort { get; }
+        ISerialPortConfiguration SerialPort { get; }
     }
 }
