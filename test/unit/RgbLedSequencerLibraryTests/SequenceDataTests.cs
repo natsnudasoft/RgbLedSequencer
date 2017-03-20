@@ -17,6 +17,7 @@
 namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Helper;
     using Moq;
@@ -130,8 +131,10 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         }
 
         [Theory]
-        [AutoMoqData]
+        [InlineAutoMoqData(false)]
+        [InlineAutoMoqData(true)]
         public void IndexerInvalidValueThrows(
+            bool asIReadOnlyList,
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
@@ -142,8 +145,16 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
             var sut = fixture.Create<SequenceData>();
-
-            var ex = Record.Exception(() => sut[customization.StepCount.Value]);
+            Exception ex;
+            if (asIReadOnlyList)
+            {
+                ex = Record.Exception(() =>
+                    ((IReadOnlyList<SequenceStep>)sut)[customization.StepCount.Value]);
+            }
+            else
+            {
+                ex = Record.Exception(() => sut[customization.StepCount.Value]);
+            }
 
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
@@ -184,6 +195,41 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             fixture.Customize(customization);
 
             assertion.Verify(SutType.GetProperty(nameof(SequenceData.DebuggerDisplay)));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void AsIReadOnlyListHasCorrectCount(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
+        {
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                MaxStepCount = 770,
+                StepCount = 9
+            };
+            fixture.Customize(customization);
+            var sut = (IReadOnlyList<SequenceStep>)fixture.Create<SequenceData>();
+
+            Assert.Equal(customization.StepCount.Value, sut.Count);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void EnumeratorIsValid(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
+        {
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                MaxStepCount = 770,
+                StepCount = 9
+            };
+            fixture.Customize(customization);
+            var expected = fixture.Create<SequenceStep[]>();
+            var sut = new SequenceData(sequencerConfigMock.Object, expected);
+
+            Assert.Equal(expected, sut);
         }
     }
 }

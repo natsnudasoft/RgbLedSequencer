@@ -17,6 +17,7 @@
 namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Helper;
     using Moq;
@@ -93,8 +94,10 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         }
 
         [Theory]
-        [AutoMoqData]
+        [InlineAutoMoqData(false)]
+        [InlineAutoMoqData(true)]
         public void IndexerInvalidValueThrows(
+            bool asIReadOnlyList,
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
@@ -104,7 +107,16 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
             var sut = fixture.Create<GrayscaleData>();
-            var ex = Record.Exception(() => sut[customization.RgbLedCount]);
+            Exception ex;
+            if (asIReadOnlyList)
+            {
+                ex = Record.Exception(() =>
+                    ((IReadOnlyList<LedGrayscale>)sut)[customization.RgbLedCount]);
+            }
+            else
+            {
+                ex = Record.Exception(() => sut[customization.RgbLedCount]);
+            }
 
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
@@ -123,6 +135,39 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             fixture.Customize(customization);
 
             assertion.Verify(SutType.GetProperty(nameof(GrayscaleData.DebuggerDisplay)));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void AsIReadOnlyListHasCorrectCount(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
+        {
+            var customization = new GrayscaleDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
+            var sut = (IReadOnlyList<LedGrayscale>)fixture.Create<GrayscaleData>();
+
+            Assert.Equal(customization.RgbLedCount, sut.Count);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void EnumeratorIsValid(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
+        {
+            var customization = new GrayscaleDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5
+            };
+            fixture.Customize(customization);
+            var expected = fixture.Create<LedGrayscale[]>();
+            var sut = new GrayscaleData(sequencerConfigMock.Object, expected);
+
+            Assert.Equal(expected, sut);
         }
     }
 }

@@ -17,6 +17,8 @@
 namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using NatsnudaLibrary;
@@ -26,7 +28,11 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     /// an RGB LED Sequencer.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public sealed class GrayscaleData
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Microsoft.Naming",
+        "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "We don't follow this convention.")]
+    public sealed class GrayscaleData : IReadOnlyList<LedGrayscale>, IEnumerable<LedGrayscale>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         private readonly LedGrayscale[] ledGrayscales;
@@ -86,6 +92,12 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
             }
         }
 
+        /// <inheritdoc/>
+        int IReadOnlyCollection<LedGrayscale>.Count
+        {
+            get { return this.ledGrayscales.Length; }
+        }
+
         /// <summary>
         /// Gets the debugger display string.
         /// </summary>
@@ -104,6 +116,24 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         public LedGrayscale this[int ledIndex]
         {
             get { return this.ledGrayscales[ledIndex]; }
+        }
+
+        /// <inheritdoc/>
+        LedGrayscale IReadOnlyList<LedGrayscale>.this[int index]
+        {
+            get { return this[index]; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerator<LedGrayscale> GetEnumerator()
+        {
+            return ((IEnumerable<LedGrayscale>)this.ledGrayscales).GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

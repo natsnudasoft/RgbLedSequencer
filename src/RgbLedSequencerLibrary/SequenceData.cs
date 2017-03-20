@@ -17,6 +17,8 @@
 namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using NatsnudaLibrary;
@@ -25,7 +27,11 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     /// Represents an RGB LED light sequence in an RGB LED Sequencer.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public sealed class SequenceData
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Microsoft.Naming",
+        "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "We don't follow this convention.")]
+    public sealed class SequenceData : IReadOnlyList<SequenceStep>, IEnumerable<SequenceStep>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         private readonly SequenceStep[] sequenceSteps;
@@ -101,6 +107,12 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int StepCount { get; }
 
+        /// <inheritdoc/>
+        int IReadOnlyCollection<SequenceStep>.Count
+        {
+            get { return this.StepCount; }
+        }
+
         /// <summary>
         /// Gets the debugger display string.
         /// </summary>
@@ -122,6 +134,24 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         public SequenceStep this[int stepIndex]
         {
             get { return this.sequenceSteps[stepIndex]; }
+        }
+
+        /// <inheritdoc/>
+        SequenceStep IReadOnlyList<SequenceStep>.this[int index]
+        {
+            get { return this[index]; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerator<SequenceStep> GetEnumerator()
+        {
+            return ((IEnumerable<SequenceStep>)this.sequenceSteps).GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

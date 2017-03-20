@@ -17,6 +17,8 @@
 namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using NatsnudaLibrary;
@@ -26,7 +28,13 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     /// LEDs part of an RGB LED Sequencer.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public sealed class DotCorrectionData
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Microsoft.Naming",
+        "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "We don't follow this convention.")]
+    public sealed class DotCorrectionData :
+        IReadOnlyList<LedDotCorrection>,
+        IEnumerable<LedDotCorrection>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         private readonly LedDotCorrection[] ledDotCorrections;
@@ -87,6 +95,12 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
             }
         }
 
+        /// <inheritdoc/>
+        int IReadOnlyCollection<LedDotCorrection>.Count
+        {
+            get { return this.ledDotCorrections.Length; }
+        }
+
         /// <summary>
         /// Gets the debugger display string.
         /// </summary>
@@ -105,6 +119,24 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         public LedDotCorrection this[int ledIndex]
         {
             get { return this.ledDotCorrections[ledIndex]; }
+        }
+
+        /// <inheritdoc/>
+        LedDotCorrection IReadOnlyList<LedDotCorrection>.this[int index]
+        {
+            get { return this[index]; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerator<LedDotCorrection> GetEnumerator()
+        {
+            return ((IEnumerable<LedDotCorrection>)this.ledDotCorrections).GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }
