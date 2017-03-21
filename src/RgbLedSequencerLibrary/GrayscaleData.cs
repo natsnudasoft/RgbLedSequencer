@@ -19,6 +19,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using NatsnudaLibrary;
@@ -42,7 +43,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// </summary>
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
-        /// <param name="ledGrayscales">The <see cref="LedGrayscale"/> array that represents
+        /// <param name="ledGrayscales">The <see cref="LedGrayscale"/> collection that represents
         /// the grayscale value of a number of RGB LEDs.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
         /// <paramref name="ledGrayscales"/> is <see langword="null"/>.</exception>
@@ -50,18 +51,19 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// array does not match the number of RGB LEDs.</exception>
         public GrayscaleData(
             IRgbLedSequencerConfiguration sequencerConfig,
-            LedGrayscale[] ledGrayscales)
+            ICollection<LedGrayscale> ledGrayscales)
         {
             ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
             ParameterValidation.IsNotNull(ledGrayscales, nameof(ledGrayscales));
-            if (ledGrayscales.Length != sequencerConfig.RgbLedCount)
+            if (ledGrayscales.Count != sequencerConfig.RgbLedCount)
             {
                 throw new ArgumentException(
-                    "Array length must match the number of RGB LEDs.",
+                    "Collection size must match the number of RGB LEDs.",
                     nameof(ledGrayscales));
             }
 
-            this.ledGrayscales = ledGrayscales;
+            this.ledGrayscales = new LedGrayscale[ledGrayscales.Count];
+            ledGrayscales.CopyTo(this.ledGrayscales, 0);
         }
 
         /// <summary>
@@ -102,6 +104,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// Gets the debugger display string.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string DebuggerDisplay => "{" +
             string.Join(" ", this.ledGrayscales.Select(l => l.DebuggerDisplay)) + "}";
 

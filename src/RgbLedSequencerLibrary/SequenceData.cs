@@ -19,6 +19,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
     using NatsnudaLibrary;
@@ -41,7 +42,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// </summary>
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
-        /// <param name="sequenceSteps">The <see cref="SequenceStep"/> array that represents
+        /// <param name="sequenceSteps">The <see cref="SequenceStep"/> collection that represents
         /// the steps in this sequence.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
         /// <paramref name="sequenceSteps"/> is <see langword="null"/>.</exception>
@@ -49,20 +50,20 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// array was greater than the maximum allowed step count.</exception>
         public SequenceData(
             IRgbLedSequencerConfiguration sequencerConfig,
-            SequenceStep[] sequenceSteps)
+            ICollection<SequenceStep> sequenceSteps)
         {
             ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
             ParameterValidation.IsNotNull(sequenceSteps, nameof(sequenceSteps));
-            if (sequenceSteps.Length > sequencerConfig.MaxStepCount)
+            if (sequenceSteps.Count > sequencerConfig.MaxStepCount)
             {
                 throw new ArgumentException(
-                    "Array length must be less than or equal to " + sequencerConfig.MaxStepCount
+                    "Collection size must be less than or equal to " + sequencerConfig.MaxStepCount
                     + ".",
                     nameof(sequenceSteps));
             }
 
-            this.sequenceSteps = sequenceSteps;
-            this.StepCount = sequenceSteps.Length;
+            this.sequenceSteps = new SequenceStep[sequenceSteps.Count];
+            sequenceSteps.CopyTo(this.sequenceSteps, 0);
         }
 
         /// <summary>
@@ -97,15 +98,16 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
                 this.sequenceSteps[i] = sequenceStepFactory();
 #pragma warning restore CC0031 // Check for null before calling a delegate
             }
-
-            this.StepCount = stepCount;
         }
 
         /// <summary>
         /// Gets the number of steps in the sequence represented by this <see cref="SequenceData"/>.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public int StepCount { get; }
+        public int StepCount
+        {
+            get { return this.sequenceSteps.Length; }
+        }
 
         /// <inheritdoc/>
         int IReadOnlyCollection<SequenceStep>.Count
@@ -117,6 +119,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// Gets the debugger display string.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string DebuggerDisplay => string.Format(
             CultureInfo.CurrentCulture,
             "{{{0}: {1}}}",

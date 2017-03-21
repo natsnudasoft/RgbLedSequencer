@@ -115,6 +115,8 @@
       <Link>CommonSuppressions.cs</Link>
     </Compile>
     <Compile Include="CommandProgressTests.cs" />
+    <Compile Include="Helper\LedDotCorrectionCustomization.cs" />
+    <Compile Include="Helper\LedGrayscaleCustomization.cs" />
     <Compile Include="PicaxeCommandInterfaceTests.cs" />
     <Compile Include="RgbLedSequencerTests.cs" />
     <Compile Include="UnexpectedInstructionExceptionTests.cs" />

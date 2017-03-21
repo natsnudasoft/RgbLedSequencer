@@ -212,7 +212,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             {
                 RgbLedCount = 5,
                 MaxStepCount = 8,
-                StepCount = 5
+                StepCount = 5,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
             sequencerConfigMock.Setup(s => s.SequenceCount).Returns(SequenceCount);
@@ -253,7 +255,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             {
                 RgbLedCount = 5,
                 MaxStepCount = 8,
-                StepCount = 5
+                StepCount = 5,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
             const byte SequenceIndex = 5;
@@ -284,7 +288,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             {
                 RgbLedCount = 5,
                 MaxStepCount = 8,
-                StepCount = 5
+                StepCount = 5,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
             const byte SequenceIndex = 5;

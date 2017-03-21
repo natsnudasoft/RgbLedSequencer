@@ -40,7 +40,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new GrayscaleDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
 #pragma warning disable SA1118 // Parameter must not span multiple lines
@@ -66,7 +67,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new GrayscaleDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
 
@@ -81,7 +83,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new GrayscaleDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
             var sut = fixture.Create<GrayscaleData>();
@@ -103,7 +106,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new GrayscaleDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
             var sut = fixture.Create<GrayscaleData>();
@@ -130,7 +134,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new GrayscaleDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
 
@@ -145,7 +150,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new GrayscaleDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
             var sut = (IReadOnlyList<LedGrayscale>)fixture.Create<GrayscaleData>();
@@ -161,10 +167,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new GrayscaleDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
-            var expected = fixture.Create<LedGrayscale[]>();
+            var expected = fixture.Create<ICollection<LedGrayscale>>();
             var sut = new GrayscaleData(sequencerConfigMock.Object, expected);
 
             Assert.Equal(expected, sut);

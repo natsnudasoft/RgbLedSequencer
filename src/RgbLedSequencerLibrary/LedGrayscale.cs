@@ -130,6 +130,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// Gets the debugger display string.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string DebuggerDisplay => "#" +
             this.Red.ToString("X2", CultureInfo.CurrentCulture) +
             this.Green.ToString("X2", CultureInfo.CurrentCulture) +

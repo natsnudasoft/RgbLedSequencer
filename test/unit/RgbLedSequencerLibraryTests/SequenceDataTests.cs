@@ -44,7 +44,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepCount = 770,
                 StepCount = 10,
                 MaxStepDelay = 1000,
-                StepDelay = 500
+                StepDelay = 500,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
 #pragma warning disable SA1118 // Parameter must not span multiple lines
@@ -80,7 +81,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepDelay = 500,
                 StepDelay = 50,
                 MaxStepCount = 10,
-                StepCount = 8
+                StepCount = 8,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
             var sequenceSteps =
@@ -102,7 +104,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepDelay = 500,
                 StepDelay = 50,
                 MaxStepCount = 10,
-                StepCount = 8
+                StepCount = 8,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
             var sequenceStepFactory = fixture.Create<Func<SequenceStep>>();
@@ -124,6 +127,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var customization = new SequenceDataCustomization(sequencerConfigMock)
             {
                 MaxStepCount = int.MaxValue,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
 
@@ -141,7 +146,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var customization = new SequenceDataCustomization(sequencerConfigMock)
             {
                 MaxStepCount = 770,
-                StepCount = 5
+                StepCount = 5,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
             var sut = fixture.Create<SequenceData>();
@@ -168,7 +175,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var customization = new SequenceDataCustomization(sequencerConfigMock)
             {
                 MaxStepCount = 770,
-                StepCount = 8
+                StepCount = 8,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
             var sut = fixture.Create<SequenceData>();
@@ -190,7 +199,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var customization = new SequenceDataCustomization(sequencerConfigMock)
             {
                 MaxStepCount = 770,
-                StepCount = 9
+                StepCount = 9,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
 
@@ -206,7 +217,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var customization = new SequenceDataCustomization(sequencerConfigMock)
             {
                 MaxStepCount = 770,
-                StepCount = 9
+                StepCount = 9,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
             var sut = (IReadOnlyList<SequenceStep>)fixture.Create<SequenceData>();
@@ -223,10 +236,12 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var customization = new SequenceDataCustomization(sequencerConfigMock)
             {
                 MaxStepCount = 770,
-                StepCount = 9
+                StepCount = 9,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
-            var expected = fixture.Create<SequenceStep[]>();
+            var expected = fixture.Create<ICollection<SequenceStep>>();
             var sut = new SequenceData(sequencerConfigMock.Object, expected);
 
             Assert.Equal(expected, sut);

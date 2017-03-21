@@ -17,6 +17,7 @@
 namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Moq;
     using NatsnudaLibrary.TestExtensions;
@@ -24,7 +25,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
     using Ploeh.AutoFixture.Kernel;
     using RgbLedSequencerLibrary;
 
-    public sealed class DotCorrectionDataCustomization : SequencerConfigurationCustomization
+    public sealed class DotCorrectionDataCustomization : LedDotCorrectionCustomization
     {
         public DotCorrectionDataCustomization(
             Mock<IRgbLedSequencerConfiguration> sequencerConfigMock)
@@ -41,7 +42,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
                 "RgbLedCount customization must be greater than or equal to 0.");
             FavorFactoryConstructor(fixture);
             this.SequencerConfigMock.Setup(c => c.RgbLedCount).Returns(this.RgbLedCount);
-            fixture.Inject(fixture.CreateMany<LedDotCorrection>(this.RgbLedCount).ToArray());
+            fixture.Inject<ICollection<LedDotCorrection>>(
+                fixture.CreateMany<LedDotCorrection>(this.RgbLedCount).ToArray());
         }
 
         private static void FavorFactoryConstructor(IFixture fixture)

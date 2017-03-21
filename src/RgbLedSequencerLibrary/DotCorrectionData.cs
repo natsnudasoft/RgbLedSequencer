@@ -19,6 +19,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using NatsnudaLibrary;
@@ -44,8 +45,8 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// </summary>
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
-        /// <param name="ledDotCorrections">The <see cref="LedDotCorrection"/> array that represents
-        /// the dot correction value of a number of RGB LEDs.</param>
+        /// <param name="ledDotCorrections">The <see cref="LedDotCorrection"/> collection that
+        /// represents the dot correction value of a number of RGB LEDs.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
         /// <paramref name="ledDotCorrections"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The length of the
@@ -53,18 +54,19 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// </exception>
         public DotCorrectionData(
             IRgbLedSequencerConfiguration sequencerConfig,
-            LedDotCorrection[] ledDotCorrections)
+            ICollection<LedDotCorrection> ledDotCorrections)
         {
             ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
             ParameterValidation.IsNotNull(ledDotCorrections, nameof(ledDotCorrections));
-            if (ledDotCorrections.Length != sequencerConfig.RgbLedCount)
+            if (ledDotCorrections.Count != sequencerConfig.RgbLedCount)
             {
                 throw new ArgumentException(
-                    "Array length must match the number of RGB LEDs.",
+                    "Collection size must match the number of RGB LEDs.",
                     nameof(ledDotCorrections));
             }
 
-            this.ledDotCorrections = ledDotCorrections;
+            this.ledDotCorrections = new LedDotCorrection[ledDotCorrections.Count];
+            ledDotCorrections.CopyTo(this.ledDotCorrections, 0);
         }
 
         /// <summary>
@@ -105,6 +107,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// Gets the debugger display string.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string DebuggerDisplay => "{" +
             string.Join(" ", this.ledDotCorrections.Select(l => l.DebuggerDisplay)) + "}";
 

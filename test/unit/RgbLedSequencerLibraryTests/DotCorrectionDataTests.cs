@@ -40,7 +40,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxDotCorrection = byte.MaxValue
             };
             fixture.Customize(customization);
 #pragma warning disable SA1118 // Parameter must not span multiple lines
@@ -66,7 +67,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxDotCorrection = byte.MaxValue
             };
             fixture.Customize(customization);
 
@@ -81,7 +83,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxDotCorrection = byte.MaxValue
             };
             fixture.Customize(customization);
             var sut = fixture.Create<DotCorrectionData>();
@@ -103,7 +106,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxDotCorrection = byte.MaxValue
             };
             fixture.Customize(customization);
             var sut = fixture.Create<DotCorrectionData>();
@@ -130,7 +134,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxDotCorrection = byte.MaxValue
             };
             fixture.Customize(customization);
 
@@ -145,7 +150,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxDotCorrection = byte.MaxValue
             };
             fixture.Customize(customization);
             var sut = (IReadOnlyList<LedDotCorrection>)fixture.Create<DotCorrectionData>();
@@ -161,10 +167,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
+                MaxDotCorrection = byte.MaxValue
             };
             fixture.Customize(customization);
-            var expected = fixture.Create<LedDotCorrection[]>();
+            var expected = fixture.Create<ICollection<LedDotCorrection>>();
             var sut = new DotCorrectionData(sequencerConfigMock.Object, expected);
 
             Assert.Equal(expected, sut);

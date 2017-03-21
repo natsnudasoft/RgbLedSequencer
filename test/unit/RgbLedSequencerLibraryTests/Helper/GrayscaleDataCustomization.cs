@@ -17,6 +17,7 @@
 namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Moq;
     using NatsnudaLibrary.TestExtensions;
@@ -24,7 +25,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
     using Ploeh.AutoFixture.Kernel;
     using RgbLedSequencerLibrary;
 
-    public class GrayscaleDataCustomization : SequencerConfigurationCustomization
+    public class GrayscaleDataCustomization : LedGrayscaleCustomization
     {
         public GrayscaleDataCustomization(Mock<IRgbLedSequencerConfiguration> sequencerConfigMock)
             : base(sequencerConfigMock)
@@ -35,12 +36,14 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 
         public override void Customize(IFixture fixture)
         {
+            base.Customize(fixture);
             System.Diagnostics.Debug.Assert(
                 this.RgbLedCount >= 0,
                 "RgbLedCount customization must be greater than or equal to 0.");
             FavorFactoryConstructor(fixture);
             this.SequencerConfigMock.Setup(c => c.RgbLedCount).Returns(this.RgbLedCount);
-            fixture.Inject(fixture.CreateMany<LedGrayscale>(this.RgbLedCount).ToArray());
+            fixture.Inject<ICollection<LedGrayscale>>(
+                fixture.CreateMany<LedGrayscale>(this.RgbLedCount).ToArray());
         }
 
         private static void FavorFactoryConstructor(IFixture fixture)
