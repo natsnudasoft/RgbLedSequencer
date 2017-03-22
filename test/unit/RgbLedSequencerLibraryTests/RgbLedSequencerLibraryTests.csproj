@@ -46,16 +46,16 @@
       <HintPath>..\..\..\packages\Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Moq, Version=4.7.1.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Moq.4.7.1\lib\net45\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.7.8.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moq.4.7.8\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Natsnudasoft.NatsnudaLibrary, Version=0.3.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NatsnudaLibrary.0.3.0\lib\net46\Natsnudasoft.NatsnudaLibrary.dll</HintPath>
+    <Reference Include="Natsnudasoft.NatsnudaLibrary, Version=0.4.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NatsnudaLibrary.0.4.0\lib\net46\Natsnudasoft.NatsnudaLibrary.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Natsnudasoft.NatsnudaLibrary.TestExtensions, Version=0.3.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NatsnudaLibrary.TestExtensions.0.3.0\lib\net46\Natsnudasoft.NatsnudaLibrary.TestExtensions.dll</HintPath>
+    <Reference Include="Natsnudasoft.NatsnudaLibrary.TestExtensions, Version=0.4.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NatsnudaLibrary.TestExtensions.0.4.0\lib\net46\Natsnudasoft.NatsnudaLibrary.TestExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ploeh.Albedo, Version=1.0.2.0, Culture=neutral, PublicKeyToken=179ef6dd03497bbd, processorArchitecture=MSIL">
@@ -151,8 +151,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\..\..\packages\codecracker.CSharp.1.0.2\analyzers\dotnet\cs\CodeCracker.Common.dll" />
-    <Analyzer Include="..\..\..\packages\codecracker.CSharp.1.0.2\analyzers\dotnet\cs\CodeCracker.CSharp.dll" />
+    <Analyzer Include="..\..\..\packages\codecracker.CSharp.1.0.3\analyzers\dotnet\cs\CodeCracker.Common.dll" />
+    <Analyzer Include="..\..\..\packages\codecracker.CSharp.1.0.3\analyzers\dotnet\cs\CodeCracker.CSharp.dll" />
     <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Menees.Analyzers.dll" />
     <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Microsoft.Build.dll" />
     <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Microsoft.Build.Engine.dll" />
