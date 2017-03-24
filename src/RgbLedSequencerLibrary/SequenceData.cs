@@ -32,7 +32,10 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         "Microsoft.Naming",
         "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "We don't follow this convention.")]
-    public sealed class SequenceData : IReadOnlyList<SequenceStep>, IEnumerable<SequenceStep>
+    public sealed class SequenceData :
+        IReadOnlyList<SequenceStep>,
+        IEnumerable<SequenceStep>,
+        IEquatable<SequenceData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         private readonly SequenceStep[] sequenceSteps;
@@ -155,6 +158,66 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(SequenceData other)
+        {
+            bool result;
+            if (ReferenceEquals(other, null))
+            {
+                result = false;
+            }
+            else if (ReferenceEquals(other, this))
+            {
+                result = true;
+            }
+            else if (other.StepCount == this.StepCount)
+            {
+                result = true;
+                for (int i = 0; i < this.sequenceSteps.Length; ++i)
+                {
+                    var otherSequenceStep = other.sequenceSteps[i];
+                    var thisSequenceStep = this.sequenceSteps[i];
+                    if (!ReferenceEquals(otherSequenceStep, thisSequenceStep) &&
+                        !(otherSequenceStep?.Equals(thisSequenceStep)).GetValueOrDefault())
+                    {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as SequenceData);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            const int InitPrime = 17;
+            const int MultPrime = 23;
+            var hash = InitPrime;
+            unchecked
+            {
+                foreach (var sequenceStep in this.sequenceSteps)
+                {
+                    hash = (hash * MultPrime) + sequenceStep.GetHashCode();
+                }
+
+                hash = (hash * MultPrime) + this.StepCount.GetHashCode();
+            }
+
+            return hash;
         }
     }
 }

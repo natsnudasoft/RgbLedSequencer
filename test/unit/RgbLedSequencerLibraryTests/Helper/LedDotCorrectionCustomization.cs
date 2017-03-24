@@ -17,7 +17,9 @@
 namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 {
     using Moq;
+    using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
+    using Ploeh.AutoFixture.Kernel;
     using RgbLedSequencerLibrary;
 
     public class LedDotCorrectionCustomization : SequencerConfigurationCustomization
@@ -32,7 +34,18 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 
         public override void Customize(IFixture fixture)
         {
+            FavorDotCorrectionsConstructor(fixture);
             this.SequencerConfigMock.Setup(c => c.MaxDotCorrection).Returns(this.MaxDotCorrection);
+        }
+
+        private static void FavorDotCorrectionsConstructor(IFixture fixture)
+        {
+            fixture.Customize<LedDotCorrection>(c => c.FromFactory(
+                new MethodInvoker(new ParameterTypeFavoringConstructorQuery(
+                    typeof(IRgbLedSequencerConfiguration),
+                    typeof(byte),
+                    typeof(byte),
+                    typeof(byte)))));
         }
     }
 }

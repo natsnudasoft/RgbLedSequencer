@@ -24,6 +24,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
     using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
+    using Ploeh.AutoFixture.Kernel;
     using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary;
     using Xunit;
@@ -175,6 +176,120 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var sut = new GrayscaleData(sequencerConfigMock.Object, expected);
 
             Assert.Equal(expected, sut);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void EqualsOverrideCorrectlyImplemented(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            EqualsOverrideNewObjectAssertion equalsNewObjectAssertion,
+            EqualsOverrideNullAssertion equalsOverrideNullAssertion,
+            EqualsOverrideOtherSuccessiveAssertion equalsOverrideOtherSuccessiveAssertion,
+            EqualsOverrideSelfAssertion equalsOverrideSelfAssertion,
+            Fixture fixture)
+        {
+            var equalsOverrideTheoriesSuccessiveAssertion =
+                new EqualsOverrideTheoriesSuccessiveAssertion(
+                    fixture,
+                    CreateDifferingLedGrayscalesLengthTheory(),
+                    CreateDifferingLedGrayscalesTheory(),
+                    CreateEqualTheory());
+            var customization = new GrayscaleDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxGrayscale = byte.MaxValue
+            };
+            fixture.Customize(customization);
+            var equalsMethods = SutType.GetMethods()
+                .Where(m => m.Name == nameof(GrayscaleData.Equals))
+                .ToArray();
+
+            equalsNewObjectAssertion.Verify(equalsMethods);
+            equalsOverrideNullAssertion.Verify(equalsMethods);
+            equalsOverrideOtherSuccessiveAssertion.Verify(equalsMethods);
+            equalsOverrideSelfAssertion.Verify(equalsMethods);
+            equalsOverrideTheoriesSuccessiveAssertion.Verify(equalsMethods);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void GetHashCodeOverrideCorrectlyImplemented(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            GetHashCodeSuccessiveAssertion assertion,
+            Fixture fixture)
+        {
+            var customization = new GrayscaleDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxGrayscale = byte.MaxValue
+            };
+            fixture.Customize(customization);
+
+            assertion.Verify(SutType.GetMethod(nameof(GrayscaleData.GetHashCode)));
+        }
+
+        internal static EqualsOverrideTheory CreateDifferingLedGrayscalesLengthTheory()
+        {
+            const int RgbLedCountLeft = 5;
+            const int RgbLedCountRight = 3;
+            var fixture = new Fixture();
+            var sequencerConfigLeftMock = new Mock<IRgbLedSequencerConfiguration>();
+            sequencerConfigLeftMock.Setup(c => c.RgbLedCount).Returns(RgbLedCountLeft);
+            sequencerConfigLeftMock.Setup(c => c.MaxGrayscale).Returns(byte.MaxValue);
+            fixture.Inject(sequencerConfigLeftMock.Object);
+            var left = new GrayscaleData(
+                sequencerConfigLeftMock.Object,
+                fixture.CreateMany<LedGrayscale>(RgbLedCountLeft).ToArray());
+            var sequencerConfigRightMock = new Mock<IRgbLedSequencerConfiguration>();
+            sequencerConfigRightMock.Setup(c => c.RgbLedCount).Returns(RgbLedCountRight);
+            sequencerConfigRightMock.Setup(c => c.MaxGrayscale).Returns(byte.MaxValue);
+            fixture.Inject(sequencerConfigRightMock.Object);
+            var right = new GrayscaleData(
+                sequencerConfigRightMock.Object,
+                fixture.CreateMany<LedGrayscale>(RgbLedCountRight).ToArray());
+            return new EqualsOverrideTheory(left, right, false);
+        }
+
+        internal static EqualsOverrideTheory CreateDifferingLedGrayscalesTheory()
+        {
+            const int RgbLedCount = 5;
+            var fixture = new Fixture();
+            var sequencerConfigMock = new Mock<IRgbLedSequencerConfiguration>();
+            sequencerConfigMock.Setup(c => c.RgbLedCount).Returns(RgbLedCount);
+            sequencerConfigMock.Setup(c => c.MaxGrayscale).Returns(byte.MaxValue);
+            fixture.Inject(sequencerConfigMock.Object);
+            var uniqueBytes =
+                new Queue<byte>(new Generator<byte>(fixture).Distinct().Take(RgbLedCount * 3 * 2));
+            fixture.Register(() => uniqueBytes.Dequeue());
+            fixture.Customize<LedGrayscale>(
+                c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
+            var left = new GrayscaleData(
+                sequencerConfigMock.Object,
+                fixture.CreateMany<LedGrayscale>(RgbLedCount).ToArray());
+            var right = new GrayscaleData(
+                sequencerConfigMock.Object,
+                fixture.CreateMany<LedGrayscale>(RgbLedCount).ToArray());
+            return new EqualsOverrideTheory(left, right, false);
+        }
+
+        internal static EqualsOverrideTheory CreateEqualTheory()
+        {
+            const int RgbLedCount = 5;
+            var fixture = new Fixture();
+            var sequencerConfigMock = new Mock<IRgbLedSequencerConfiguration>();
+            sequencerConfigMock.Setup(c => c.RgbLedCount).Returns(RgbLedCount);
+            sequencerConfigMock.Setup(c => c.MaxGrayscale).Returns(byte.MaxValue);
+            fixture.Inject(sequencerConfigMock.Object);
+            fixture.Inject(fixture.Create<byte>());
+            fixture.Customize<LedGrayscale>(
+                c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
+            var left = new GrayscaleData(
+                sequencerConfigMock.Object,
+                fixture.CreateMany<LedGrayscale>(RgbLedCount).ToArray());
+            var right = new GrayscaleData(
+                sequencerConfigMock.Object,
+                fixture.CreateMany<LedGrayscale>(RgbLedCount).ToArray());
+            return new EqualsOverrideTheory(left, right, true);
         }
     }
 }

@@ -35,7 +35,8 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         Justification = "We don't follow this convention.")]
     public sealed class DotCorrectionData :
         IReadOnlyList<LedDotCorrection>,
-        IEnumerable<LedDotCorrection>
+        IEnumerable<LedDotCorrection>,
+        IEquatable<DotCorrectionData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         private readonly LedDotCorrection[] ledDotCorrections;
@@ -140,6 +141,61 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(DotCorrectionData other)
+        {
+            bool result;
+            if (ReferenceEquals(other, null))
+            {
+                result = false;
+            }
+            else if (ReferenceEquals(other, this))
+            {
+                result = true;
+            }
+            else if (this.ledDotCorrections.Length == other.ledDotCorrections.Length)
+            {
+                result = true;
+                for (int i = 0; i < this.ledDotCorrections.Length; ++i)
+                {
+                    if (other.ledDotCorrections[i] != this.ledDotCorrections[i])
+                    {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as DotCorrectionData);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            const int InitPrime = 17;
+            const int MultPrime = 23;
+            var hash = InitPrime;
+            unchecked
+            {
+                foreach (var ledDotCorrection in this.ledDotCorrections)
+                {
+                    hash = (hash * MultPrime) + ledDotCorrection.GetHashCode();
+                }
+            }
+
+            return hash;
         }
     }
 }

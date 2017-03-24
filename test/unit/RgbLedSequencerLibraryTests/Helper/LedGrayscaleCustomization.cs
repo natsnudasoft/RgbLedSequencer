@@ -17,7 +17,9 @@
 namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 {
     using Moq;
+    using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
+    using Ploeh.AutoFixture.Kernel;
     using RgbLedSequencerLibrary;
 
     public class LedGrayscaleCustomization : SequencerConfigurationCustomization
@@ -31,7 +33,18 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 
         public override void Customize(IFixture fixture)
         {
+            FavorGrayscalesConstructor(fixture);
             this.SequencerConfigMock.Setup(c => c.MaxGrayscale).Returns(this.MaxGrayscale);
+        }
+
+        private static void FavorGrayscalesConstructor(IFixture fixture)
+        {
+            fixture.Customize<LedDotCorrection>(c => c.FromFactory(
+                new MethodInvoker(new ParameterTypeFavoringConstructorQuery(
+                    typeof(IRgbLedSequencerConfiguration),
+                    typeof(byte),
+                    typeof(byte),
+                    typeof(byte)))));
         }
     }
 }

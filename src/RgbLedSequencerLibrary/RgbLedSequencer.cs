@@ -395,11 +395,9 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
                 ledGrayscales[ledIndex] = await this.ReadLedGrayscaleAsync().ConfigureAwait(false);
             }
 
+            var stepDelay = await this.PicaxeCommandInterface.ReadWordAsync().ConfigureAwait(false);
             var grayscaleData = new GrayscaleData(this.SequencerConfig, ledGrayscales);
-            return new SequenceStep(this.SequencerConfig, grayscaleData)
-            {
-                StepDelay = await this.PicaxeCommandInterface.ReadWordAsync().ConfigureAwait(false)
-            };
+            return new SequenceStep(this.SequencerConfig, grayscaleData, stepDelay);
         }
 
         private async Task SendSequenceStepAsync(SequenceData sequence, int stepIndex)
@@ -422,28 +420,18 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
 
         private async Task<LedDotCorrection> ReadLedDotCorrectionAsync()
         {
-            return new LedDotCorrection(this.SequencerConfig)
-            {
-                Blue = await this.PicaxeCommandInterface.ReadByteAsync()
-                    .ConfigureAwait(false),
-                Green = await this.PicaxeCommandInterface.ReadByteAsync()
-                    .ConfigureAwait(false),
-                Red = await this.PicaxeCommandInterface.ReadByteAsync()
-                    .ConfigureAwait(false)
-            };
+            var blue = await this.PicaxeCommandInterface.ReadByteAsync().ConfigureAwait(false);
+            var green = await this.PicaxeCommandInterface.ReadByteAsync().ConfigureAwait(false);
+            var red = await this.PicaxeCommandInterface.ReadByteAsync().ConfigureAwait(false);
+            return new LedDotCorrection(this.SequencerConfig, red, green, blue);
         }
 
         private async Task<LedGrayscale> ReadLedGrayscaleAsync()
         {
-            return new LedGrayscale(this.SequencerConfig)
-            {
-                Blue = await this.PicaxeCommandInterface.ReadByteAsync()
-                    .ConfigureAwait(false),
-                Green = await this.PicaxeCommandInterface.ReadByteAsync()
-                    .ConfigureAwait(false),
-                Red = await this.PicaxeCommandInterface.ReadByteAsync()
-                    .ConfigureAwait(false)
-            };
+            var blue = await this.PicaxeCommandInterface.ReadByteAsync().ConfigureAwait(false);
+            var green = await this.PicaxeCommandInterface.ReadByteAsync().ConfigureAwait(false);
+            var red = await this.PicaxeCommandInterface.ReadByteAsync().ConfigureAwait(false);
+            return new LedGrayscale(this.SequencerConfig, red, green, blue);
         }
 
         private async Task SendLedDotCorrectionAsync(LedDotCorrection ledDotCorrection)

@@ -26,16 +26,9 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     /// Describes an individual step, and the delay time of the step, within an RGB LED Sequencer
     /// sequence.
     /// </summary>
-    /// <seealso cref="INotifyPropertyChanged" />
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public sealed class SequenceStep : INotifyPropertyChanged
+    public sealed class SequenceStep : IEquatable<SequenceStep>
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly IRgbLedSequencerConfiguration sequencerConfig;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int stepDelay;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SequenceStep"/> class.
         /// </summary>
@@ -44,17 +37,29 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// <param name="grayscaleData">The <see cref="RgbLedSequencerLibrary.GrayscaleData"/> that
         /// this step has.
         /// </param>
+        /// <param name="stepDelay">The step delay (time to wait at the end of this step) value for
+        /// this step. This value must be positive, and can not be larger than the maximum step
+        /// delay defined in the specified configuration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
         /// <paramref name="grayscaleData"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="stepDelay"/> is less than
+        /// zero or larger than the maximum step delay defined in the specified configuration.
+        /// </exception>
         public SequenceStep(
             IRgbLedSequencerConfiguration sequencerConfig,
-            GrayscaleData grayscaleData)
+            GrayscaleData grayscaleData,
+            int stepDelay)
         {
             ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
             ParameterValidation.IsNotNull(grayscaleData, nameof(grayscaleData));
+            ParameterValidation.IsBetweenInclusive(
+                stepDelay,
+                0,
+                sequencerConfig.MaxStepDelay,
+                nameof(stepDelay));
 
-            this.sequencerConfig = sequencerConfig;
             this.GrayscaleData = grayscaleData;
+            this.StepDelay = stepDelay;
         }
 
         /// <summary>
@@ -65,23 +70,32 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// describes the configuration of the RGB LED Sequencer.</param>
         /// <param name="grayscaleDataFactory">The factory to use to create instances of
         /// <see cref="RgbLedSequencerLibrary.GrayscaleData"/>.</param>
+        /// <param name="stepDelay">The step delay (time to wait at the end of this step) value for
+        /// this step. This value must be positive, and can not be larger than the maximum step
+        /// delay defined in the specified configuration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
         /// <paramref name="grayscaleDataFactory"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="stepDelay"/> is less than
+        /// zero or larger than the maximum step delay defined in the specified configuration.
+        /// </exception>
         public SequenceStep(
             IRgbLedSequencerConfiguration sequencerConfig,
-            Func<GrayscaleData> grayscaleDataFactory)
+            Func<GrayscaleData> grayscaleDataFactory,
+            int stepDelay)
         {
             ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
             ParameterValidation.IsNotNull(grayscaleDataFactory, nameof(grayscaleDataFactory));
+            ParameterValidation.IsBetweenInclusive(
+                stepDelay,
+                0,
+                sequencerConfig.MaxStepDelay,
+                nameof(stepDelay));
 
-            this.sequencerConfig = sequencerConfig;
 #pragma warning disable CC0031 // Check for null before calling a delegate
             this.GrayscaleData = grayscaleDataFactory();
 #pragma warning restore CC0031 // Check for null before calling a delegate
+            this.StepDelay = stepDelay;
         }
-
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Gets the grayscale data for the RGB LED Sequencer at this step.
@@ -90,27 +104,11 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         public GrayscaleData GrayscaleData { get; }
 
         /// <summary>
-        /// Gets or sets the step delay (time to wait at the end of this step) value for this step.
+        /// Gets the step delay (time to wait at the end of this step) value for this step.
         /// This value must be positive, can not be larger than the maximum value defined in the
         /// application config, and will be automatically clamped.
         /// </summary>
-        public int StepDelay
-        {
-            get
-            {
-                return this.stepDelay;
-            }
-
-            set
-            {
-                value = Math.Max(0, Math.Min(value, this.sequencerConfig.MaxStepDelay));
-                if (this.stepDelay != value)
-                {
-                    this.stepDelay = value;
-                    this.OnPropertyChanged(nameof(this.StepDelay));
-                }
-            }
-        }
+        public int StepDelay { get; }
 
         /// <summary>
         /// Gets the debugger display string.
@@ -125,9 +123,48 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
             nameof(this.StepDelay),
             this.StepDelay);
 
-        private void OnPropertyChanged(string propertyName)
+        /// <inheritdoc/>
+        public bool Equals(SequenceStep other)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            bool result;
+            if (ReferenceEquals(other, null))
+            {
+                result = false;
+            }
+            else if (ReferenceEquals(other, this))
+            {
+                result = true;
+            }
+            else
+            {
+                var grayscaleDataEqual = ReferenceEquals(other.GrayscaleData, this.GrayscaleData) ||
+                    (other.GrayscaleData?.Equals(this.GrayscaleData)).GetValueOrDefault();
+                result = grayscaleDataEqual && other.StepDelay == this.StepDelay;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as SequenceStep);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            const int InitPrime = 17;
+            const int MultPrime = 23;
+            var hash = InitPrime;
+            unchecked
+            {
+                hash = (hash * MultPrime)
+                    + (this.GrayscaleData != null ? this.GrayscaleData.GetHashCode() : 0);
+                hash = (hash * MultPrime) + this.StepDelay.GetHashCode();
+            }
+
+            return hash;
         }
     }
 }

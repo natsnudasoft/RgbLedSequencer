@@ -26,22 +26,11 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     /// Represents dot correction (brightness difference compensation) values for a single RGB LED.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public sealed class LedDotCorrection : INotifyPropertyChanged
+    public struct LedDotCorrection : IEquatable<LedDotCorrection>
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly IRgbLedSequencerConfiguration sequencerConfig;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private byte redDotCorrection;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private byte greenDotCorrection;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private byte blueDotCorrection;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="LedDotCorrection"/> class.
+        /// Initializes a new instance of the <see cref="LedDotCorrection"/> struct, with values
+        /// defaulting to the maximum dot correction defined by the specified configuration.
         /// </summary>
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
@@ -51,83 +40,72 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         {
             ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
 
-            this.redDotCorrection = (byte)sequencerConfig.MaxDotCorrection;
-            this.greenDotCorrection = (byte)sequencerConfig.MaxDotCorrection;
-            this.blueDotCorrection = (byte)sequencerConfig.MaxDotCorrection;
-            this.sequencerConfig = sequencerConfig;
-        }
-
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Gets or sets the dot correction (brightness difference compensation) for the red part of
-        /// an RGB LED. This value can not be larger than the maximum value defined in the
-        /// application config, and will be automatically clamped.
-        /// </summary>
-        public byte Red
-        {
-            get
-            {
-                return this.redDotCorrection;
-            }
-
-            set
-            {
-                value = (byte)Math.Min(value, this.sequencerConfig.MaxDotCorrection);
-                if (this.redDotCorrection != value)
-                {
-                    this.redDotCorrection = value;
-                    this.OnPropertyChanged(nameof(this.Red));
-                }
-            }
+            this.Red = (byte)sequencerConfig.MaxDotCorrection;
+            this.Green = (byte)sequencerConfig.MaxDotCorrection;
+            this.Blue = (byte)sequencerConfig.MaxDotCorrection;
         }
 
         /// <summary>
-        /// Gets or sets the dot correction (brightness difference compensation) for the green part
-        /// of an RGB LED. This value can not be larger than the maximum value defined in the
-        /// application config, and will be automatically clamped.
+        /// Initializes a new instance of the <see cref="LedDotCorrection"/> struct.
         /// </summary>
-        public byte Green
+        /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
+        /// describes the configuration of the RGB LED Sequencer.</param>
+        /// <param name="red">The dot correction (brightness difference compensation) for the red
+        /// part of an RGB LED. This value can not be larger than the maximum dot correction defined
+        /// in the specified configuration.</param>
+        /// <param name="green">The dot correction (brightness difference compensation) for the
+        /// green part of an RGB LED. This value can not be larger than the maximum dot correction
+        /// defined in the specified configuration.</param>
+        /// <param name="blue">The dot correction (brightness difference compensation) for the blue
+        /// part of an RGB LED. This value can not be larger than the maximum dot correction defined
+        /// in the specified configuration.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/> is
+        /// <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="red"/>,
+        /// <paramref name="green"/>, or <paramref name="blue"/> is larger than the maximum dot
+        /// correction defined in the specified configuration.</exception>
+        public LedDotCorrection(
+            IRgbLedSequencerConfiguration sequencerConfig,
+            byte red,
+            byte green,
+            byte blue)
         {
-            get
-            {
-                return this.greenDotCorrection;
-            }
+            ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
+            ParameterValidation.IsLessThanOrEqualTo(
+                red,
+                sequencerConfig.MaxDotCorrection,
+                nameof(red));
+            ParameterValidation.IsLessThanOrEqualTo(
+                green,
+                sequencerConfig.MaxDotCorrection,
+                nameof(green));
+            ParameterValidation.IsLessThanOrEqualTo(
+                blue,
+                sequencerConfig.MaxDotCorrection,
+                nameof(blue));
 
-            set
-            {
-                value = (byte)Math.Min(value, this.sequencerConfig.MaxDotCorrection);
-                if (this.greenDotCorrection != value)
-                {
-                    this.greenDotCorrection = value;
-                    this.OnPropertyChanged(nameof(this.Green));
-                }
-            }
+            this.Red = red;
+            this.Green = green;
+            this.Blue = blue;
         }
 
         /// <summary>
-        /// Gets or sets the dot correction (brightness difference compensation) for the blue part
-        /// of an RGB LED. This value can not be larger than the maximum value defined in the
-        /// application config, and will be automatically clamped.
+        /// Gets the dot correction (brightness difference compensation) for the red part of an RGB
+        /// LED.
         /// </summary>
-        public byte Blue
-        {
-            get
-            {
-                return this.blueDotCorrection;
-            }
+        public byte Red { get; }
 
-            set
-            {
-                value = (byte)Math.Min(value, this.sequencerConfig.MaxDotCorrection);
-                if (this.blueDotCorrection != value)
-                {
-                    this.blueDotCorrection = value;
-                    this.OnPropertyChanged(nameof(this.Blue));
-                }
-            }
-        }
+        /// <summary>
+        /// Gets the dot correction (brightness difference compensation) for the green part of an
+        /// RGB LED.
+        /// </summary>
+        public byte Green { get; }
+
+        /// <summary>
+        /// Gets the dot correction (brightness difference compensation) for the blue part of an RGB
+        /// LED.
+        /// </summary>
+        public byte Blue { get; }
 
         /// <summary>
         /// Gets the debugger display string.
@@ -139,9 +117,62 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
             this.Green.ToString("X2", CultureInfo.CurrentCulture) +
             this.Blue.ToString("X2", CultureInfo.CurrentCulture);
 
-        private void OnPropertyChanged(string propertyName)
+        /// <summary>
+        /// Determines if the specified operands are equal.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="left"/> is equal to <paramref name="right"/>;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
+        public static bool operator ==(LedDotCorrection left, LedDotCorrection right)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return left.Red == right.Red &&
+                left.Green == right.Green &&
+                left.Blue == right.Blue;
+        }
+
+        /// <summary>
+        /// Determines if the specified operands are not equal.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="left"/> is not equal to
+        /// <paramref name="right"/>; otherwise, <see langword="false"/>.
+        /// </returns>
+        public static bool operator !=(LedDotCorrection left, LedDotCorrection right)
+        {
+            return !(left == right);
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(LedDotCorrection other)
+        {
+            return other == this;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return obj is LedDotCorrection && (LedDotCorrection)obj == this;
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            const int InitPrime = 17;
+            const int MultPrime = 23;
+            var hash = InitPrime;
+            unchecked
+            {
+                hash = (hash * MultPrime) + this.Red.GetHashCode();
+                hash = (hash * MultPrime) + this.Green.GetHashCode();
+                hash = (hash * MultPrime) + this.Blue.GetHashCode();
+            }
+
+            return hash;
         }
     }
 }

@@ -33,7 +33,10 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         "Microsoft.Naming",
         "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "We don't follow this convention.")]
-    public sealed class GrayscaleData : IReadOnlyList<LedGrayscale>, IEnumerable<LedGrayscale>
+    public sealed class GrayscaleData :
+        IReadOnlyList<LedGrayscale>,
+        IEnumerable<LedGrayscale>,
+        IEquatable<GrayscaleData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         private readonly LedGrayscale[] ledGrayscales;
@@ -137,6 +140,61 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(GrayscaleData other)
+        {
+            bool result;
+            if (ReferenceEquals(other, null))
+            {
+                result = false;
+            }
+            else if (ReferenceEquals(other, this))
+            {
+                result = true;
+            }
+            else if (this.ledGrayscales.Length == other.ledGrayscales.Length)
+            {
+                result = true;
+                for (int i = 0; i < this.ledGrayscales.Length; ++i)
+                {
+                    if (other.ledGrayscales[i] != this.ledGrayscales[i])
+                    {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as GrayscaleData);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            const int InitPrime = 17;
+            const int MultPrime = 23;
+            var hash = InitPrime;
+            unchecked
+            {
+                foreach (var ledGrayscale in this.ledGrayscales)
+                {
+                    hash = (hash * MultPrime) + ledGrayscale.GetHashCode();
+                }
+            }
+
+            return hash;
         }
     }
 }
