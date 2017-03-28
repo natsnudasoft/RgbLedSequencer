@@ -17,6 +17,9 @@
 namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
     using NatsnudaLibrary;
@@ -25,7 +28,14 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     /// Represents an RGB LED light sequence in an RGB LED Sequencer.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public sealed class SequenceData
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Microsoft.Naming",
+        "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "We don't follow this convention.")]
+    public sealed class SequenceData :
+        IReadOnlyList<SequenceStep>,
+        IEnumerable<SequenceStep>,
+        IEquatable<SequenceData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         private readonly SequenceStep[] sequenceSteps;
@@ -35,7 +45,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// </summary>
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
-        /// <param name="sequenceSteps">The <see cref="SequenceStep"/> array that represents
+        /// <param name="sequenceSteps">The <see cref="SequenceStep"/> collection that represents
         /// the steps in this sequence.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
         /// <paramref name="sequenceSteps"/> is <see langword="null"/>.</exception>
@@ -43,20 +53,20 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// array was greater than the maximum allowed step count.</exception>
         public SequenceData(
             IRgbLedSequencerConfiguration sequencerConfig,
-            SequenceStep[] sequenceSteps)
+            ICollection<SequenceStep> sequenceSteps)
         {
             ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
             ParameterValidation.IsNotNull(sequenceSteps, nameof(sequenceSteps));
-            if (sequenceSteps.Length > sequencerConfig.MaxStepCount)
+            if (sequenceSteps.Count > sequencerConfig.MaxStepCount)
             {
                 throw new ArgumentException(
-                    "Array length must be less than or equal to " + sequencerConfig.MaxStepCount
+                    "Collection size must be less than or equal to " + sequencerConfig.MaxStepCount
                     + ".",
                     nameof(sequenceSteps));
             }
 
-            this.sequenceSteps = sequenceSteps;
-            this.StepCount = sequenceSteps.Length;
+            this.sequenceSteps = new SequenceStep[sequenceSteps.Count];
+            sequenceSteps.CopyTo(this.sequenceSteps, 0);
         }
 
         /// <summary>
@@ -91,20 +101,28 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
                 this.sequenceSteps[i] = sequenceStepFactory();
 #pragma warning restore CC0031 // Check for null before calling a delegate
             }
-
-            this.StepCount = stepCount;
         }
 
         /// <summary>
         /// Gets the number of steps in the sequence represented by this <see cref="SequenceData"/>.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public int StepCount { get; }
+        public int StepCount
+        {
+            get { return this.sequenceSteps.Length; }
+        }
+
+        /// <inheritdoc/>
+        int IReadOnlyCollection<SequenceStep>.Count
+        {
+            get { return this.StepCount; }
+        }
 
         /// <summary>
         /// Gets the debugger display string.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string DebuggerDisplay => string.Format(
             CultureInfo.CurrentCulture,
             "{{{0}: {1}}}",
@@ -122,6 +140,84 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         public SequenceStep this[int stepIndex]
         {
             get { return this.sequenceSteps[stepIndex]; }
+        }
+
+        /// <inheritdoc/>
+        SequenceStep IReadOnlyList<SequenceStep>.this[int index]
+        {
+            get { return this[index]; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerator<SequenceStep> GetEnumerator()
+        {
+            return ((IEnumerable<SequenceStep>)this.sequenceSteps).GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(SequenceData other)
+        {
+            bool result;
+            if (ReferenceEquals(other, null))
+            {
+                result = false;
+            }
+            else if (ReferenceEquals(other, this))
+            {
+                result = true;
+            }
+            else if (other.StepCount == this.StepCount)
+            {
+                result = true;
+                for (int i = 0; i < this.sequenceSteps.Length; ++i)
+                {
+                    var otherSequenceStep = other.sequenceSteps[i];
+                    var thisSequenceStep = this.sequenceSteps[i];
+                    if (!ReferenceEquals(otherSequenceStep, thisSequenceStep) &&
+                        !(otherSequenceStep?.Equals(thisSequenceStep)).GetValueOrDefault())
+                    {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as SequenceData);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            const int InitPrime = 17;
+            const int MultPrime = 23;
+            var hash = InitPrime;
+            unchecked
+            {
+                foreach (var sequenceStep in this.sequenceSteps)
+                {
+                    hash = (hash * MultPrime) + sequenceStep.GetHashCode();
+                }
+
+                hash = (hash * MultPrime) + this.StepCount.GetHashCode();
+            }
+
+            return hash;
         }
     }
 }

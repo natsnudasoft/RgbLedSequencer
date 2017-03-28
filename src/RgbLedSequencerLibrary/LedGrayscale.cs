@@ -26,118 +26,133 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     /// Represents grayscale (PWM brightness control) values for an RGB LED.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public sealed class LedGrayscale : INotifyPropertyChanged
+    public struct LedGrayscale : IEquatable<LedGrayscale>
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly IRgbLedSequencerConfiguration sequencerConfig;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private byte redGrayscale;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private byte greenGrayscale;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private byte blueGrayscale;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="LedGrayscale"/> class.
+        /// Initializes a new instance of the <see cref="LedGrayscale"/> struct.
         /// </summary>
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
+        /// <param name="red">The grayscale (PWM brightness control) value for the red part of an
+        /// RGB LED. This value can not be larger than the maximum grayscale value defined by the
+        /// specified configuration.</param>
+        /// <param name="green">The grayscale (PWM brightness control) value for the green part of
+        /// an RGB LED. This value can not be larger than the maximum grayscale value defined by the
+        /// specified configuration.</param>
+        /// <param name="blue">The grayscale (PWM brightness control) value for the blue part of an
+        /// RGB LED. This value can not be larger than the maximum grayscale value defined by the
+        /// specified configuration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/> is
         /// <see langword="null"/>.</exception>
-        public LedGrayscale(IRgbLedSequencerConfiguration sequencerConfig)
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="red"/>,
+        /// <paramref name="green"/>, or <paramref name="blue"/> is larger than the maximum
+        /// grayscale defined in the specified configuration.</exception>
+        public LedGrayscale(
+            IRgbLedSequencerConfiguration sequencerConfig,
+            byte red,
+            byte green,
+            byte blue)
         {
             ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
+            ParameterValidation.IsLessThanOrEqualTo(
+                red,
+                sequencerConfig.MaxGrayscale,
+                nameof(red));
+            ParameterValidation.IsLessThanOrEqualTo(
+                green,
+                sequencerConfig.MaxGrayscale,
+                nameof(green));
+            ParameterValidation.IsLessThanOrEqualTo(
+                blue,
+                sequencerConfig.MaxGrayscale,
+                nameof(blue));
 
-            this.sequencerConfig = sequencerConfig;
-        }
-
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Gets or sets the grayscale (PWM brightness control) value for the red part of an RGB
-        /// LED. This value can not be larger than the maximum value defined in the application
-        /// config, and will be automatically clamped.
-        /// </summary>
-        public byte Red
-        {
-            get
-            {
-                return this.redGrayscale;
-            }
-
-            set
-            {
-                value = (byte)Math.Min(value, this.sequencerConfig.MaxGrayscale);
-                if (this.redGrayscale != value)
-                {
-                    this.redGrayscale = value;
-                    this.OnPropertyChanged(nameof(this.Red));
-                }
-            }
+            this.Red = red;
+            this.Green = green;
+            this.Blue = blue;
         }
 
         /// <summary>
-        /// Gets or sets the grayscale (PWM brightness control) value for the green part of an RGB
-        /// LED. This value can not be larger than the maximum value defined in the application
-        /// config, and will be automatically clamped.
+        /// Gets the grayscale (PWM brightness control) value for the red part of an RGB LED.
         /// </summary>
-        public byte Green
-        {
-            get
-            {
-                return this.greenGrayscale;
-            }
-
-            set
-            {
-                value = (byte)Math.Min(value, this.sequencerConfig.MaxGrayscale);
-                if (this.greenGrayscale != value)
-                {
-                    this.greenGrayscale = value;
-                    this.OnPropertyChanged(nameof(this.Green));
-                }
-            }
-        }
+        public byte Red { get; }
 
         /// <summary>
-        /// Gets or sets the grayscale (PWM brightness control) value for the blue part of an RGB
-        /// LED. This value can not be larger than the maximum value defined in the application
-        /// config, and will be automatically clamped.
+        /// Gets the grayscale (PWM brightness control) value for the green part of an RGB LED.
         /// </summary>
-        public byte Blue
-        {
-            get
-            {
-                return this.blueGrayscale;
-            }
+        public byte Green { get; }
 
-            set
-            {
-                value = (byte)Math.Min(value, this.sequencerConfig.MaxGrayscale);
-                if (this.blueGrayscale != value)
-                {
-                    this.blueGrayscale = value;
-                    this.OnPropertyChanged(nameof(this.Blue));
-                }
-            }
-        }
+        /// <summary>
+        /// Gets the grayscale (PWM brightness control) value for the blue part of an RGB LED.
+        /// </summary>
+        public byte Blue { get; }
 
         /// <summary>
         /// Gets the debugger display string.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string DebuggerDisplay => "#" +
             this.Red.ToString("X2", CultureInfo.CurrentCulture) +
             this.Green.ToString("X2", CultureInfo.CurrentCulture) +
             this.Blue.ToString("X2", CultureInfo.CurrentCulture);
 
-        private void OnPropertyChanged(string propertyName)
+        /// <summary>
+        /// Determines if the specified operands are equal.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="left"/> is equal to <paramref name="right"/>;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
+        public static bool operator ==(LedGrayscale left, LedGrayscale right)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return left.Red == right.Red &&
+                left.Green == right.Green &&
+                left.Blue == right.Blue;
+        }
+
+        /// <summary>
+        /// Determines if the specified operands are not equal.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="left"/> is not equal to
+        /// <paramref name="right"/>; otherwise, <see langword="false"/>.
+        /// </returns>
+        public static bool operator !=(LedGrayscale left, LedGrayscale right)
+        {
+            return !(left == right);
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(LedGrayscale other)
+        {
+            return other == this;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return obj is LedGrayscale && (LedGrayscale)obj == this;
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            const int InitPrime = 17;
+            const int MultPrime = 23;
+            var hash = InitPrime;
+            unchecked
+            {
+                hash = (hash * MultPrime) + this.Red.GetHashCode();
+                hash = (hash * MultPrime) + this.Green.GetHashCode();
+                hash = (hash * MultPrime) + this.Blue.GetHashCode();
+            }
+
+            return hash;
         }
     }
 }

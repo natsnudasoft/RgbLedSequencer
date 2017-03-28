@@ -46,16 +46,16 @@
       <HintPath>..\..\..\packages\Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Moq, Version=4.7.1.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Moq.4.7.1\lib\net45\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.7.8.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moq.4.7.8\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Natsnudasoft.NatsnudaLibrary, Version=0.3.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NatsnudaLibrary.0.3.0\lib\net46\Natsnudasoft.NatsnudaLibrary.dll</HintPath>
+    <Reference Include="Natsnudasoft.NatsnudaLibrary, Version=0.4.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NatsnudaLibrary.0.4.0\lib\net46\Natsnudasoft.NatsnudaLibrary.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Natsnudasoft.NatsnudaLibrary.TestExtensions, Version=0.3.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NatsnudaLibrary.TestExtensions.0.3.0\lib\net46\Natsnudasoft.NatsnudaLibrary.TestExtensions.dll</HintPath>
+    <Reference Include="Natsnudasoft.NatsnudaLibrary.TestExtensions, Version=0.4.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NatsnudaLibrary.TestExtensions.0.4.0\lib\net46\Natsnudasoft.NatsnudaLibrary.TestExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ploeh.Albedo, Version=1.0.2.0, Culture=neutral, PublicKeyToken=179ef6dd03497bbd, processorArchitecture=MSIL">
@@ -83,7 +83,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -116,10 +115,11 @@
       <Link>CommonSuppressions.cs</Link>
     </Compile>
     <Compile Include="CommandProgressTests.cs" />
+    <Compile Include="Helper\LedDotCorrectionCustomization.cs" />
+    <Compile Include="Helper\LedGrayscaleCustomization.cs" />
     <Compile Include="PicaxeCommandInterfaceTests.cs" />
     <Compile Include="RgbLedSequencerTests.cs" />
     <Compile Include="UnexpectedInstructionExceptionTests.cs" />
-    <Compile Include="BaudRateValidatorTests.cs" />
     <Compile Include="DotCorrectionDataTests.cs" />
     <Compile Include="GrayscaleDataTests.cs" />
     <Compile Include="Helper\DotCorrectionDataCustomization.cs" />
@@ -130,10 +130,8 @@
     <Compile Include="LedDotCorrectionTests.cs" />
     <Compile Include="LedGrayscaleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RgbLedSequencerSectionTests.cs" />
     <Compile Include="SequenceDataTests.cs" />
     <Compile Include="SequenceStepTests.cs" />
-    <Compile Include="SerialPortElementTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\..\..\stylecop.json">
@@ -153,8 +151,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\..\..\packages\codecracker.CSharp.1.0.2\analyzers\dotnet\cs\CodeCracker.Common.dll" />
-    <Analyzer Include="..\..\..\packages\codecracker.CSharp.1.0.2\analyzers\dotnet\cs\CodeCracker.CSharp.dll" />
+    <Analyzer Include="..\..\..\packages\codecracker.CSharp.1.0.3\analyzers\dotnet\cs\CodeCracker.Common.dll" />
+    <Analyzer Include="..\..\..\packages\codecracker.CSharp.1.0.3\analyzers\dotnet\cs\CodeCracker.CSharp.dll" />
     <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Menees.Analyzers.dll" />
     <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Microsoft.Build.dll" />
     <Analyzer Include="..\..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Microsoft.Build.Engine.dll" />

@@ -1,4 +1,4 @@
-﻿// <copyright file="GrayscaleDataCustomization.cs" company="natsnudasoft">
+﻿// <copyright file="LedGrayscaleCustomization.cs" company="natsnudasoft">
 // Copyright (c) Adrian John Dunstan. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,42 +16,35 @@
 
 namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Moq;
     using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Kernel;
     using RgbLedSequencerLibrary;
 
-    public class GrayscaleDataCustomization : LedGrayscaleCustomization
+    public class LedGrayscaleCustomization : SequencerConfigurationCustomization
     {
-        public GrayscaleDataCustomization(Mock<IRgbLedSequencerConfiguration> sequencerConfigMock)
+        public LedGrayscaleCustomization(Mock<IRgbLedSequencerConfiguration> sequencerConfigMock)
             : base(sequencerConfigMock)
         {
         }
 
-        public int RgbLedCount { get; set; }
+        public int MaxGrayscale { get; set; }
 
         public override void Customize(IFixture fixture)
         {
-            base.Customize(fixture);
-            System.Diagnostics.Debug.Assert(
-                this.RgbLedCount >= 0,
-                "RgbLedCount customization must be greater than or equal to 0.");
-            FavorFactoryConstructor(fixture);
-            this.SequencerConfigMock.Setup(c => c.RgbLedCount).Returns(this.RgbLedCount);
-            fixture.Inject<ICollection<LedGrayscale>>(
-                fixture.CreateMany<LedGrayscale>(this.RgbLedCount).ToArray());
+            FavorGrayscalesConstructor(fixture);
+            this.SequencerConfigMock.Setup(c => c.MaxGrayscale).Returns(this.MaxGrayscale);
         }
 
-        private static void FavorFactoryConstructor(IFixture fixture)
+        private static void FavorGrayscalesConstructor(IFixture fixture)
         {
-            fixture.Customize<GrayscaleData>(c => c.FromFactory(
+            fixture.Customize<LedDotCorrection>(c => c.FromFactory(
                 new MethodInvoker(new ParameterTypeFavoringConstructorQuery(
                     typeof(IRgbLedSequencerConfiguration),
-                    typeof(Func<LedGrayscale>)))));
+                    typeof(byte),
+                    typeof(byte),
+                    typeof(byte)))));
         }
     }
 }

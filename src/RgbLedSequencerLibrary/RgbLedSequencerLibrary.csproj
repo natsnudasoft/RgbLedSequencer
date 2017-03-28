@@ -45,12 +45,11 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Natsnudasoft.NatsnudaLibrary, Version=0.3.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NatsnudaLibrary.0.3.0\lib\net46\Natsnudasoft.NatsnudaLibrary.dll</HintPath>
+    <Reference Include="Natsnudasoft.NatsnudaLibrary, Version=0.4.0.0, Culture=neutral, PublicKeyToken=b0f282eb5a9064bb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NatsnudaLibrary.0.4.0\lib\net46\Natsnudasoft.NatsnudaLibrary.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -66,11 +65,10 @@
     <Compile Include="..\..\CommonSuppressions.cs">
       <Link>CommonSuppressions.cs</Link>
     </Compile>
-    <Compile Include="BaudRateValidator.cs" />
     <Compile Include="CommandProgress.cs" />
     <Compile Include="IRgbLedSequencer.cs" />
+    <Compile Include="ISerialPortConfiguration.cs" />
     <Compile Include="RgbLedSequencer.cs" />
-    <Compile Include="SerialPortElement.cs" />
     <Compile Include="IRgbLedSequencerConfiguration.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -85,7 +83,6 @@
     <Compile Include="LedDotCorrection.cs" />
     <Compile Include="PicaxeCommandInterface.cs" />
     <Compile Include="GrayscaleData.cs" />
-    <Compile Include="RgbLedSequencerSection.cs" />
     <Compile Include="SequenceData.cs" />
     <Compile Include="SendInstruction.cs" />
     <Compile Include="ReceiveInstruction.cs" />
@@ -97,14 +94,11 @@
     <AdditionalFiles Include="..\..\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
-    <None Include="example-app.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\..\packages\codecracker.CSharp.1.0.2\analyzers\dotnet\cs\CodeCracker.Common.dll" />
-    <Analyzer Include="..\..\packages\codecracker.CSharp.1.0.2\analyzers\dotnet\cs\CodeCracker.CSharp.dll" />
+    <Analyzer Include="..\..\packages\codecracker.CSharp.1.0.3\analyzers\dotnet\cs\CodeCracker.Common.dll" />
+    <Analyzer Include="..\..\packages\codecracker.CSharp.1.0.3\analyzers\dotnet\cs\CodeCracker.CSharp.dll" />
     <Analyzer Include="..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Menees.Analyzers.dll" />
     <Analyzer Include="..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Microsoft.Build.dll" />
     <Analyzer Include="..\..\packages\Menees.Analyzers.1.1.1.0\analyzers\dotnet\cs\Microsoft.Build.Engine.dll" />

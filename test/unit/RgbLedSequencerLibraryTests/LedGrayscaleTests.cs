@@ -17,6 +17,8 @@
 namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
+    using System.Linq;
+    using Helper;
     using Moq;
     using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
@@ -38,19 +40,33 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
 
         [Theory]
         [AutoMoqData]
-        public void ConstructorDoesNotThrow(DoesNotThrowAssertion assertion)
+        public void ConstructorDoesNotThrow(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture,
+            DoesNotThrowAssertion assertion)
         {
+            var customization = new LedGrayscaleCustomization(sequencerConfigMock)
+            {
+                MaxGrayscale = byte.MaxValue
+            };
+            fixture.Customize(customization);
+
             assertion.Verify(SutType.GetConstructors());
         }
 
         [Theory]
         [AutoMoqData]
-        public void WritablePropertiesAreCorrectlyImplemented(
-            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfig,
-            WritablePropertyAssertion assertion)
+        public void ConstructorSetsCorrectInitializedMembers(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture,
+            ConstructorInitializedMemberAssertion assertion)
         {
-            const byte MaxGrayscale = byte.MaxValue;
-            sequencerConfig.Setup(c => c.MaxGrayscale).Returns(MaxGrayscale);
+            var customization = new LedGrayscaleCustomization(sequencerConfigMock)
+            {
+                MaxGrayscale = byte.MaxValue
+            };
+            fixture.Customize(customization);
+
             assertion.Verify(
                 SutType.GetProperty(nameof(LedGrayscale.Red)),
                 SutType.GetProperty(nameof(LedGrayscale.Green)),
@@ -59,43 +75,105 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
 
         [Theory]
         [AutoMoqData]
-        public void ColorChannelChangesPropertyChangedIsRaised(
+        public void DebuggerDisplayDoesNotThrow(
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
-            PropertyChangedRaisedAssertion assertion)
+            Fixture fixture,
+            DoesNotThrowAssertion assertion)
         {
-            const byte MaxGrayscale = byte.MaxValue;
-            sequencerConfigMock.Setup(c => c.MaxGrayscale).Returns(MaxGrayscale);
+            var customization = new LedGrayscaleCustomization(sequencerConfigMock)
+            {
+                MaxGrayscale = byte.MaxValue
+            };
+            fixture.Customize(customization);
 
-            assertion.Verify(
-                SutType.GetProperty(nameof(LedGrayscale.Red)),
-                SutType.GetProperty(nameof(LedGrayscale.Green)),
-                SutType.GetProperty(nameof(LedGrayscale.Blue)));
+            assertion.Verify(SutType.GetProperty(nameof(LedGrayscale.DebuggerDisplay)));
         }
 
         [Theory]
-        [InlineAutoMoqData(nameof(LedGrayscale.Red))]
-        [InlineAutoMoqData(nameof(LedGrayscale.Green))]
-        [InlineAutoMoqData(nameof(LedGrayscale.Blue))]
-        public void ColorChannelSetTooHighIsClamped(
-            string propertyName,
+        [AutoMoqData]
+        public void EqualsOperatorOverloadCorrectlyImplemented(
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
-            const byte MaxGrayscale = 50;
-            sequencerConfigMock.Setup(c => c.MaxGrayscale).Returns(MaxGrayscale);
-            var sut = fixture.Build<LedGrayscale>().OmitAutoProperties().Create();
+            var customization = new LedGrayscaleCustomization(sequencerConfigMock)
+            {
+                MaxGrayscale = byte.MaxValue
+            };
+            fixture.Customize(customization);
+            var red = fixture.Create<byte>();
+            var green = fixture.Create<byte>();
+            var blue = fixture.Create<byte>();
+            var ledGrayscale1 = new LedGrayscale(sequencerConfigMock.Object, red, green, blue);
+            var ledGrayscale2 = new LedGrayscale(sequencerConfigMock.Object, red, green, blue);
 
-            SutType.GetProperty(propertyName).SetValue(sut, byte.MaxValue);
-            var actualValue = SutType.GetProperty(propertyName).GetValue(sut);
+            var result = ledGrayscale1 == ledGrayscale2;
 
-            Assert.Equal(MaxGrayscale, actualValue);
+            Assert.True(result);
         }
 
         [Theory]
         [AutoMoqData]
-        public void DebuggerDisplayDoesNotThrow(DoesNotThrowAssertion assertion)
+        public void NotEqualsOperatorOverloadCorrectlyImplemented(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
         {
-            assertion.Verify(SutType.GetProperty(nameof(LedGrayscale.DebuggerDisplay)));
+            var customization = new LedGrayscaleCustomization(sequencerConfigMock)
+            {
+                MaxGrayscale = byte.MaxValue
+            };
+            fixture.Customize(customization);
+            var red = fixture.Create<byte>();
+            var green = fixture.Create<byte>();
+            var blue = fixture.Create<byte>();
+            var red2 = unchecked((byte)(red + 1));
+            var green2 = unchecked((byte)(green + 1));
+            var blue2 = unchecked((byte)(blue + 1));
+            var ledGrayscale1 = new LedGrayscale(sequencerConfigMock.Object, red, green, blue);
+            var ledGrayscale2 = new LedGrayscale(sequencerConfigMock.Object, red2, green2, blue2);
+
+            var result = ledGrayscale1 != ledGrayscale2;
+
+            Assert.True(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void EqualsOverrideCorrectlyImplemented(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            EqualsOverrideNewObjectAssertion equalsNewObjectAssertion,
+            EqualsOverrideNullAssertion equalsOverrideNullAssertion,
+            EqualsOverrideOtherSuccessiveAssertion equalsOverrideOtherSuccessiveAssertion,
+            EqualsOverrideSelfAssertion equalsOverrideSelfAssertion,
+            Fixture fixture)
+        {
+            var customization = new LedGrayscaleCustomization(sequencerConfigMock)
+            {
+                MaxGrayscale = byte.MaxValue
+            };
+            fixture.Customize(customization);
+            var equalsMethods =
+                SutType.GetMethods().Where(m => m.Name == nameof(LedGrayscale.Equals));
+
+            equalsNewObjectAssertion.Verify(equalsMethods);
+            equalsOverrideNullAssertion.Verify(equalsMethods);
+            equalsOverrideOtherSuccessiveAssertion.Verify(equalsMethods);
+            equalsOverrideSelfAssertion.Verify(equalsMethods);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void GetHashCodeOverrideCorrectlyImplemented(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            GetHashCodeSuccessiveAssertion assertion,
+            Fixture fixture)
+        {
+            var customization = new LedGrayscaleCustomization(sequencerConfigMock)
+            {
+                MaxGrayscale = byte.MaxValue
+            };
+            fixture.Customize(customization);
+
+            assertion.Verify(SutType.GetMethod(nameof(LedGrayscale.GetHashCode)));
         }
     }
 }

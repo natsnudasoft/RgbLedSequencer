@@ -17,6 +17,7 @@
 namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Moq;
     using NatsnudaLibrary.TestExtensions;
@@ -47,7 +48,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 
             if (this.StepCount.HasValue)
             {
-                fixture.Inject(fixture.CreateMany<SequenceStep>(this.StepCount.Value).ToArray());
+                fixture.Inject<ICollection<SequenceStep>>(
+                    fixture.CreateMany<SequenceStep>(this.StepCount.Value).ToArray());
                 ApplyStepCountParameterSpecimen(fixture, this.StepCount.Value);
             }
         }

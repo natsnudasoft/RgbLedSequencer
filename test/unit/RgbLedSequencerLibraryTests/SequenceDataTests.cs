@@ -17,6 +17,7 @@
 namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Helper;
     using Moq;
@@ -43,7 +44,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepCount = 770,
                 StepCount = 10,
                 MaxStepDelay = 1000,
-                StepDelay = 500
+                StepDelay = 500,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
 #pragma warning disable SA1118 // Parameter must not span multiple lines
@@ -79,7 +81,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepDelay = 500,
                 StepDelay = 50,
                 MaxStepCount = 10,
-                StepCount = 8
+                StepCount = 8,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
             var sequenceSteps =
@@ -101,7 +104,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepDelay = 500,
                 StepDelay = 50,
                 MaxStepCount = 10,
-                StepCount = 8
+                StepCount = 8,
+                MaxGrayscale = byte.MaxValue
             };
             fixture.Customize(customization);
             var sequenceStepFactory = fixture.Create<Func<SequenceStep>>();
@@ -123,6 +127,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var customization = new SequenceDataCustomization(sequencerConfigMock)
             {
                 MaxStepCount = int.MaxValue,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
 
@@ -130,20 +136,32 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         }
 
         [Theory]
-        [AutoMoqData]
+        [InlineAutoMoqData(false)]
+        [InlineAutoMoqData(true)]
         public void IndexerInvalidValueThrows(
+            bool asIReadOnlyList,
             [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
             Fixture fixture)
         {
             var customization = new SequenceDataCustomization(sequencerConfigMock)
             {
                 MaxStepCount = 770,
-                StepCount = 5
+                StepCount = 5,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
             var sut = fixture.Create<SequenceData>();
-
-            var ex = Record.Exception(() => sut[customization.StepCount.Value]);
+            Exception ex;
+            if (asIReadOnlyList)
+            {
+                ex = Record.Exception(() =>
+                    ((IReadOnlyList<SequenceStep>)sut)[customization.StepCount.Value]);
+            }
+            else
+            {
+                ex = Record.Exception(() => sut[customization.StepCount.Value]);
+            }
 
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
@@ -157,7 +175,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var customization = new SequenceDataCustomization(sequencerConfigMock)
             {
                 MaxStepCount = 770,
-                StepCount = 8
+                StepCount = 8,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
             var sut = fixture.Create<SequenceData>();
@@ -179,11 +199,147 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var customization = new SequenceDataCustomization(sequencerConfigMock)
             {
                 MaxStepCount = 770,
-                StepCount = 9
+                StepCount = 9,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
             };
             fixture.Customize(customization);
 
             assertion.Verify(SutType.GetProperty(nameof(SequenceData.DebuggerDisplay)));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void AsIReadOnlyListHasCorrectCount(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
+        {
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                MaxStepCount = 770,
+                StepCount = 9,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
+            };
+            fixture.Customize(customization);
+            var sut = (IReadOnlyList<SequenceStep>)fixture.Create<SequenceData>();
+
+            Assert.Equal(customization.StepCount.Value, sut.Count);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void EnumeratorIsValid(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            Fixture fixture)
+        {
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                MaxStepCount = 770,
+                StepCount = 9,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue
+            };
+            fixture.Customize(customization);
+            var expected = fixture.Create<ICollection<SequenceStep>>();
+            var sut = new SequenceData(sequencerConfigMock.Object, expected);
+
+            Assert.Equal(expected, sut);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void EqualsOverrideCorrectlyImplemented(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            EqualsOverrideNewObjectAssertion equalsNewObjectAssertion,
+            EqualsOverrideNullAssertion equalsOverrideNullAssertion,
+            EqualsOverrideOtherSuccessiveAssertion equalsOverrideOtherSuccessiveAssertion,
+            EqualsOverrideSelfAssertion equalsOverrideSelfAssertion,
+            Fixture fixture)
+        {
+            var equalsOverrideTheoriesSuccessiveAssertion =
+                new EqualsOverrideTheoriesSuccessiveAssertion(
+                    fixture,
+                    CreateDifferingStepCountTheory(),
+                    CreateDifferingStepsTheory(),
+                    CreateEqualTheory());
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue,
+                MaxStepCount = int.MaxValue
+            };
+            fixture.Customize(customization);
+            var equalsMethods = SutType.GetMethods()
+                .Where(m => m.Name == nameof(SequenceData.Equals))
+                .ToArray();
+
+            equalsNewObjectAssertion.Verify(equalsMethods);
+            equalsOverrideNullAssertion.Verify(equalsMethods);
+            equalsOverrideOtherSuccessiveAssertion.Verify(equalsMethods);
+            equalsOverrideSelfAssertion.Verify(equalsMethods);
+            equalsOverrideTheoriesSuccessiveAssertion.Verify(equalsMethods);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void GetHashCodeOverrideCorrectlyImplemented(
+            [Frozen]Mock<IRgbLedSequencerConfiguration> sequencerConfigMock,
+            GetHashCodeSuccessiveAssertion assertion,
+            Fixture fixture)
+        {
+            var customization = new SequenceDataCustomization(sequencerConfigMock)
+            {
+                RgbLedCount = 5,
+                MaxGrayscale = byte.MaxValue,
+                MaxStepDelay = int.MaxValue,
+                MaxStepCount = int.MaxValue
+            };
+            fixture.Customize(customization);
+
+            assertion.Verify(SutType.GetMethod(nameof(SequenceData.GetHashCode)));
+        }
+
+        internal static EqualsOverrideTheory CreateDifferingStepCountTheory()
+        {
+            var sequencerConfigMock = new Mock<IRgbLedSequencerConfiguration>();
+            sequencerConfigMock.Setup(c => c.MaxStepCount).Returns(int.MaxValue);
+            var equalSequenceStepsTheory = SequenceStepTests.CreateEqualTheory();
+            var leftSequenceSteps = new[] { equalSequenceStepsTheory.Left as SequenceStep };
+            var rightSequenceSteps = new[]
+            {
+                equalSequenceStepsTheory.Right as SequenceStep,
+                equalSequenceStepsTheory.Right as SequenceStep
+            };
+            var left = new SequenceData(sequencerConfigMock.Object, leftSequenceSteps);
+            var right = new SequenceData(sequencerConfigMock.Object, rightSequenceSteps);
+            return new EqualsOverrideTheory(left, right, false);
+        }
+
+        internal static EqualsOverrideTheory CreateDifferingStepsTheory()
+        {
+            var sequencerConfigMock = new Mock<IRgbLedSequencerConfiguration>();
+            sequencerConfigMock.Setup(c => c.MaxStepCount).Returns(int.MaxValue);
+            var differingSequenceStepsTheory =
+                SequenceStepTests.CreateDifferingGrayscaleDataTheory();
+            var leftSequenceSteps = new[] { differingSequenceStepsTheory.Left as SequenceStep };
+            var rightSequenceSteps = new[] { differingSequenceStepsTheory.Right as SequenceStep };
+            var left = new SequenceData(sequencerConfigMock.Object, leftSequenceSteps);
+            var right = new SequenceData(sequencerConfigMock.Object, rightSequenceSteps);
+            return new EqualsOverrideTheory(left, right, false);
+        }
+
+        internal static EqualsOverrideTheory CreateEqualTheory()
+        {
+            var sequencerConfigMock = new Mock<IRgbLedSequencerConfiguration>();
+            sequencerConfigMock.Setup(c => c.MaxStepCount).Returns(int.MaxValue);
+            var equalSequenceStepsTheory = SequenceStepTests.CreateEqualTheory();
+            var leftSequenceSteps = new[] { equalSequenceStepsTheory.Left as SequenceStep };
+            var rightSequenceSteps = new[] { equalSequenceStepsTheory.Right as SequenceStep };
+            var left = new SequenceData(sequencerConfigMock.Object, leftSequenceSteps);
+            var right = new SequenceData(sequencerConfigMock.Object, rightSequenceSteps);
+            return new EqualsOverrideTheory(left, right, true);
         }
     }
 }

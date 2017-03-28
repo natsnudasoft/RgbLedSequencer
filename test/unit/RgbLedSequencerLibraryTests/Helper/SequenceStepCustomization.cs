@@ -20,7 +20,6 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
     using Moq;
     using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
-    using Ploeh.AutoFixture.Dsl;
     using Ploeh.AutoFixture.Kernel;
     using RgbLedSequencerLibrary;
 
@@ -42,27 +41,30 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
                 !this.StepDelay.HasValue ||
                     (this.StepDelay.Value >= 0 && this.StepDelay.Value <= this.MaxStepDelay),
                 "StepDelay customization must be positive and less than or equal to MaxStepDelay.");
-            FavorFactoryConstructor(fixture, this.StepDelay);
+            FavorFactoryConstructor(fixture);
             this.SequencerConfigMock.Setup(c => c.MaxStepDelay).Returns(this.MaxStepDelay);
+
+            if (this.StepDelay.HasValue)
+            {
+                ApplyStepDelayParameterSpecimen(fixture, this.StepDelay.Value);
+            }
         }
 
-        private static void FavorFactoryConstructor(IFixture fixture, int? stepDelay)
+        private static void FavorFactoryConstructor(IFixture fixture)
         {
-            Func<ICustomizationComposer<SequenceStep>, ISpecimenBuilder> customization =
-                c =>
-                {
-                    var builder = c.FromFactory(new MethodInvoker(
-                        new ParameterTypeFavoringConstructorQuery(
-                            typeof(IRgbLedSequencerConfiguration),
-                            typeof(Func<GrayscaleData>))));
-                    if (stepDelay.HasValue)
-                    {
-                        builder = builder.With(s => s.StepDelay, stepDelay.Value);
-                    }
+            fixture.Customize<SequenceStep>(c => c.FromFactory(
+                new MethodInvoker(new ParameterTypeFavoringConstructorQuery(
+                    typeof(IRgbLedSequencerConfiguration),
+                    typeof(Func<GrayscaleData>),
+                    typeof(int)))));
+        }
 
-                    return builder;
-                };
-            fixture.Customize(customization);
+        private static void ApplyStepDelayParameterSpecimen(IFixture fixture, int stepDelay)
+        {
+            fixture.Customizations.Add(new ParameterSpecimenBuilder(
+                typeof(SequenceStep),
+                nameof(stepDelay),
+                stepDelay));
         }
     }
 }

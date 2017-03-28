@@ -17,6 +17,9 @@
 namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using NatsnudaLibrary;
@@ -26,7 +29,14 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     /// LEDs part of an RGB LED Sequencer.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public sealed class DotCorrectionData
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Microsoft.Naming",
+        "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "We don't follow this convention.")]
+    public sealed class DotCorrectionData :
+        IReadOnlyList<LedDotCorrection>,
+        IEnumerable<LedDotCorrection>,
+        IEquatable<DotCorrectionData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         private readonly LedDotCorrection[] ledDotCorrections;
@@ -36,8 +46,8 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// </summary>
         /// <param name="sequencerConfig">The <see cref="IRgbLedSequencerConfiguration"/> that
         /// describes the configuration of the RGB LED Sequencer.</param>
-        /// <param name="ledDotCorrections">The <see cref="LedDotCorrection"/> array that represents
-        /// the dot correction value of a number of RGB LEDs.</param>
+        /// <param name="ledDotCorrections">The <see cref="LedDotCorrection"/> collection that
+        /// represents the dot correction value of a number of RGB LEDs.</param>
         /// <exception cref="ArgumentNullException"><paramref name="sequencerConfig"/>, or
         /// <paramref name="ledDotCorrections"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The length of the
@@ -45,18 +55,19 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// </exception>
         public DotCorrectionData(
             IRgbLedSequencerConfiguration sequencerConfig,
-            LedDotCorrection[] ledDotCorrections)
+            ICollection<LedDotCorrection> ledDotCorrections)
         {
             ParameterValidation.IsNotNull(sequencerConfig, nameof(sequencerConfig));
             ParameterValidation.IsNotNull(ledDotCorrections, nameof(ledDotCorrections));
-            if (ledDotCorrections.Length != sequencerConfig.RgbLedCount)
+            if (ledDotCorrections.Count != sequencerConfig.RgbLedCount)
             {
                 throw new ArgumentException(
-                    "Array length must match the number of RGB LEDs.",
+                    "Collection size must match the number of RGB LEDs.",
                     nameof(ledDotCorrections));
             }
 
-            this.ledDotCorrections = ledDotCorrections;
+            this.ledDotCorrections = new LedDotCorrection[ledDotCorrections.Count];
+            ledDotCorrections.CopyTo(this.ledDotCorrections, 0);
         }
 
         /// <summary>
@@ -87,10 +98,17 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
             }
         }
 
+        /// <inheritdoc/>
+        int IReadOnlyCollection<LedDotCorrection>.Count
+        {
+            get { return this.ledDotCorrections.Length; }
+        }
+
         /// <summary>
         /// Gets the debugger display string.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string DebuggerDisplay => "{" +
             string.Join(" ", this.ledDotCorrections.Select(l => l.DebuggerDisplay)) + "}";
 
@@ -105,6 +123,79 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         public LedDotCorrection this[int ledIndex]
         {
             get { return this.ledDotCorrections[ledIndex]; }
+        }
+
+        /// <inheritdoc/>
+        LedDotCorrection IReadOnlyList<LedDotCorrection>.this[int index]
+        {
+            get { return this[index]; }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerator<LedDotCorrection> GetEnumerator()
+        {
+            return ((IEnumerable<LedDotCorrection>)this.ledDotCorrections).GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(DotCorrectionData other)
+        {
+            bool result;
+            if (ReferenceEquals(other, null))
+            {
+                result = false;
+            }
+            else if (ReferenceEquals(other, this))
+            {
+                result = true;
+            }
+            else if (this.ledDotCorrections.Length == other.ledDotCorrections.Length)
+            {
+                result = true;
+                for (int i = 0; i < this.ledDotCorrections.Length; ++i)
+                {
+                    if (other.ledDotCorrections[i] != this.ledDotCorrections[i])
+                    {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as DotCorrectionData);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            const int InitPrime = 17;
+            const int MultPrime = 23;
+            var hash = InitPrime;
+            unchecked
+            {
+                foreach (var ledDotCorrection in this.ledDotCorrections)
+                {
+                    hash = (hash * MultPrime) + ledDotCorrection.GetHashCode();
+                }
+            }
+
+            return hash;
         }
     }
 }
