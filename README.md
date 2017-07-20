@@ -3,7 +3,6 @@
 [![AppVeyor master][AppVeyorImage]][AppVeyorUrl]
 [![Coveralls master][CoverallsImage]][CoverallsUrl]
 [![license][LicenceImage]][LicenceUrl]
-[![RgbLedSequencerLibrary MyGet][RgbLedSequencerLibraryMyGetImage]][RgbLedSequencerLibraryMyGetUrl]
 
 ## RGB LED Sequencer
 The RGB LED Sequencer (RgbLedS) is a 5 RGB LED electronic circuit, controlled by a
@@ -30,7 +29,5 @@ achieved using an [AXE027](http://www.picaxe.com/Hardware/Cables/PICAXE-USB-Down
 [CoverallsUrl]: https://coveralls.io/github/natsnudasoft/RgbLedSequencer?branch=master
 [RgbLedSequencerLibraryNuGetImage]: https://img.shields.io/nuget/v/RgbLedSequencerLibrary.svg?style=flat-square
 [RgbLedSequencerLibraryNuGetUrl]: https://www.nuget.org/packages/RgbLedSequencerLibrary
-[RgbLedSequencerLibraryMyGetImage]: https://img.shields.io/myget/rgb-led-sequencer/v/RgbLedSequencerLibrary.svg?style=flat-square
-[RgbLedSequencerLibraryMyGetUrl]: https://www.myget.org/gallery/rgb-led-sequencer
 [LicenceImage]: https://img.shields.io/github/license/natsnudasoft/RgbLedSequencer.svg?maxAge=2592000&style=flat-square
 [LicenceUrl]: http://www.apache.org/licenses/LICENSE-2.0
