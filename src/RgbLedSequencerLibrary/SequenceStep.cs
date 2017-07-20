@@ -105,8 +105,6 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
 
         /// <summary>
         /// Gets the step delay (time to wait at the end of this step) value for this step.
-        /// This value must be positive, can not be larger than the maximum value defined in the
-        /// application config, and will be automatically clamped.
         /// </summary>
         public int StepDelay { get; }
 
