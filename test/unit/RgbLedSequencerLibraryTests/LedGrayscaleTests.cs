@@ -26,10 +26,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
     using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary;
     using Xunit;
+    using SutAlias = RgbLedSequencerLibrary.LedGrayscale;
 
     public sealed class LedGrayscaleTests
     {
-        private static readonly Type SutType = typeof(LedGrayscale);
+        private static readonly Type SutType = typeof(SutAlias);
 
         [Theory]
         [AutoMoqData]
@@ -68,9 +69,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             fixture.Customize(customization);
 
             assertion.Verify(
-                SutType.GetProperty(nameof(LedGrayscale.Red)),
-                SutType.GetProperty(nameof(LedGrayscale.Green)),
-                SutType.GetProperty(nameof(LedGrayscale.Blue)));
+                SutType.GetProperty(nameof(SutAlias.Red)),
+                SutType.GetProperty(nameof(SutAlias.Green)),
+                SutType.GetProperty(nameof(SutAlias.Blue)));
         }
 
         [Theory]
@@ -86,7 +87,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
 
-            assertion.Verify(SutType.GetProperty(nameof(LedGrayscale.DebuggerDisplay)));
+            assertion.Verify(SutType.GetProperty(nameof(SutAlias.DebuggerDisplay)));
         }
 
         [Theory]
@@ -103,8 +104,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var red = fixture.Create<byte>();
             var green = fixture.Create<byte>();
             var blue = fixture.Create<byte>();
-            var ledGrayscale1 = new LedGrayscale(sequencerConfigMock.Object, red, green, blue);
-            var ledGrayscale2 = new LedGrayscale(sequencerConfigMock.Object, red, green, blue);
+            var ledGrayscale1 = new SutAlias(sequencerConfigMock.Object, red, green, blue);
+            var ledGrayscale2 = new SutAlias(sequencerConfigMock.Object, red, green, blue);
 
             var result = ledGrayscale1 == ledGrayscale2;
 
@@ -128,8 +129,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var red2 = unchecked((byte)(red + 1));
             var green2 = unchecked((byte)(green + 1));
             var blue2 = unchecked((byte)(blue + 1));
-            var ledGrayscale1 = new LedGrayscale(sequencerConfigMock.Object, red, green, blue);
-            var ledGrayscale2 = new LedGrayscale(sequencerConfigMock.Object, red2, green2, blue2);
+            var ledGrayscale1 = new SutAlias(sequencerConfigMock.Object, red, green, blue);
+            var ledGrayscale2 = new SutAlias(sequencerConfigMock.Object, red2, green2, blue2);
 
             var result = ledGrayscale1 != ledGrayscale2;
 
@@ -152,7 +153,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
             var equalsMethods =
-                SutType.GetMethods().Where(m => m.Name == nameof(LedGrayscale.Equals));
+                SutType.GetMethods().Where(m => m.Name == nameof(SutAlias.Equals));
 
             equalsNewObjectAssertion.Verify(equalsMethods);
             equalsOverrideNullAssertion.Verify(equalsMethods);
@@ -173,7 +174,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
 
-            assertion.Verify(SutType.GetMethod(nameof(LedGrayscale.GetHashCode)));
+            assertion.Verify(SutType.GetMethod(nameof(SutAlias.GetHashCode)));
         }
     }
 }

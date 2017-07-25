@@ -24,10 +24,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
     using Ploeh.SemanticComparison.Fluent;
     using RgbLedSequencerLibrary;
     using Xunit;
+    using SutAlias = RgbLedSequencerLibrary.UnexpectedInstructionException;
 
     public sealed class UnexpectedInstructionExceptionTests
     {
-        private static readonly Type SutType = typeof(UnexpectedInstructionException);
+        private static readonly Type SutType = typeof(SutAlias);
 
         [Theory]
         [AutoMoqData]
@@ -35,8 +36,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             ConstructorInitializedMemberAssertion assertion)
         {
             assertion.Verify(
-                SutType.GetProperty(nameof(UnexpectedInstructionException.ExpectedInstruction)),
-                SutType.GetProperty(nameof(UnexpectedInstructionException.ReceivedInstruction)));
+                SutType.GetProperty(nameof(SutAlias.ExpectedInstruction)),
+                SutType.GetProperty(nameof(SutAlias.ReceivedInstruction)));
         }
 
         [Theory]
@@ -53,8 +54,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             ReceiveInstruction receivedInstruction)
         {
             var sutExpected =
-                new UnexpectedInstructionException(expectedInstruction, receivedInstruction);
-            UnexpectedInstructionException sutActual;
+                new SutAlias(expectedInstruction, receivedInstruction);
+            SutAlias sutActual;
 
             using (var memoryStream = new MemoryStream())
             {
@@ -62,13 +63,13 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 binaryFormatter.Serialize(memoryStream, sutExpected);
                 memoryStream.Position = 0;
                 sutActual =
-                    (UnexpectedInstructionException)binaryFormatter.Deserialize(memoryStream);
+                    (SutAlias)binaryFormatter.Deserialize(memoryStream);
             }
 
             Assert.NotSame(sutExpected, sutActual);
             sutActual
                 .AsSource()
-                .OfLikeness<UnexpectedInstructionException>()
+                .OfLikeness<SutAlias>()
                 .Without(ex => ex.Data)
                 .Without(ex => ex.HelpLink)
                 .Without(ex => ex.HResult)

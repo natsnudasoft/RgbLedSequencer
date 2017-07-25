@@ -26,10 +26,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
     using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary;
     using Xunit;
+    using SutAlias = RgbLedSequencerLibrary.LedDotCorrection;
 
     public sealed class LedDotCorrectionTests
     {
-        private static readonly Type SutType = typeof(LedDotCorrection);
+        private static readonly Type SutType = typeof(SutAlias);
 
         [Theory]
         [AutoMoqData]
@@ -46,7 +47,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             Fixture fixture)
         {
             sequencerConfigMock.Setup(c => c.MaxDotCorrection).Returns(maxDotCorrection);
-            var sut = fixture.Build<LedDotCorrection>().OmitAutoProperties().Create();
+            var sut = fixture.Build<SutAlias>().OmitAutoProperties().Create();
 
             Assert.Equal(maxDotCorrection, sut.Red);
             Assert.Equal(maxDotCorrection, sut.Green);
@@ -67,9 +68,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             fixture.Customize(customization);
 
             assertion.Verify(
-                SutType.GetProperty(nameof(LedDotCorrection.Red)),
-                SutType.GetProperty(nameof(LedDotCorrection.Green)),
-                SutType.GetProperty(nameof(LedDotCorrection.Blue)));
+                SutType.GetProperty(nameof(SutAlias.Red)),
+                SutType.GetProperty(nameof(SutAlias.Green)),
+                SutType.GetProperty(nameof(SutAlias.Blue)));
         }
 
         [Theory]
@@ -101,7 +102,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
 
-            assertion.Verify(SutType.GetProperty(nameof(LedDotCorrection.DebuggerDisplay)));
+            assertion.Verify(SutType.GetProperty(nameof(SutAlias.DebuggerDisplay)));
         }
 
         [Theory]
@@ -119,9 +120,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var green = fixture.Create<byte>();
             var blue = fixture.Create<byte>();
             var ledDotCorrection1 =
-                new LedDotCorrection(sequencerConfigMock.Object, red, green, blue);
+                new SutAlias(sequencerConfigMock.Object, red, green, blue);
             var ledDotCorrection2 =
-                new LedDotCorrection(sequencerConfigMock.Object, red, green, blue);
+                new SutAlias(sequencerConfigMock.Object, red, green, blue);
 
             var result = ledDotCorrection1 == ledDotCorrection2;
 
@@ -146,9 +147,9 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var green2 = unchecked((byte)(green + 1));
             var blue2 = unchecked((byte)(blue + 1));
             var ledDotCorrection1 =
-                new LedDotCorrection(sequencerConfigMock.Object, red, green, blue);
+                new SutAlias(sequencerConfigMock.Object, red, green, blue);
             var ledDotCorrection2 =
-                new LedDotCorrection(sequencerConfigMock.Object, red2, green2, blue2);
+                new SutAlias(sequencerConfigMock.Object, red2, green2, blue2);
 
             var result = ledDotCorrection1 != ledDotCorrection2;
 
@@ -171,7 +172,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
             var equalsMethods =
-                SutType.GetMethods().Where(m => m.Name == nameof(LedDotCorrection.Equals));
+                SutType.GetMethods().Where(m => m.Name == nameof(SutAlias.Equals));
 
             equalsNewObjectAssertion.Verify(equalsMethods);
             equalsOverrideNullAssertion.Verify(equalsMethods);
@@ -192,7 +193,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
 
-            assertion.Verify(SutType.GetMethod(nameof(LedDotCorrection.GetHashCode)));
+            assertion.Verify(SutType.GetMethod(nameof(SutAlias.GetHashCode)));
         }
     }
 }
