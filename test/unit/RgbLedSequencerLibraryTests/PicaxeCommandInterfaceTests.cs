@@ -25,10 +25,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
     using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary;
     using Xunit;
+    using SutAlias = RgbLedSequencerLibrary.PicaxeCommandInterface;
 
     public sealed class PicaxeCommandInterfaceTests
     {
-        private static readonly Type SutType = typeof(PicaxeCommandInterface);
+        private static readonly Type SutType = typeof(SutAlias);
 
         [Theory]
         [AutoMoqData]
@@ -42,7 +43,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         public void ConstructorSetsCorrectInitializedMembers(
             ConstructorInitializedMemberAssertion assertion)
         {
-            assertion.Verify(SutType.GetProperty(nameof(PicaxeCommandInterface.SerialPortAdapter)));
+            assertion.Verify(SutType.GetProperty(nameof(SutAlias.SerialPortAdapter)));
         }
 
         [Theory]
@@ -68,7 +69,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             serialPortAdapterMock.InSequence(sequence)
                 .Setup(s => s.WriteByteAsync((byte)SendInstruction.Handshake))
                 .Returns(Task.CompletedTask);
-            var sut = fixture.Create<PicaxeCommandInterface>();
+            var sut = fixture.Create<SutAlias>();
 
             await sut.HandshakeAsync().ConfigureAwait(false);
 
@@ -91,7 +92,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             serialPortAdapterMock.InSequence(sequence)
                 .Setup(s => s.WriteByteAsync(value))
                 .Returns(Task.CompletedTask);
-            var sut = fixture.Create<PicaxeCommandInterface>();
+            var sut = fixture.Create<SutAlias>();
 
             await sut.SendByteWhenReadyAsync(value).ConfigureAwait(false);
 
@@ -119,7 +120,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             serialPortAdapterMock.InSequence(sequence)
                 .Setup(s => s.WriteByteAsync(unchecked((byte)(value >> 8))))
                 .Returns(Task.CompletedTask);
-            var sut = fixture.Create<PicaxeCommandInterface>();
+            var sut = fixture.Create<SutAlias>();
 
             await sut.SendWordWhenReadyAsync(value).ConfigureAwait(false);
 
@@ -139,7 +140,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             serialPortAdapterMock.InSequence(sequence)
                 .Setup(s => s.WriteByteAsync((byte)sendInstruction))
                 .Returns(Task.CompletedTask);
-            var sut = fixture.Create<PicaxeCommandInterface>();
+            var sut = fixture.Create<SutAlias>();
 
             await sut.SendInstructionAsync(sendInstruction).ConfigureAwait(false);
 
@@ -156,7 +157,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             serialPortAdapterMock
                 .Setup(s => s.ReadByteAsync())
                 .ReturnsAsync((byte)ReceiveInstruction.Undefined);
-            var sut = fixture.Create<PicaxeCommandInterface>();
+            var sut = fixture.Create<SutAlias>();
 
             var ex = await Record.ExceptionAsync(() => sut.HandshakeAsync()).ConfigureAwait(false);
 
@@ -173,7 +174,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             serialPortAdapterMock
                 .Setup(s => s.ReadByteAsync())
                 .ReturnsAsync(expectedValue);
-            var sut = fixture.Create<PicaxeCommandInterface>();
+            var sut = fixture.Create<SutAlias>();
 
             var actualValue = await sut.ReadByteAsync().ConfigureAwait(false);
 
@@ -191,7 +192,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 .SetupSequence(s => s.ReadByteAsync())
                 .ReturnsAsync((byte)expectedValue)
                 .ReturnsAsync((byte)(expectedValue >> 8));
-            var sut = fixture.Create<PicaxeCommandInterface>();
+            var sut = fixture.Create<SutAlias>();
 
             var actualValue = await sut.ReadWordAsync().ConfigureAwait(false);
 

@@ -28,10 +28,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
     using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary;
     using Xunit;
+    using SutAlias = RgbLedSequencerLibrary.DotCorrectionData;
 
     public sealed class DotCorrectionDataTests
     {
-        private static readonly Type SutType = typeof(DotCorrectionData);
+        private static readonly Type SutType = typeof(SutAlias);
 
         [Theory]
         [AutoMoqData]
@@ -88,7 +89,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxDotCorrection = byte.MaxValue
             };
             fixture.Customize(customization);
-            var sut = fixture.Create<DotCorrectionData>();
+            var sut = fixture.Create<SutAlias>();
 
             for (int i = 0; i < customization.RgbLedCount; ++i)
             {
@@ -111,7 +112,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxDotCorrection = byte.MaxValue
             };
             fixture.Customize(customization);
-            var sut = fixture.Create<DotCorrectionData>();
+            var sut = fixture.Create<SutAlias>();
             Exception ex;
             if (asIReadOnlyList)
             {
@@ -140,7 +141,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
 
-            assertion.Verify(SutType.GetProperty(nameof(DotCorrectionData.DebuggerDisplay)));
+            assertion.Verify(SutType.GetProperty(nameof(SutAlias.DebuggerDisplay)));
         }
 
         [Theory]
@@ -155,7 +156,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxDotCorrection = byte.MaxValue
             };
             fixture.Customize(customization);
-            var sut = (IReadOnlyList<LedDotCorrection>)fixture.Create<DotCorrectionData>();
+            var sut = (IReadOnlyList<LedDotCorrection>)fixture.Create<SutAlias>();
 
             Assert.Equal(customization.RgbLedCount, sut.Count);
         }
@@ -173,7 +174,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
             var expected = fixture.Create<ICollection<LedDotCorrection>>();
-            var sut = new DotCorrectionData(sequencerConfigMock.Object, expected);
+            var sut = new SutAlias(sequencerConfigMock.Object, expected);
 
             Assert.Equal(expected, sut);
         }
@@ -201,7 +202,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
             var equalsMethods = SutType.GetMethods()
-                .Where(m => m.Name == nameof(DotCorrectionData.Equals))
+                .Where(m => m.Name == nameof(SutAlias.Equals))
                 .ToArray();
 
             equalsNewObjectAssertion.Verify(equalsMethods);
@@ -225,7 +226,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
 
-            assertion.Verify(SutType.GetMethod(nameof(DotCorrectionData.GetHashCode)));
+            assertion.Verify(SutType.GetMethod(nameof(SutAlias.GetHashCode)));
         }
 
         internal static EqualsOverrideTheory CreateDifferingLedDotCorrectionsLengthTheory()
@@ -237,14 +238,14 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             sequencerConfigLeftMock.Setup(c => c.RgbLedCount).Returns(RgbLedCountLeft);
             sequencerConfigLeftMock.Setup(c => c.MaxDotCorrection).Returns(byte.MaxValue);
             fixture.Inject(sequencerConfigLeftMock.Object);
-            var left = new DotCorrectionData(
+            var left = new SutAlias(
                 sequencerConfigLeftMock.Object,
                 fixture.CreateMany<LedDotCorrection>(RgbLedCountLeft).ToArray());
             var sequencerConfigRightMock = new Mock<IRgbLedSequencerConfiguration>();
             sequencerConfigRightMock.Setup(c => c.RgbLedCount).Returns(RgbLedCountRight);
             sequencerConfigRightMock.Setup(c => c.MaxDotCorrection).Returns(byte.MaxValue);
             fixture.Inject(sequencerConfigRightMock.Object);
-            var right = new DotCorrectionData(
+            var right = new SutAlias(
                 sequencerConfigRightMock.Object,
                 fixture.CreateMany<LedDotCorrection>(RgbLedCountRight).ToArray());
             return new EqualsOverrideTheory(left, right, false);
@@ -263,10 +264,10 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             fixture.Register(() => uniqueBytes.Dequeue());
             fixture.Customize<LedDotCorrection>(
                 c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
-            var left = new DotCorrectionData(
+            var left = new SutAlias(
                 sequencerConfigMock.Object,
                 fixture.CreateMany<LedDotCorrection>(RgbLedCount).ToArray());
-            var right = new DotCorrectionData(
+            var right = new SutAlias(
                 sequencerConfigMock.Object,
                 fixture.CreateMany<LedDotCorrection>(RgbLedCount).ToArray());
             return new EqualsOverrideTheory(left, right, false);
@@ -283,10 +284,10 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             fixture.Inject(fixture.Create<byte>());
             fixture.Customize<LedDotCorrection>(
                 c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
-            var left = new DotCorrectionData(
+            var left = new SutAlias(
                 sequencerConfigMock.Object,
                 fixture.CreateMany<LedDotCorrection>(RgbLedCount).ToArray());
-            var right = new DotCorrectionData(
+            var right = new SutAlias(
                 sequencerConfigMock.Object,
                 fixture.CreateMany<LedDotCorrection>(RgbLedCount).ToArray());
             return new EqualsOverrideTheory(left, right, true);

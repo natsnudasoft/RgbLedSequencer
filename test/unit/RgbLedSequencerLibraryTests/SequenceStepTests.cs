@@ -26,10 +26,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
     using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary;
     using Xunit;
+    using SutAlias = RgbLedSequencerLibrary.SequenceStep;
 
     public sealed class SequenceStepTests
     {
-        private static readonly Type SutType = typeof(SequenceStep);
+        private static readonly Type SutType = typeof(SutAlias);
 
         [Theory]
         [AutoMoqData]
@@ -67,8 +68,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             fixture.Customize(customization);
 
             assertion.Verify(
-                SutType.GetProperty(nameof(SequenceStep.GrayscaleData)),
-                SutType.GetProperty(nameof(SequenceStep.StepDelay)));
+                SutType.GetProperty(nameof(SutAlias.GrayscaleData)),
+                SutType.GetProperty(nameof(SutAlias.StepDelay)));
         }
 
         [Theory]
@@ -85,7 +86,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             fixture.Customize(customization);
             var grayscaleData = fixture.Create<GrayscaleData>();
             Func<GrayscaleData> grayscaleDataFactory = () => grayscaleData;
-            var sut = new SequenceStep(sequencerConfigMock.Object, grayscaleDataFactory, 0);
+            var sut = new SutAlias(sequencerConfigMock.Object, grayscaleDataFactory, 0);
 
             Assert.Equal(grayscaleData, sut.GrayscaleData);
         }
@@ -125,7 +126,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
 
-            assertion.Verify(SutType.GetProperty(nameof(SequenceStep.DebuggerDisplay)));
+            assertion.Verify(SutType.GetProperty(nameof(SutAlias.DebuggerDisplay)));
         }
 
         [Theory]
@@ -152,7 +153,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
             var equalsMethods = SutType.GetMethods()
-                .Where(m => m.Name == nameof(SequenceStep.Equals))
+                .Where(m => m.Name == nameof(SutAlias.Equals))
                 .ToArray();
 
             equalsNewObjectAssertion.Verify(equalsMethods);
@@ -177,7 +178,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
 
-            assertion.Verify(SutType.GetMethod(nameof(SequenceStep.GetHashCode)));
+            assertion.Verify(SutType.GetMethod(nameof(SutAlias.GetHashCode)));
         }
 
         internal static EqualsOverrideTheory CreateDifferingGrayscaleDataTheory()
@@ -187,11 +188,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             sequencerConfigMock.Setup(c => c.MaxStepDelay).Returns(int.MaxValue);
             var differingGrayscalesTheory =
                 GrayscaleDataTests.CreateDifferingLedGrayscalesTheory();
-            var left = new SequenceStep(
+            var left = new SutAlias(
                 sequencerConfigMock.Object,
                 differingGrayscalesTheory.Left as GrayscaleData,
                 StepDelay);
-            var right = new SequenceStep(
+            var right = new SutAlias(
                 sequencerConfigMock.Object,
                 differingGrayscalesTheory.Right as GrayscaleData,
                 StepDelay);
@@ -205,11 +206,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var sequencerConfigMock = new Mock<IRgbLedSequencerConfiguration>();
             sequencerConfigMock.Setup(c => c.MaxStepDelay).Returns(int.MaxValue);
             var equalGrayscalesTheory = GrayscaleDataTests.CreateEqualTheory();
-            var left = new SequenceStep(
+            var left = new SutAlias(
                 sequencerConfigMock.Object,
                 equalGrayscalesTheory.Left as GrayscaleData,
                 StepDelayLeft);
-            var right = new SequenceStep(
+            var right = new SutAlias(
                 sequencerConfigMock.Object,
                 equalGrayscalesTheory.Right as GrayscaleData,
                 StepDelayRight);
@@ -222,11 +223,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var sequencerConfigMock = new Mock<IRgbLedSequencerConfiguration>();
             sequencerConfigMock.Setup(c => c.MaxStepDelay).Returns(int.MaxValue);
             var equalGrayscalesTheory = GrayscaleDataTests.CreateEqualTheory();
-            var left = new SequenceStep(
+            var left = new SutAlias(
                 sequencerConfigMock.Object,
                 equalGrayscalesTheory.Left as GrayscaleData,
                 StepDelay);
-            var right = new SequenceStep(
+            var right = new SutAlias(
                 sequencerConfigMock.Object,
                 equalGrayscalesTheory.Right as GrayscaleData,
                 StepDelay);

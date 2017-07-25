@@ -26,10 +26,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
     using Ploeh.AutoFixture.Xunit2;
     using RgbLedSequencerLibrary;
     using Xunit;
+    using SutAlias = RgbLedSequencerLibrary.RgbLedSequencer;
 
     public sealed class RgbLedSequencerTests
     {
-        private static readonly Type SutType = typeof(RgbLedSequencer);
+        private static readonly Type SutType = typeof(SutAlias);
 
         [Theory]
         [AutoMoqData]
@@ -44,8 +45,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             ConstructorInitializedMemberAssertion assertion)
         {
             assertion.Verify(
-                SutType.GetProperty(nameof(RgbLedSequencer.SequencerConfig)),
-                SutType.GetProperty(nameof(RgbLedSequencer.PicaxeCommandInterface)));
+                SutType.GetProperty(nameof(SutAlias.SequencerConfig)),
+                SutType.GetProperty(nameof(SutAlias.PicaxeCommandInterface)));
         }
 
         [Theory]
@@ -59,7 +60,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         [AutoMoqData]
         public async Task ContinueSendsCommandSequenceAsync(
             [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
-            RgbLedSequencer sut)
+            SutAlias sut)
         {
             await sut.ContinueAsync().ConfigureAwait(false);
 
@@ -73,7 +74,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         [AutoMoqData]
         public async Task SleepSendsCommandSequenceAsync(
             [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
-            RgbLedSequencer sut)
+            SutAlias sut)
         {
             await sut.SleepAsync().ConfigureAwait(false);
 
@@ -95,7 +96,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 RgbLedCount = 5
             };
             fixture.Customize(customization);
-            var sut = fixture.Create<RgbLedSequencer>();
+            var sut = fixture.Create<SutAlias>();
 
             var dotCorrectionData = await sut.ReadDotCorrectionAsync().ConfigureAwait(false);
 
@@ -128,7 +129,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 fixture,
                 new ParameterNullReferenceBehaviorExpectation(fixture));
 
-            assertion.Verify(SutType.GetMethod(nameof(RgbLedSequencer.SetDotCorrectionAsync)));
+            assertion.Verify(SutType.GetMethod(nameof(SutAlias.SetDotCorrectionAsync)));
         }
 
         [Theory]
@@ -144,7 +145,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             };
             fixture.Customize(customization);
             var dotCorrection = fixture.Create<DotCorrectionData>();
-            var sut = fixture.Create<RgbLedSequencer>();
+            var sut = fixture.Create<SutAlias>();
 
             await sut.SetDotCorrectionAsync(dotCorrection).ConfigureAwait(false);
 
@@ -173,7 +174,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                     (byte)(SequenceCount + 1)));
 #pragma warning restore SA1118 // Parameter must not span multiple lines
             var assertion = new GuardClauseAssertion(fixture, behaviorExpectation);
-            assertion.Verify(SutType.GetMethod(nameof(RgbLedSequencer.PlaySequenceAsync)));
+            assertion.Verify(SutType.GetMethod(nameof(SutAlias.PlaySequenceAsync)));
         }
 
         [Theory]
@@ -186,7 +187,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             const byte SequenceIndex = 5;
             const int SequenceCount = 10;
             sequencerConfigMock.Setup(s => s.SequenceCount).Returns(SequenceCount);
-            var sut = fixture.Create<RgbLedSequencer>();
+            var sut = fixture.Create<SutAlias>();
 
             await sut.PlaySequenceAsync(SequenceIndex).ConfigureAwait(false);
 
@@ -221,7 +222,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             picaxeCommandInterfaceMock
                 .Setup(p => p.ReadWordAsync())
                 .ReturnsAsync(customization.StepCount.Value);
-            var sut = fixture.Create<RgbLedSequencer>();
+            var sut = fixture.Create<SutAlias>();
 
             var sequenceData = await sut.ReadSequenceAsync(SequenceIndex).ConfigureAwait(false);
 
@@ -274,7 +275,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
 #pragma warning restore SA1118 // Parameter must not span multiple lines
             var assertion = new GuardClauseAssertion(fixture, behaviorExpectation);
 
-            assertion.Verify(SutType.GetMethod(nameof(RgbLedSequencer.SaveSequenceAsync)));
+            assertion.Verify(SutType.GetMethod(nameof(SutAlias.SaveSequenceAsync)));
         }
 
         [Theory]
@@ -297,7 +298,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             const int SequenceCount = 10;
             sequencerConfigMock.Setup(s => s.SequenceCount).Returns(SequenceCount);
             var sequence = fixture.Create<SequenceData>();
-            var sut = fixture.Create<RgbLedSequencer>();
+            var sut = fixture.Create<SutAlias>();
 
             await sut.SaveSequenceAsync(SequenceIndex, sequence).ConfigureAwait(false);
 
@@ -317,7 +318,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         [AutoMoqData]
         public async Task ClearSequencesSendsCommandSequenceAsync(
             [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
-            RgbLedSequencer sut)
+            SutAlias sut)
         {
             await sut.ClearSequencesAsync().ConfigureAwait(false);
 
@@ -331,7 +332,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         [AutoMoqData]
         public async Task CommandReportsProgressAsync(
             [Frozen]Mock<IProgress<CommandProgress>> progress,
-            [Greedy]RgbLedSequencer sut)
+            [Greedy]SutAlias sut)
         {
             await sut.ContinueAsync().ConfigureAwait(false);
 

@@ -20,12 +20,12 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
     using NatsnudaLibrary.TestExtensions;
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Idioms;
-    using RgbLedSequencerLibrary;
     using Xunit;
+    using SutAlias = RgbLedSequencerLibrary.CommandProgress;
 
     public sealed class CommandProgressTests
     {
-        private static readonly Type SutType = typeof(CommandProgress);
+        private static readonly Type SutType = typeof(SutAlias);
 
         [Theory]
         [AutoMoqData]
@@ -61,8 +61,8 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             ApplyProgressPercentageSpecimen(fixture, ProgressPercentage);
 
             assertion.Verify(
-                SutType.GetProperty(nameof(CommandProgress.ProgressPercentage)),
-                SutType.GetProperty(nameof(CommandProgress.CurrentAction)));
+                SutType.GetProperty(nameof(SutAlias.ProgressPercentage)),
+                SutType.GetProperty(nameof(SutAlias.CurrentAction)));
         }
 
         [Theory]

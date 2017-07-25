@@ -36,6 +36,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	EndProjectSection
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "RgbLedSequencerLibraryDocs", "docs\RgbLedSequencerLibrary\RgbLedSequencerLibraryDocs.shfbproj", "{8817198A-EA39-40CC-88EC-391C393C8F17}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E1EE2BB5-34E1-45D8-AE84-A10F9251EF1B} = {E1EE2BB5-34E1-45D8-AE84-A10F9251EF1B}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{3308754B-41E4-4852-8C68-9D57E995079B}"
 	ProjectSection(SolutionItems) = preProject
