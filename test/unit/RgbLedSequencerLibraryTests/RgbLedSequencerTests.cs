@@ -18,15 +18,15 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
     using System.Threading.Tasks;
-    using Helper;
+    using AutoFixture;
+    using AutoFixture.Idioms;
+    using AutoFixture.Xunit2;
     using Moq;
-    using NatsnudaLibrary.TestExtensions;
-    using Ploeh.AutoFixture;
-    using Ploeh.AutoFixture.Idioms;
-    using Ploeh.AutoFixture.Xunit2;
-    using RgbLedSequencerLibrary;
+    using Natsnudasoft.NatsnudaLibrary.TestExtensions;
+    using Natsnudasoft.RgbLedSequencerLibrary;
+    using Natsnudasoft.RgbLedSequencerLibraryTests.Helper;
     using Xunit;
-    using SutAlias = RgbLedSequencerLibrary.RgbLedSequencer;
+    using SutAlias = Natsnudasoft.RgbLedSequencerLibrary.RgbLedSequencer;
 
     public sealed class RgbLedSequencerTests
     {

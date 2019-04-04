@@ -21,7 +21,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     using System.IO.Ports;
     using System.Threading;
     using System.Threading.Tasks;
-    using NatsnudaLibrary;
+    using Natsnudasoft.NatsnudaLibrary;
 
     /// <summary>
     /// Provides an adapter for the <see cref="SerialPort"/> that reads and writes bytes to the

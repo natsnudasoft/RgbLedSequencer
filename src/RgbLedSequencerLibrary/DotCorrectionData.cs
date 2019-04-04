@@ -22,7 +22,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
-    using NatsnudaLibrary;
+    using Natsnudasoft.NatsnudaLibrary;
 
     /// <summary>
     /// Represents dot correction (brightness difference compensation) values for a number of RGB

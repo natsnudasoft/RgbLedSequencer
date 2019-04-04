@@ -16,10 +16,10 @@
 
 namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 {
+    using AutoFixture;
     using Moq;
-    using NatsnudaLibrary;
-    using Ploeh.AutoFixture;
-    using RgbLedSequencerLibrary;
+    using Natsnudasoft.NatsnudaLibrary;
+    using Natsnudasoft.RgbLedSequencerLibrary;
 
     public abstract class SequencerConfigurationCustomization : ICustomization
     {

@@ -17,7 +17,7 @@
 namespace Natsnudasoft.RgbLedSequencerLibrary
 {
     using System;
-    using NatsnudaLibrary;
+    using Natsnudasoft.NatsnudaLibrary;
 
     /// <summary>
     /// Represents the progress of a task of the RGB LED Sequencer.

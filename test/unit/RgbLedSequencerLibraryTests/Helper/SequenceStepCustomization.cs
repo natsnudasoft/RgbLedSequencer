@@ -17,11 +17,11 @@
 namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
 {
     using System;
+    using AutoFixture;
+    using AutoFixture.Kernel;
     using Moq;
-    using NatsnudaLibrary.TestExtensions;
-    using Ploeh.AutoFixture;
-    using Ploeh.AutoFixture.Kernel;
-    using RgbLedSequencerLibrary;
+    using Natsnudasoft.NatsnudaLibrary.TestExtensions;
+    using Natsnudasoft.RgbLedSequencerLibrary;
 
     public class SequenceStepCustomization : GrayscaleDataCustomization
     {

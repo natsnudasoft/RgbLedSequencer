@@ -19,11 +19,11 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests.Helper
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using AutoFixture;
+    using AutoFixture.Kernel;
     using Moq;
-    using NatsnudaLibrary.TestExtensions;
-    using Ploeh.AutoFixture;
-    using Ploeh.AutoFixture.Kernel;
-    using RgbLedSequencerLibrary;
+    using Natsnudasoft.NatsnudaLibrary.TestExtensions;
+    using Natsnudasoft.RgbLedSequencerLibrary;
 
     public sealed class SequenceDataCustomization : SequenceStepCustomization
     {

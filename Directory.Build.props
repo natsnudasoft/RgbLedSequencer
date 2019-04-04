@@ -1,0 +1,25 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+    <Authors>Adrian John Dunstan</Authors>
+    <Company>Natsnudasoft</Company>
+    <Copyright>Copyright © Adrian John Dunstan 2019</Copyright>
+    <Product>RgbLedSequencer</Product>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(APPVEYOR)' == 'True' And '$(APPVEYOR_PULL_REQUEST_NUMBER)' == ''">
+    <ReportUnitTests>True</ReportUnitTests>
+    <StrongNameSign>True</StrongNameSign>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(StrongNameSign)' == 'True'">
+    <DefineConstants>$(DefineConstants);StrongNameSign</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)Natsnudasoft.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+</Project>

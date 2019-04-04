@@ -20,8 +20,8 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     using System.Globalization;
     using System.IO;
     using System.Threading.Tasks;
-    using NatsnudaLibrary;
-    using Properties;
+    using Natsnudasoft.NatsnudaLibrary;
+    using Natsnudasoft.RgbLedSequencerLibrary.Properties;
 
     /// <summary>
     /// Provides an implementation of a high level interface describing operations available on an

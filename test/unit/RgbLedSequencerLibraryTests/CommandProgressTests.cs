@@ -17,11 +17,11 @@
 namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
-    using NatsnudaLibrary.TestExtensions;
-    using Ploeh.AutoFixture;
-    using Ploeh.AutoFixture.Idioms;
+    using AutoFixture;
+    using AutoFixture.Idioms;
+    using Natsnudasoft.NatsnudaLibrary.TestExtensions;
     using Xunit;
-    using SutAlias = RgbLedSequencerLibrary.CommandProgress;
+    using SutAlias = Natsnudasoft.RgbLedSequencerLibrary.CommandProgress;
 
     public sealed class CommandProgressTests
     {

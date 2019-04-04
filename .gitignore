@@ -1,14 +1,6 @@
 *.bas.settings
-StyleCop.Cache
-/packages
 /.vs
 *.csproj.user
 bin
 obj
-/OpenCover
-/tools/TestResult.xml
-/tools/coverage
-/tools/results.xml
-/tools/coverage.xml
-/tools/artifact
-/docs/RgbLedSequencerLibrary/Help
+/coverage
