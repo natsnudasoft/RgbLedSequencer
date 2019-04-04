@@ -3,6 +3,7 @@ environment:
     secure: o+iKgbcKgIodN483XdvSg7VtSMx3+P/AR2ykYvOMKJ73cy4K94NPTHv8smPZA3AI
   STRONG_NAME_SECRET:
     secure: 4W8bFbUP7bJsxCqGF6+xfy7kCUjQscJcrGmjegVxxBs=
+image: Visual Studio 2017
 configuration: Release
 platform: Any CPU
 install:
