@@ -19,7 +19,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: CLSCompliant(false)]
-
 [assembly: AssemblyTitle("RgbLedSequencerLibrary.RgbLedSequencerLibraryTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
