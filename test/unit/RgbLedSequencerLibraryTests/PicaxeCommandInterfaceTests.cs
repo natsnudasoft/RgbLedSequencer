@@ -18,14 +18,14 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
     using System.Threading.Tasks;
+    using AutoFixture;
+    using AutoFixture.Idioms;
+    using AutoFixture.Xunit2;
     using Moq;
-    using NatsnudaLibrary.TestExtensions;
-    using Ploeh.AutoFixture;
-    using Ploeh.AutoFixture.Idioms;
-    using Ploeh.AutoFixture.Xunit2;
-    using RgbLedSequencerLibrary;
+    using Natsnudasoft.NatsnudaLibrary.TestExtensions;
+    using Natsnudasoft.RgbLedSequencerLibrary;
     using Xunit;
-    using SutAlias = RgbLedSequencerLibrary.PicaxeCommandInterface;
+    using SutAlias = Natsnudasoft.RgbLedSequencerLibrary.PicaxeCommandInterface;
 
     public sealed class PicaxeCommandInterfaceTests
     {

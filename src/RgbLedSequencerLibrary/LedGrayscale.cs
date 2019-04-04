@@ -20,7 +20,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
-    using NatsnudaLibrary;
+    using Natsnudasoft.NatsnudaLibrary;
 
     /// <summary>
     /// Represents grayscale (PWM brightness control) values for an RGB LED.

@@ -1,0 +1,26 @@
+<Project>
+  <Target Name="RunReportUnitTests" AfterTargets="Build" Condition="'$(TargetFramework)' != ''">
+    <!-- Currently we only run reports on net46 framework, however these mappings exist for future changes -->
+    <ItemGroup>
+      <TestToolMappings Include="netcoreapp2.2">
+        <Runner>netcoreapp2.0\xunit.console.dll</Runner>
+        <ReportGenerator>netcoreapp2.0\ReportGenerator.dll</ReportGenerator>
+        <Coveralls_io>coveralls.net.exe</Coveralls_io>
+      </TestToolMappings>
+      <TestToolMappings Include="net46">
+        <Runner>net46\xunit.console.exe</Runner>
+        <ReportGenerator>net47\ReportGenerator.exe</ReportGenerator>
+        <Coveralls_io>coveralls.net.exe</Coveralls_io>
+      </TestToolMappings>
+    </ItemGroup>
+    <Exec
+      Command='"$(PkgOpenCover)\tools\OpenCover.Console.exe" -register:user "-filter:+[*]* -[*Tests]* -[xunit.*]*" -target:"$(Pkgxunit_runner_console)\tools\%(TestToolMappings.Runner)" -targetargs:"\"$(OutputPath)Natsnudasoft.RgbLedSequencerLibraryTests.dll\" -noshadow" -excludebyattribute:*.ExcludeFromCodeCoverage*;*.CompilerGenerated* -excludebyfile:*Designer.cs -output:$(IntermediateOutputPath)coverage.xml'
+      Condition="'$(TargetFramework)' == 'net46' And '%(TestToolMappings.Identity)' == '$(TargetFramework)'" />
+    <Exec
+      Command='"$(PkgReportGenerator)\tools\%(TestToolMappings.ReportGenerator)" -reports:$(IntermediateOutputPath)coverage.xml -targetdir:..\..\..\coverage\$(TargetFramework)'
+      Condition="'$(APPVEYOR)' != 'True' And '$(TargetFramework)' == 'net46' And '%(TestToolMappings.Identity)' == '$(TargetFramework)'" />
+    <Exec
+      Command='"$(Pkgcoveralls_io)\tools\%(TestToolMappings.Coveralls_io)" --opencover $(IntermediateOutputPath)coverage.xml'
+      Condition="'$(APPVEYOR)' == 'True' And '$(TargetFramework)' == 'net46' And '%(TestToolMappings.Identity)' == '$(TargetFramework)'" />
+  </Target>
+</Project>

@@ -1,89 +1,41 @@
--
-  branches:
-    only:
-      - master
-  environment:
-    COVERALLS_REPO_TOKEN:
-      secure: o+iKgbcKgIodN483XdvSg7VtSMx3+P/AR2ykYvOMKJ73cy4K94NPTHv8smPZA3AI
-    STRONG_NAME_SECRET:
-      secure: 4W8bFbUP7bJsxCqGF6+xfy7kCUjQscJcrGmjegVxxBs=
-  configuration: Release
-  platform: Any CPU
-  install:
-    - choco install gitversion.portable -y
-    - choco install html-help-workshop -y
-    - nuget install secure-file -ExcludeVersion
-    - IF "%APPVEYOR_PULL_REQUEST_NUMBER%" == "" secure-file\tools\secure-file -decrypt Natsnudasoft.snk.enc -secret %STRONG_NAME_SECRET%
-  before_build:
-    - nuget restore
-    - gitversion /l console /output buildserver /updateassemblyinfo AssemblyInfoCommon.cs /b %APPVEYOR_REPO_BRANCH%
-  build:
-    project: RgbLedSequencerLibrary.sln
-    verbosity: minimal
-    publish_nuget: true
-    publish_nuget_symbols: true
-    include_nuget_references: true
-  after_build:
-    - call tools\prepare-artifacts.bat
-  test:
-    assemblies: test\unit\RgbLedSequencerLibraryTests\bin\Release\Natsnudasoft.RgbLedSequencerLibraryTests.dll
-  after_test:
-    - call tools\run-test-report.bat buildserver
-  cache:
-    - packages -> **\packages.config
-    - C:\ProgramData\chocolatey\bin -> appveyor.yml
-    - C:\ProgramData\chocolatey\lib -> appveyor.yml
-  artifacts:
-    - path: RgbLedSequencerLibrary_Release_Any_CPU.zip
-      name: RgbLedSequencerLibrary_Release_Any_CPU
-  deploy:
-    - provider: GitHub
-      tag: $(APPVEYOR_REPO_TAG_NAME)
-      release: 'RgbLedSequencerLibrary $(APPVEYOR_REPO_TAG_NAME)'
-      description: ''
-      auth_token:
-        secure: Btb4eq03u8e4+k4WUyv4mWf0kfmzuxSCRo6u1nfOCtxlr4hrdpB5af5tVpt5q+1q
-      artifact: RgbLedSequencerLibrary_Release_Any_CPU
-      draft: false
-      prerelease: false
-      on:
-        appveyor_repo_tag: true
-    - provider: NuGet
-      api_key:
-        secure: PfVPJEY5ku4Umwbpy5KlUfjbECOuEXqOxDKlNr16pTymRcrtbwxq9Bz4wX/UkTCK
-      skip_symbols: true
-      artifact: /.*\.nupkg/
-      on:
-        appveyor_repo_tag: true
--
-  environment:
-    COVERALLS_REPO_TOKEN:
-      secure: o+iKgbcKgIodN483XdvSg7VtSMx3+P/AR2ykYvOMKJ73cy4K94NPTHv8smPZA3AI
-    STRONG_NAME_SECRET:
-      secure: 4W8bFbUP7bJsxCqGF6+xfy7kCUjQscJcrGmjegVxxBs=
-  configuration: Release
-  platform: Any CPU
-  install:
-    - choco install gitversion.portable -y
-    - choco install html-help-workshop -y
-    - nuget install secure-file -ExcludeVersion
-    - IF "%APPVEYOR_PULL_REQUEST_NUMBER%" == "" secure-file\tools\secure-file -decrypt Natsnudasoft.snk.enc -secret %STRONG_NAME_SECRET%
-  before_build:
-    - nuget restore
-    - gitversion /l console /output buildserver /updateassemblyinfo AssemblyInfoCommon.cs /b %APPVEYOR_REPO_BRANCH%
-  build:
-    project: RgbLedSequencerLibrary.sln
-    verbosity: minimal
-  after_build:
-    - call tools\prepare-artifacts.bat
-  test:
-    assemblies: test\unit\RgbLedSequencerLibraryTests\bin\Release\Natsnudasoft.RgbLedSequencerLibraryTests.dll
-  after_test:
-    - call tools\run-test-report.bat buildserver
-  cache:
-    - packages -> **\packages.config
-    - C:\ProgramData\chocolatey\bin -> appveyor.yml
-    - C:\ProgramData\chocolatey\lib -> appveyor.yml
-  artifacts:
-    - path: RgbLedSequencerLibrary_Release_Any_CPU.zip
-      name: RgbLedSequencerLibrary_Release_Any_CPU
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: o+iKgbcKgIodN483XdvSg7VtSMx3+P/AR2ykYvOMKJ73cy4K94NPTHv8smPZA3AI
+  STRONG_NAME_SECRET:
+    secure: 4W8bFbUP7bJsxCqGF6+xfy7kCUjQscJcrGmjegVxxBs=
+configuration: Release
+platform: Any CPU
+install:
+  - IF "%APPVEYOR_PULL_REQUEST_NUMBER%" == "" nuget install secure-file -ExcludeVersion
+  - IF "%APPVEYOR_PULL_REQUEST_NUMBER%" == "" secure-file\tools\secure-file -decrypt Natsnudasoft.snk.enc -secret %STRONG_NAME_SECRET%
+before_build:
+  - nuget restore
+build:
+  project: RgbLedSequencerLibrary.sln
+  verbosity: minimal
+test:
+  assemblies: test\unit\RgbLedSequencerLibraryTests\bin\Release\**\Natsnudasoft.RgbLedSequencerLibraryTests.dll
+cache:
+  - '%userprofile%\.nuget\packages -> **\*.csproj'
+  - C:\ProgramData\chocolatey\bin -> appveyor.yml
+  - C:\ProgramData\chocolatey\lib -> appveyor.yml
+artifacts:
+  - path: 'src\**\*.nupkg'
+deploy:
+  - provider: GitHub
+    tag: $(APPVEYOR_REPO_TAG_NAME)
+    release: 'RgbLedSequencerLibrary $(APPVEYOR_REPO_TAG_NAME)'
+    description: ''
+    auth_token:
+      secure: winth2ckr0q/1fONK0Nz7MixzIikq4sYbi/uKfJ97WYgL6rKwI/TT9PNHXcX2pFF
+    draft: false
+    prerelease: false
+    on:
+      appveyor_repo_tag: true
+  - provider: NuGet
+    api_key:
+      secure: wvoN+2TdN7wKMO0KmND5kGT4x4LZjMls08dg8ao5F7/16Bu1F5dPw15b9twEYALJ
+    skip_symbols: true
+    artifact: /.*\.nupkg/
+    on:
+      appveyor_repo_tag: true

@@ -20,7 +20,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
-    using NatsnudaLibrary;
+    using Natsnudasoft.NatsnudaLibrary;
 
     /// <summary>
     /// Represents dot correction (brightness difference compensation) values for a single RGB LED.

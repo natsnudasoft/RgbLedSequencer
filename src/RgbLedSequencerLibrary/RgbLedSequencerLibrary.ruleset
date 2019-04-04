@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rules for RgbLedSequencerLibrary" Description="Code analysis rules for RgbLedSequencerLibrary." ToolsVersion="14.0">
+<RuleSet Name="Rules for RgbLedSequencerLibrary" Description="Code analysis rules for RgbLedSequencerLibrary." ToolsVersion="15.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="CodeCracker.CSharp" RuleNamespace="CodeCracker.CSharp">
     <Rule Id="CC0013" Action="None" />
@@ -18,5 +18,6 @@
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
     <Rule Id="IDE0003" Action="None" />
+    <Rule Id="IDE0041" Action="None" />
   </Rules>
 </RuleSet>

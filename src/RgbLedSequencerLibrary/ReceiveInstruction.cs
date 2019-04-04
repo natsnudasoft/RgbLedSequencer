@@ -16,6 +16,8 @@
 
 namespace Natsnudasoft.RgbLedSequencerLibrary
 {
+    using System;
+
     /// <summary>
     /// Defines the available instruction set that can be -received- by the
     /// <see cref="RgbLedSequencerLibrary"/> from the physical RGB LED Sequencer.
@@ -24,6 +26,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         "Microsoft.Design",
         "CA1028:EnumStorageShouldBeInt32",
         Justification = "Consistent with RGB LED Sequencer.")]
+    [Serializable]
     public enum ReceiveInstruction : byte
     {
         /// <summary>
@@ -39,6 +42,6 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// <summary>
         /// The RGB LED Sequencer is waiting for a handshake signal.
         /// </summary>
-        Handshake = 17
+        Handshake = 17,
     }
 }

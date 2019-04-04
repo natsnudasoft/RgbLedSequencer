@@ -19,12 +19,12 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
     using System;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
-    using NatsnudaLibrary.TestExtensions;
-    using Ploeh.AutoFixture.Idioms;
-    using Ploeh.SemanticComparison.Fluent;
-    using RgbLedSequencerLibrary;
+    using AutoFixture.Idioms;
+    using Natsnudasoft.NatsnudaLibrary.TestExtensions;
+    using Natsnudasoft.RgbLedSequencerLibrary;
+    using SemanticComparison.Fluent;
     using Xunit;
-    using SutAlias = RgbLedSequencerLibrary.UnexpectedInstructionException;
+    using SutAlias = Natsnudasoft.RgbLedSequencerLibrary.UnexpectedInstructionException;
 
     public sealed class UnexpectedInstructionExceptionTests
     {

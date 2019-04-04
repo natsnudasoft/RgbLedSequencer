@@ -18,15 +18,15 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
 {
     using System;
     using System.Threading.Tasks;
-    using Helper;
+    using AutoFixture;
+    using AutoFixture.Idioms;
+    using AutoFixture.Xunit2;
     using Moq;
-    using NatsnudaLibrary.TestExtensions;
-    using Ploeh.AutoFixture;
-    using Ploeh.AutoFixture.Idioms;
-    using Ploeh.AutoFixture.Xunit2;
-    using RgbLedSequencerLibrary;
+    using Natsnudasoft.NatsnudaLibrary.TestExtensions;
+    using Natsnudasoft.RgbLedSequencerLibrary;
+    using Natsnudasoft.RgbLedSequencerLibraryTests.Helper;
     using Xunit;
-    using SutAlias = RgbLedSequencerLibrary.RgbLedSequencer;
+    using SutAlias = Natsnudasoft.RgbLedSequencerLibrary.RgbLedSequencer;
 
     public sealed class RgbLedSequencerTests
     {
@@ -93,7 +93,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
             };
             fixture.Customize(customization);
             var sut = fixture.Create<SutAlias>();
@@ -110,7 +110,6 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             for (int i = 0; i < customization.RgbLedCount; ++i)
             {
                 Assert.IsType<LedDotCorrection>(dotCorrectionData[i]);
-                Assert.NotNull(dotCorrectionData[i]);
             }
         }
 
@@ -122,7 +121,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
             };
             fixture.Customize(customization);
             var assertion = new GuardClauseAssertion(
@@ -141,7 +140,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new DotCorrectionDataCustomization(sequencerConfigMock)
             {
-                RgbLedCount = 5
+                RgbLedCount = 5,
             };
             fixture.Customize(customization);
             var dotCorrection = fixture.Create<DotCorrectionData>();
@@ -215,7 +214,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepCount = 8,
                 StepCount = 5,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
             sequencerConfigMock.Setup(s => s.SequenceCount).Returns(SequenceCount);
@@ -258,7 +257,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepCount = 8,
                 StepCount = 5,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
             const byte SequenceIndex = 5;
@@ -291,7 +290,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepCount = 8,
                 StepCount = 5,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
             const byte SequenceIndex = 5;

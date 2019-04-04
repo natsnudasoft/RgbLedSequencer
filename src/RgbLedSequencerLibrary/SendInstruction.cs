@@ -70,6 +70,6 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// <summary>
         /// Read the currently stored dot correction data from the RGB LED Sequencer.
         /// </summary>
-        ReadDotCorrection = 8
+        ReadDotCorrection = 8,
     }
 }

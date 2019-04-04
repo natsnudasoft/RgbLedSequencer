@@ -22,7 +22,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
-    using NatsnudaLibrary;
+    using Natsnudasoft.NatsnudaLibrary;
 
     /// <summary>
     /// Represents dot correction (brightness difference compensation) values for a number of RGB
@@ -35,7 +35,6 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         Justification = "We don't follow this convention.")]
     public sealed class DotCorrectionData :
         IReadOnlyList<LedDotCorrection>,
-        IEnumerable<LedDotCorrection>,
         IEquatable<DotCorrectionData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]

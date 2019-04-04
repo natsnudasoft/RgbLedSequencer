@@ -20,7 +20,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
-    using NatsnudaLibrary;
+    using Natsnudasoft.NatsnudaLibrary;
 
     /// <summary>
     /// Describes an individual step, and the delay time of the step, within an RGB LED Sequencer
