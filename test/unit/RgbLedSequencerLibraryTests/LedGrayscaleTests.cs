@@ -48,7 +48,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedGrayscaleCustomization(sequencerConfigMock)
             {
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -64,7 +64,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedGrayscaleCustomization(sequencerConfigMock)
             {
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -83,7 +83,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedGrayscaleCustomization(sequencerConfigMock)
             {
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -98,7 +98,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedGrayscaleCustomization(sequencerConfigMock)
             {
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
             var red = fixture.Create<byte>();
@@ -120,7 +120,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedGrayscaleCustomization(sequencerConfigMock)
             {
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
             var red = fixture.Create<byte>();
@@ -149,7 +149,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedGrayscaleCustomization(sequencerConfigMock)
             {
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
             var equalsMethods =
@@ -170,7 +170,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedGrayscaleCustomization(sequencerConfigMock)
             {
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
 

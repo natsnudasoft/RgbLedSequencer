@@ -35,7 +35,6 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         Justification = "We don't follow this convention.")]
     public sealed class DotCorrectionData :
         IReadOnlyList<LedDotCorrection>,
-        IEnumerable<LedDotCorrection>,
         IEquatable<DotCorrectionData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]

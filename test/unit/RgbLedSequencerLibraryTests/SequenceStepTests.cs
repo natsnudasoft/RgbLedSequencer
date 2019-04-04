@@ -43,7 +43,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 RgbLedCount = 5,
                 MaxStepDelay = 1000,
                 StepDelay = 500,
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
             var behaviorExpectation = new ParameterNullReferenceBehaviorExpectation(fixture);
@@ -63,7 +63,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             {
                 RgbLedCount = 5,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -81,7 +81,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var customization = new GrayscaleDataCustomization(sequencerConfigMock)
             {
                 RgbLedCount = 5,
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
             var grayscaleData = fixture.Create<GrayscaleData>();
@@ -103,7 +103,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 RgbLedCount = 5,
                 MaxStepDelay = 1000,
                 StepDelay = 500,
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -122,7 +122,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 RgbLedCount = 5,
                 MaxStepDelay = 50,
                 StepDelay = 0,
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -149,7 +149,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             {
                 RgbLedCount = 5,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
             var equalsMethods = SutType.GetMethods()
@@ -174,7 +174,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             {
                 RgbLedCount = 5,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
 

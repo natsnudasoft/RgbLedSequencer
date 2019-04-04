@@ -63,7 +63,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedDotCorrectionCustomization(sequencerConfigMock)
             {
-                MaxDotCorrection = byte.MaxValue
+                MaxDotCorrection = byte.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -82,7 +82,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedDotCorrectionCustomization(sequencerConfigMock)
             {
-                MaxDotCorrection = byte.MaxValue
+                MaxDotCorrection = byte.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -98,7 +98,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedDotCorrectionCustomization(sequencerConfigMock)
             {
-                MaxDotCorrection = byte.MaxValue
+                MaxDotCorrection = byte.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -113,7 +113,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedDotCorrectionCustomization(sequencerConfigMock)
             {
-                MaxDotCorrection = byte.MaxValue
+                MaxDotCorrection = byte.MaxValue,
             };
             fixture.Customize(customization);
             var red = fixture.Create<byte>();
@@ -137,7 +137,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedDotCorrectionCustomization(sequencerConfigMock)
             {
-                MaxDotCorrection = byte.MaxValue
+                MaxDotCorrection = byte.MaxValue,
             };
             fixture.Customize(customization);
             var red = fixture.Create<byte>();
@@ -168,7 +168,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedDotCorrectionCustomization(sequencerConfigMock)
             {
-                MaxDotCorrection = byte.MaxValue
+                MaxDotCorrection = byte.MaxValue,
             };
             fixture.Customize(customization);
             var equalsMethods =
@@ -189,7 +189,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
         {
             var customization = new LedDotCorrectionCustomization(sequencerConfigMock)
             {
-                MaxDotCorrection = byte.MaxValue
+                MaxDotCorrection = byte.MaxValue,
             };
             fixture.Customize(customization);
 

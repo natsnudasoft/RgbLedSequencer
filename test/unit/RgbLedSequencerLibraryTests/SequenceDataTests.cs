@@ -46,7 +46,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 StepCount = 10,
                 MaxStepDelay = 1000,
                 StepDelay = 500,
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
 #pragma warning disable SA1118 // Parameter must not span multiple lines
@@ -62,7 +62,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                     "sequenceSteps",
                     new[]
                     {
-                        fixture.CreateMany<SequenceStep>(customization.MaxStepCount + 1).ToArray()
+                        fixture.CreateMany<SequenceStep>(customization.MaxStepCount + 1).ToArray(),
                     }));
 #pragma warning restore SA1118 // Parameter must not span multiple lines
             var assertion = new GuardClauseAssertion(fixture, behaviorExpectation);
@@ -83,7 +83,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 StepDelay = 50,
                 MaxStepCount = 10,
                 StepCount = 8,
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
             var sequenceSteps =
@@ -106,7 +106,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 StepDelay = 50,
                 MaxStepCount = 10,
                 StepCount = 8,
-                MaxGrayscale = byte.MaxValue
+                MaxGrayscale = byte.MaxValue,
             };
             fixture.Customize(customization);
             var sequenceStepFactory = fixture.Create<Func<SequenceStep>>();
@@ -129,7 +129,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             {
                 MaxStepCount = int.MaxValue,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -149,7 +149,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepCount = 770,
                 StepCount = 5,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
             var sut = fixture.Create<SutAlias>();
@@ -178,7 +178,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepCount = 770,
                 StepCount = 8,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
             var sut = fixture.Create<SutAlias>();
@@ -202,7 +202,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepCount = 770,
                 StepCount = 9,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -220,7 +220,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepCount = 770,
                 StepCount = 9,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
             var sut = (IReadOnlyList<SequenceStep>)fixture.Create<SutAlias>();
@@ -239,7 +239,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 MaxStepCount = 770,
                 StepCount = 9,
                 MaxGrayscale = byte.MaxValue,
-                MaxStepDelay = int.MaxValue
+                MaxStepDelay = int.MaxValue,
             };
             fixture.Customize(customization);
             var expected = fixture.Create<ICollection<SequenceStep>>();
@@ -269,7 +269,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 RgbLedCount = 5,
                 MaxGrayscale = byte.MaxValue,
                 MaxStepDelay = int.MaxValue,
-                MaxStepCount = int.MaxValue
+                MaxStepCount = int.MaxValue,
             };
             fixture.Customize(customization);
             var equalsMethods = SutType.GetMethods()
@@ -295,7 +295,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
                 RgbLedCount = 5,
                 MaxGrayscale = byte.MaxValue,
                 MaxStepDelay = int.MaxValue,
-                MaxStepCount = int.MaxValue
+                MaxStepCount = int.MaxValue,
             };
             fixture.Customize(customization);
 
@@ -311,7 +311,7 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
             var rightSequenceSteps = new[]
             {
                 equalSequenceStepsTheory.Right as SequenceStep,
-                equalSequenceStepsTheory.Right as SequenceStep
+                equalSequenceStepsTheory.Right as SequenceStep,
             };
             var left = new SutAlias(sequencerConfigMock.Object, leftSequenceSteps);
             var right = new SutAlias(sequencerConfigMock.Object, rightSequenceSteps);

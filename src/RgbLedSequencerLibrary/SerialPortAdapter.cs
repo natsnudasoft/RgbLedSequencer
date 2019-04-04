@@ -68,7 +68,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
                     ReadTimeout = sequencerConfig.SerialPort.ReadTimeout,
                     WriteTimeout = sequencerConfig.SerialPort.WriteTimeout,
                     DtrEnable = true,
-                    RtsEnable = true
+                    RtsEnable = true,
                 };
             }
             catch
@@ -361,12 +361,9 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
 
         private void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && this.isSerialPortOwner)
             {
-                if (this.isSerialPortOwner)
-                {
-                    this.serialPort.Dispose();
-                }
+                this.serialPort.Dispose();
             }
         }
     }

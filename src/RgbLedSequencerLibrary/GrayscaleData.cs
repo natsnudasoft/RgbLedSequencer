@@ -33,10 +33,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         "Microsoft.Naming",
         "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "We don't follow this convention.")]
-    public sealed class GrayscaleData :
-        IReadOnlyList<LedGrayscale>,
-        IEnumerable<LedGrayscale>,
-        IEquatable<GrayscaleData>
+    public sealed class GrayscaleData : IReadOnlyList<LedGrayscale>, IEquatable<GrayscaleData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         private readonly LedGrayscale[] ledGrayscales;

@@ -32,10 +32,7 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         "Microsoft.Naming",
         "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "We don't follow this convention.")]
-    public sealed class SequenceData :
-        IReadOnlyList<SequenceStep>,
-        IEnumerable<SequenceStep>,
-        IEquatable<SequenceData>
+    public sealed class SequenceData : IReadOnlyList<SequenceStep>, IEquatable<SequenceData>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         private readonly SequenceStep[] sequenceSteps;
