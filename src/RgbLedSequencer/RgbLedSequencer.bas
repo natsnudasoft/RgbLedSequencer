@@ -376,7 +376,7 @@ SetDotCorrection:
     next b0
     gosub TlcDotCorrection
     return
-    
+
 'Reads the current sequence at a specified sequence number
 ReadSequence:
     gosub LcBeginRead
@@ -405,7 +405,7 @@ ReadSequence:
     next w1
     gosub LcEndCommand
     return
-    
+
 ReadDotCorrection:
     for b0 = DotCorrectionStart to DotCorrectionEnd
         read b0, clockedByte
@@ -604,7 +604,7 @@ LcReleaseDeepPowerDown:
     next b0
     gosub LcEndCommand
     return
-    
+
 'Waits for any writes in progress on the 25LC1024
 LcWaitWriteInProgress:
     low LC_NOT_CS_PIN
@@ -618,7 +618,7 @@ LcWaitWriteInProgress:
     loop while clockedByte = %00000001
     high LC_NOT_CS_PIN
     return
-    
+
 'Set up the 25LC1024 status register to set all addresses to non write protected
 LcStatusRegisterSetup:
     gosub LcBeginCommand
@@ -843,7 +843,7 @@ SetInterrupt:
     'Interrupt on serial in high (should come from breakstate), OR button press
     setint OR %00110000, %00110000
     return
-    
+
 'A read timeout occurred, this should only be used as a timeout from another sub routine so it can
 'pop the correct return point from the call stack
 ReadTimeout:
