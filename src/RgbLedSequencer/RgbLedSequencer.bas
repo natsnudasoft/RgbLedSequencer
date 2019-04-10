@@ -17,7 +17,7 @@
 '   =========================================================
 
 '   ---------------------------------------------------------
-'   RgbLedS v1.1.0 - 2017-03-08
+'   RgbLedS v1.1.1 - 2019-04-10
 '   ---------------------------------------------------------
 
 '   The RGB LED Sequencer is a 5 RGB LED device which allows up to 10 user
@@ -218,9 +218,6 @@ CheckInterrupts:
     do while interruptType != 0
         select case interruptType
             case INT_BREAK
-                if isAsleep != 0 then
-                    gosub WakeDevice
-                endif
                 gosub ReadCommand
             case INT_NEXTSEQUENCE
                 if isAsleep = 0 then
@@ -288,7 +285,9 @@ ReadCommand:
         case CMDI_READDOTCORRECTION
             gosub ReadDotCorrection
         case CMDI_LCCLEAR
-            gosub LcClear
+            gosub ClearSequences
+        case CMDI_CONTINUE
+            gosub WakeDeviceIfAsleep
         case CMDI_SLEEP
             gosub SleepDevice
     endselect
@@ -330,6 +329,7 @@ PrepareCurrentSequence:
 
 'Set the the current sequence to a specified sequence number
 PlaySequence:
+    gosub WakeDeviceIfAsleep
     sertxd(CMDO_READY)
     'The sequence number we are loading
     serrxd[ReadTimeoutTime, ReadTimeout], sevenSegmentValue
@@ -341,6 +341,7 @@ PlaySequence:
 
 'Save a sequence to the 25LC1024 at a specified sequence number
 SaveSequence:
+    gosub LcReleaseDeepPowerDownIfAsleep
     gosub LcBeginWrite
     sertxd(CMDO_READY)
     'The sequence number we are saving to
@@ -365,6 +366,7 @@ SaveSequence:
         next b5
     next w3
     gosub LcEndCommand
+    gosub LcDeepPowerDownIfAsleep
     return
 
 'Sets the dot correction of the TLC5940
@@ -379,6 +381,7 @@ SetDotCorrection:
 
 'Reads the current sequence at a specified sequence number
 ReadSequence:
+    gosub LcReleaseDeepPowerDownIfAsleep
     gosub LcBeginRead
     sertxd(CMDO_READY)
     'The sequence number we are reading from
@@ -404,6 +407,7 @@ ReadSequence:
         next b1
     next w1
     gosub LcEndCommand
+    gosub LcDeepPowerDownIfAsleep
     return
 
 ReadDotCorrection:
@@ -411,6 +415,13 @@ ReadDotCorrection:
         read b0, clockedByte
         sertxd(clockedByte)
     next b0
+    return
+
+'Clears all sequences from the 25LC1024
+ClearSequences:
+    gosub LcReleaseDeepPowerDownIfAsleep
+    gosub LcClear
+    gosub LcDeepPowerDownIfAsleep
     return
 
 'Prepare the 25LC1024 for a read sequence
@@ -603,6 +614,20 @@ LcReleaseDeepPowerDown:
         pulsout LC_SCK_PIN, 1
     next b0
     gosub LcEndCommand
+    return
+
+'Sets the 25LC1024 into deep power down mode (if in sleep mode - used when temporarily awoken for a command)
+LcDeepPowerDownIfAsleep:
+    if isAsleep != 0 then
+        gosub LcDeepPowerDown
+    endif
+    return
+
+'Releases the 25LC1024 from deep power down mode (if in sleep mode - used to temporarily awaken for a command)
+LcReleaseDeepPowerDownIfAsleep:
+    if isAsleep != 0 then
+        gosub LcReleaseDeepPowerDown
+    endif
     return
 
 'Waits for any writes in progress on the 25LC1024
@@ -817,6 +842,12 @@ SleepDevice:
     isAsleep = 1
     return
 
+'Wakes the device from sleep mode (if it is asleep)
+WakeDeviceIfAsleep:
+    if isAsleep != 0 then
+        gosub WakeDevice
+    endif
+
 'Wakes the device from sleep mode
 WakeDevice:
     gosub LcReleaseDeepPowerDown
@@ -854,18 +885,21 @@ ReadTimeout:
 AttemptCleanUp:
     'End any instruction on the 25LC1024 EEPROM
     gosub LcEndCommand
+    gosub LcDeepPowerDownIfAsleep
     return
 
 'Interrupt routine
 Interrupt:
-    pwmout TLC_BLANK_PIN, off
-    high TLC_BLANK_PIN
     gosub DebounceButton
     if BREAKINTERRUPT_PINVALUE = 1 then
+        pwmout TLC_BLANK_PIN, off
+        high TLC_BLANK_PIN
         'Wait for breakstate to clear
         do while BREAKINTERRUPT_PINVALUE = 1 loop
         interruptType = INT_BREAK
     else if BUTTONINTERRUPT_PINVALUE = 1 then
+        pwmout TLC_BLANK_PIN, off
+        high TLC_BLANK_PIN
         'If asleep then just wake up on button press
         if isAsleep != 0 then
             interruptType = INT_TOGGLESLEEP
@@ -882,7 +916,5 @@ Interrupt:
     else
         'The break or the button press wasn't long enough to detect
         gosub SetInterrupt
-        low TLC_BLANK_PIN
-        gosub TlcSetReferenceClock
     endif
     return
