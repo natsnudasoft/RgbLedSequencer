@@ -17,7 +17,7 @@
 '   =========================================================
 
 '   ---------------------------------------------------------
-'   RgbLedS v1.1.1 - 2019-04-10
+'   RgbLedS v1.2.0 - 2019-04-12
 '   ---------------------------------------------------------
 
 '   The RGB LED Sequencer is a 5 RGB LED device which allows up to 10 user
@@ -122,6 +122,7 @@ symbol CMDI_HANDSHAKE = %0000101 'Finish handshaking and receive a command
 symbol CMDI_LCCLEAR = %00000110 'Clear the 25LC1024 EEPROM
 symbol CMDI_READSEQUENCE = %00000111 'Read the sequence at a specified sequence number (0-9) from the device
 symbol CMDI_READDOTCORRECTION = %00001000 'Read the dot correction data from the device
+symbol CMDI_GETSTATUS = %00001001 'Get the current status of the device (sleep status, current sequence)
 
 'Serial Out instruction set (instructions that can be sent by this)
 symbol CMDO_READY = %00010000 'Signals that the device is ready for more data
@@ -284,6 +285,8 @@ ReadCommand:
             gosub ReadSequence
         case CMDI_READDOTCORRECTION
             gosub ReadDotCorrection
+        case CMDI_GETSTATUS
+            gosub GetStatus
         case CMDI_LCCLEAR
             gosub ClearSequences
         case CMDI_CONTINUE
@@ -415,6 +418,12 @@ ReadDotCorrection:
         read b0, clockedByte
         sertxd(clockedByte)
     next b0
+    return
+
+'Gets the current status of the device
+GetStatus:
+    sertxd(isAsleep)
+    sertxd(sevenSegmentValue)
     return
 
 'Clears all sequences from the 25LC1024

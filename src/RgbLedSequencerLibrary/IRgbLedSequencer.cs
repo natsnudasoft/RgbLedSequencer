@@ -24,6 +24,14 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
     public interface IRgbLedSequencer
     {
         /// <summary>
+        /// Gets the current status of the RGB LED Sequencer.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation. The
+        /// result of the <see cref="Task{TResult}"/> contains the status of the RGB LED Sequencer.
+        /// </returns>
+        Task<RgbLedSequencerStatus> GetStatusAsync();
+
+        /// <summary>
         /// Instructs the RGB LED Sequencer to continue from a break (used to wake the device
         /// without performing a command).
         /// </summary>

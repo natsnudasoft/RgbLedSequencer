@@ -58,6 +58,45 @@ namespace Natsnudasoft.RgbLedSequencerLibraryTests
 
         [Theory]
         [AutoMoqData]
+        public async Task GetStatusSendsCommandSequenceAsync(
+            [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
+            SutAlias sut)
+        {
+            await sut.GetStatusAsync().ConfigureAwait(false);
+
+            picaxeCommandInterfaceMock.Verify(s => s.HandshakeAsync(), Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.SendInstructionAsync(SendInstruction.GetStatus),
+                Times.Once());
+            picaxeCommandInterfaceMock.Verify(
+                s => s.ReadByteAsync(),
+                Times.Exactly(2));
+        }
+
+        [Theory]
+        [InlineAutoMoqData(0, false)]
+        [InlineAutoMoqData(1, true)]
+        [InlineAutoMoqData(5, true)]
+        public async Task GetStatusSetsCorrectValuesAsync(
+            byte isAsleepByte,
+            bool expectedIsAsleep,
+            byte currentSequenceIndex,
+            [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
+            SutAlias sut)
+        {
+            picaxeCommandInterfaceMock
+                .SetupSequence(c => c.ReadByteAsync())
+                .ReturnsAsync(isAsleepByte)
+                .ReturnsAsync(currentSequenceIndex);
+
+            var status = await sut.GetStatusAsync().ConfigureAwait(false);
+
+            Assert.Equal(expectedIsAsleep, status.IsAsleep);
+            Assert.Equal(currentSequenceIndex, status.CurrentSequenceIndex);
+        }
+
+        [Theory]
+        [AutoMoqData]
         public async Task ContinueSendsCommandSequenceAsync(
             [Frozen]Mock<IPicaxeCommandInterface> picaxeCommandInterfaceMock,
             SutAlias sut)
