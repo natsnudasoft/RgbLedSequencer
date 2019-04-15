@@ -12,7 +12,6 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\CommonSuppressions.cs" Link="CommonSuppressions.cs" />
     <AdditionalFiles Include="..\..\..\stylecop.json" Link="stylecop.json" />
     <AdditionalFiles Include="..\..\..\Menees.Analyzers.Settings.xml" Link="Menees.Analyzers.Settings.xml" />
     <None Update="Natsnudasoft.RgbLedSequencerLibraryTests.xunit.runner.json">
