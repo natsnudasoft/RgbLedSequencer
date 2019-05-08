@@ -12,7 +12,6 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\CommonSuppressions.cs" Link="CommonSuppressions.cs" />
     <AdditionalFiles Include="..\..\..\stylecop.json" Link="stylecop.json" />
     <AdditionalFiles Include="..\..\..\Menees.Analyzers.Settings.xml" Link="Menees.Analyzers.Settings.xml" />
     <None Update="Natsnudasoft.RgbLedSequencerLibraryTests.xunit.runner.json">
@@ -37,10 +36,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="coveralls.io" Version="1.4.2" Condition="'$(ReportUnitTests)' == 'True'">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="GitVersionTask" Version="4.0.0" Condition="'$(ReportUnitTests)' == 'True'">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

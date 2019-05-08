@@ -17,7 +17,7 @@
 '   =========================================================
 
 '   ---------------------------------------------------------
-'   RgbLedS v1.1.0 - 2017-03-08
+'   RgbLedS v1.2.0 - 2019-04-12
 '   ---------------------------------------------------------
 
 '   The RGB LED Sequencer is a 5 RGB LED device which allows up to 10 user
@@ -122,6 +122,7 @@ symbol CMDI_HANDSHAKE = %0000101 'Finish handshaking and receive a command
 symbol CMDI_LCCLEAR = %00000110 'Clear the 25LC1024 EEPROM
 symbol CMDI_READSEQUENCE = %00000111 'Read the sequence at a specified sequence number (0-9) from the device
 symbol CMDI_READDOTCORRECTION = %00001000 'Read the dot correction data from the device
+symbol CMDI_GETSTATUS = %00001001 'Get the current status of the device (sleep status, current sequence)
 
 'Serial Out instruction set (instructions that can be sent by this)
 symbol CMDO_READY = %00010000 'Signals that the device is ready for more data
@@ -218,9 +219,6 @@ CheckInterrupts:
     do while interruptType != 0
         select case interruptType
             case INT_BREAK
-                if isAsleep != 0 then
-                    gosub WakeDevice
-                endif
                 gosub ReadCommand
             case INT_NEXTSEQUENCE
                 if isAsleep = 0 then
@@ -287,8 +285,12 @@ ReadCommand:
             gosub ReadSequence
         case CMDI_READDOTCORRECTION
             gosub ReadDotCorrection
+        case CMDI_GETSTATUS
+            gosub GetStatus
         case CMDI_LCCLEAR
-            gosub LcClear
+            gosub ClearSequences
+        case CMDI_CONTINUE
+            gosub WakeDeviceIfAsleep
         case CMDI_SLEEP
             gosub SleepDevice
     endselect
@@ -330,6 +332,7 @@ PrepareCurrentSequence:
 
 'Set the the current sequence to a specified sequence number
 PlaySequence:
+    gosub WakeDeviceIfAsleep
     sertxd(CMDO_READY)
     'The sequence number we are loading
     serrxd[ReadTimeoutTime, ReadTimeout], sevenSegmentValue
@@ -341,6 +344,7 @@ PlaySequence:
 
 'Save a sequence to the 25LC1024 at a specified sequence number
 SaveSequence:
+    gosub LcReleaseDeepPowerDownIfAsleep
     gosub LcBeginWrite
     sertxd(CMDO_READY)
     'The sequence number we are saving to
@@ -365,6 +369,7 @@ SaveSequence:
         next b5
     next w3
     gosub LcEndCommand
+    gosub LcDeepPowerDownIfAsleep
     return
 
 'Sets the dot correction of the TLC5940
@@ -376,9 +381,10 @@ SetDotCorrection:
     next b0
     gosub TlcDotCorrection
     return
-    
+
 'Reads the current sequence at a specified sequence number
 ReadSequence:
+    gosub LcReleaseDeepPowerDownIfAsleep
     gosub LcBeginRead
     sertxd(CMDO_READY)
     'The sequence number we are reading from
@@ -404,13 +410,27 @@ ReadSequence:
         next b1
     next w1
     gosub LcEndCommand
+    gosub LcDeepPowerDownIfAsleep
     return
-    
+
 ReadDotCorrection:
     for b0 = DotCorrectionStart to DotCorrectionEnd
         read b0, clockedByte
         sertxd(clockedByte)
     next b0
+    return
+
+'Gets the current status of the device
+GetStatus:
+    sertxd(isAsleep)
+    sertxd(sevenSegmentValue)
+    return
+
+'Clears all sequences from the 25LC1024
+ClearSequences:
+    gosub LcReleaseDeepPowerDownIfAsleep
+    gosub LcClear
+    gosub LcDeepPowerDownIfAsleep
     return
 
 'Prepare the 25LC1024 for a read sequence
@@ -604,7 +624,21 @@ LcReleaseDeepPowerDown:
     next b0
     gosub LcEndCommand
     return
-    
+
+'Sets the 25LC1024 into deep power down mode (if in sleep mode - used when temporarily awoken for a command)
+LcDeepPowerDownIfAsleep:
+    if isAsleep != 0 then
+        gosub LcDeepPowerDown
+    endif
+    return
+
+'Releases the 25LC1024 from deep power down mode (if in sleep mode - used to temporarily awaken for a command)
+LcReleaseDeepPowerDownIfAsleep:
+    if isAsleep != 0 then
+        gosub LcReleaseDeepPowerDown
+    endif
+    return
+
 'Waits for any writes in progress on the 25LC1024
 LcWaitWriteInProgress:
     low LC_NOT_CS_PIN
@@ -618,7 +652,7 @@ LcWaitWriteInProgress:
     loop while clockedByte = %00000001
     high LC_NOT_CS_PIN
     return
-    
+
 'Set up the 25LC1024 status register to set all addresses to non write protected
 LcStatusRegisterSetup:
     gosub LcBeginCommand
@@ -817,6 +851,12 @@ SleepDevice:
     isAsleep = 1
     return
 
+'Wakes the device from sleep mode (if it is asleep)
+WakeDeviceIfAsleep:
+    if isAsleep != 0 then
+        gosub WakeDevice
+    endif
+
 'Wakes the device from sleep mode
 WakeDevice:
     gosub LcReleaseDeepPowerDown
@@ -843,7 +883,7 @@ SetInterrupt:
     'Interrupt on serial in high (should come from breakstate), OR button press
     setint OR %00110000, %00110000
     return
-    
+
 'A read timeout occurred, this should only be used as a timeout from another sub routine so it can
 'pop the correct return point from the call stack
 ReadTimeout:
@@ -854,18 +894,21 @@ ReadTimeout:
 AttemptCleanUp:
     'End any instruction on the 25LC1024 EEPROM
     gosub LcEndCommand
+    gosub LcDeepPowerDownIfAsleep
     return
 
 'Interrupt routine
 Interrupt:
-    pwmout TLC_BLANK_PIN, off
-    high TLC_BLANK_PIN
     gosub DebounceButton
     if BREAKINTERRUPT_PINVALUE = 1 then
+        pwmout TLC_BLANK_PIN, off
+        high TLC_BLANK_PIN
         'Wait for breakstate to clear
         do while BREAKINTERRUPT_PINVALUE = 1 loop
         interruptType = INT_BREAK
     else if BUTTONINTERRUPT_PINVALUE = 1 then
+        pwmout TLC_BLANK_PIN, off
+        high TLC_BLANK_PIN
         'If asleep then just wake up on button press
         if isAsleep != 0 then
             interruptType = INT_TOGGLESLEEP
@@ -882,7 +925,5 @@ Interrupt:
     else
         'The break or the button press wasn't long enough to detect
         gosub SetInterrupt
-        low TLC_BLANK_PIN
-        gosub TlcSetReferenceClock
     endif
     return

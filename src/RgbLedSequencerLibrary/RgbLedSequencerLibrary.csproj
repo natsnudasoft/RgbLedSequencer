@@ -18,7 +18,6 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\CommonSuppressions.cs" Link="CommonSuppressions.cs" />
     <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
     <AdditionalFiles Include="..\..\Menees.Analyzers.Settings.xml" Link="Menees.Analyzers.Settings.xml" />
@@ -73,9 +72,6 @@
     </PackageReference>
   </ItemGroup>
   <Target Name="ReplaceInheritdoc" AfterTargets="Build" Condition="'$(TargetFramework)' != ''">
-    <Exec
-      Command='"$(PkgInheritdocInliner)\tools\InheritdocInliner.exe" "$(OutputPath)Natsnudasoft.RgbLedSequencerLibrary.xml"'
-      IgnoreStandardErrorWarningFormat="true"
-      StandardOutputImportance="low" />
+    <Exec Command="&quot;$(PkgInheritdocInliner)\tools\InheritdocInliner.exe&quot; &quot;$(OutputPath)Natsnudasoft.RgbLedSequencerLibrary.xml&quot;" IgnoreStandardErrorWarningFormat="true" StandardOutputImportance="low" />
   </Target>
 </Project>

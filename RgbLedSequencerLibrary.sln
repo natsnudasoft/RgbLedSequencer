@@ -21,11 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code Analysis", "Code Analy
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Tests", "Unit Tests", "{371D84AB-7213-402F-9AD7-866A27381ED6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Versioning", "Versioning", "{146CFFF2-7AF3-48C7-B89D-1EA37CB441A5}"
-	ProjectSection(SolutionItems) = preProject
-		CommonSuppressions.cs = CommonSuppressions.cs
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RgbLedSequencerLibraryTests", "test\unit\RgbLedSequencerLibraryTests\RgbLedSequencerLibraryTests.csproj", "{F22C0302-E6D7-468D-B2C9-EF982DC1664C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{7A28AE9A-13BA-4C0A-8F22-F3E1902152F9}"

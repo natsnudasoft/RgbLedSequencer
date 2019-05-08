@@ -98,6 +98,32 @@ namespace Natsnudasoft.RgbLedSequencerLibrary
         /// to set the state of the underlying port failed.</exception>
         /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
         /// from the RGB LED Sequencer.</exception>
+        public async Task<RgbLedSequencerStatus> GetStatusAsync()
+        {
+#pragma warning disable MEN010 // Avoid magic numbers
+            this.ReportProgress(new CommandProgress(0d, Resources.HandshakeProgress));
+            await this.PicaxeCommandInterface.HandshakeAsync().ConfigureAwait(false);
+            await this.PicaxeCommandInterface.SendInstructionAsync(SendInstruction.GetStatus)
+                .ConfigureAwait(false);
+            var isAsleepByte = await this.PicaxeCommandInterface.ReadByteAsync()
+                .ConfigureAwait(false);
+            var isAsleep = isAsleepByte != 0;
+            var currentSequenceIndex = await this.PicaxeCommandInterface.ReadByteAsync()
+                .ConfigureAwait(false);
+            this.ReportProgress(new CommandProgress(100d, Resources.GetStatusComplete));
+#pragma warning restore MEN010 // Avoid magic numbers
+
+            return new RgbLedSequencerStatus(isAsleep, currentSequenceIndex);
+        }
+
+        /// <inheritdoc/>
+        /// <exception cref="TimeoutException">A read or write operation timed out.</exception>
+        /// <exception cref="InvalidOperationException">The underlying port is not open, or the
+        /// underlying stream of the port is closed.</exception>
+        /// <exception cref="IOException">The underlying port is in an invalid state, or an attempt
+        /// to set the state of the underlying port failed.</exception>
+        /// <exception cref="UnexpectedInstructionException">An unexpected instruction was received
+        /// from the RGB LED Sequencer.</exception>
         public async Task ContinueAsync()
         {
 #pragma warning disable MEN010 // Avoid magic numbers

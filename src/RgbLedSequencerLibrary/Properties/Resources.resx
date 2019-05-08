@@ -123,6 +123,9 @@
   <data name="ContinueComplete" xml:space="preserve">
     <value>Continue command sent.</value>
   </data>
+  <data name="GetStatusComplete" xml:space="preserve">
+    <value>Get status successful.</value>
+  </data>
   <data name="HandshakeProgress" xml:space="preserve">
     <value>Performing handshake with device.</value>
   </data>

@@ -14,7 +14,7 @@
       </TestToolMappings>
     </ItemGroup>
     <Exec
-      Command='"$(PkgOpenCover)\tools\OpenCover.Console.exe" -register:user "-filter:+[*]* -[*Tests]* -[xunit.*]*" -target:"$(Pkgxunit_runner_console)\tools\%(TestToolMappings.Runner)" -targetargs:"\"$(OutputPath)Natsnudasoft.RgbLedSequencerLibraryTests.dll\" -noshadow" -excludebyattribute:*.ExcludeFromCodeCoverage*;*.CompilerGenerated* -excludebyfile:*Designer.cs -output:$(IntermediateOutputPath)coverage.xml'
+      Command='"$(PkgOpenCover)\tools\OpenCover.Console.exe" -register:user "-filter:+[*]* -[*Tests]* -[xunit.*]*" -target:"$(Pkgxunit_runner_console)\tools\%(TestToolMappings.Runner)" -targetargs:"\"$(OutputPath)Natsnudasoft.RgbLedSequencerLibraryTests.dll\" -noshadow" -excludebyattribute:*.ExcludeFromCodeCoverage* -excludebyfile:*Designer.cs;*GitVersionInformation.g.cs -output:$(IntermediateOutputPath)coverage.xml'
       Condition="'$(TargetFramework)' == 'net46' And '%(TestToolMappings.Identity)' == '$(TargetFramework)'" />
     <Exec
       Command='"$(PkgReportGenerator)\tools\%(TestToolMappings.ReportGenerator)" -reports:$(IntermediateOutputPath)coverage.xml -targetdir:..\..\..\coverage\$(TargetFramework)'
